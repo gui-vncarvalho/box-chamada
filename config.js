@@ -4,6 +4,6 @@
 // Com os campos vazios o site roda em MODO DEMONSTRAÇÃO (dados fictícios,
 // salvos só no navegador).
 window.BOX_CONFIG = {
-  supabaseUrl: "",
-  supabaseKey: "",
+  supabaseUrl: "https://iimlzzczkxdofrkeknto.supabase.co",
+  supabaseKey: "sb_publishable_tvBzRcdbPUdycqHHqQ9P2g_7dXp5q5K",
 };
