@@ -154,6 +154,7 @@ function toast(msg, erro = false) {
 const ICON = {
   wa: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2Z"/></svg>',
   tel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>',
+  mais: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
   user: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
 };
 
@@ -503,6 +504,49 @@ function botoesContato(j, a) {
   </div>`;
 }
 
+function iniciais(nome) {
+  const partes = primeiroNome(nome).split(/\s+/).filter(Boolean);
+  return ((partes[0]?.[0] || '') + (partes.length > 1 ? partes[partes.length - 1][0] : '')).toUpperCase();
+}
+
+function cardMinha(a, pj) {
+  const j = jovem(a.jovem_id);
+  const outros = pj.get(a.jovem_id).filter(x => x.id !== a.id);
+  const temTel = !!digitos(j.telefone);
+  const resolvido = a.status === 'confirmado' || a.status === 'nao_vai';
+  const meta = [
+    faixa(j) ? faixaBadge(j) : '<span class="dim">idade não informada</span>',
+    temTel ? `<span>${esc(fmtTel(j.telefone))}</span>` : '',
+  ].filter(Boolean).join('<span class="sep" aria-hidden="true">·</span>');
+  const contato = temTel
+    ? `<div class="acoes">
+        <a class="btn ${resolvido ? 'wa-suave' : 'wa'}" href="${esc(linkWhats(evento(), j))}" target="_blank" rel="noopener" data-act="contato" data-id="${a.id}">${ICON.wa}WhatsApp</a>
+        <a class="btn" href="tel:+${telIntl(j.telefone)}" data-act="contato" data-id="${a.id}">${ICON.tel}Ligar</a>
+      </div>`
+    : `<button class="btn tracejado" data-act="editar-jovem" data-id="${j.id}">+ Adicionar telefone</button>`;
+  return `
+    <article class="pcard st-${a.status}">
+      <div class="pcard-top">
+        <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
+        <div class="pcard-id">
+          <h3>${esc(j.nome)}</h3>
+          <div class="pcard-meta">${meta}</div>
+        </div>
+        <button class="icon-btn" data-act="jovem" data-id="${j.id}" aria-label="Detalhes de ${esc(j.nome)}" title="Detalhes">${ICON.mais}</button>
+      </div>
+      ${j.obs ? `<p class="pcard-obs">${esc(j.obs)}</p>` : ''}
+      ${contato}
+      ${segStatus(a)}
+      ${a.nota ? `<button class="nota" data-act="nota" data-id="${a.id}"><span aria-hidden="true">📝</span> ${esc(a.nota)}</button>` : ''}
+      <div class="pcard-foot">
+        <div class="outros">${outros.length
+          ? outros.map(o => `<span class="st-${o.status}"><span class="dot"></span>Com ${esc(diretor(o.diretor_id)?.nome)} · ${STATUS_BY_ID[o.status].label}</span>`).join('')
+          : '<span class="dim">Só você chama</span>'}</div>
+        ${a.nota ? '' : `<button class="link-btn" data-act="nota" data-id="${a.id}">+ Nota</button>`}
+      </div>
+    </article>`;
+}
+
 function viewMinha() {
   const minhas = atribs().filter(a => a.diretor_id === S.me);
   if (!minhas.length) {
@@ -510,33 +554,23 @@ function viewMinha() {
       <p class="small">A distribuição é feita em Gerenciar.</p></div>`;
   }
   const pj = porJovem();
-  const ordem = { pendente: 0, chamado: 1, confirmado: 2, nao_vai: 3 };
-  minhas.sort((a, b) => ordem[a.status] - ordem[b.status] || byNome(jovem(a.jovem_id), jovem(b.jovem_id)));
+  minhas.sort((a, b) => byNome(jovem(a.jovem_id), jovem(b.jovem_id)));
   const feitas = minhas.filter(a => a.status !== 'pendente').length;
+  const grupos = [
+    ['Pra chamar', minhas.filter(a => a.status === 'pendente')],
+    ['Aguardando resposta', minhas.filter(a => a.status === 'chamado')],
+    ['Resolvidos', minhas.filter(a => a.status === 'confirmado' || a.status === 'nao_vai')],
+  ].filter(([, l]) => l.length);
   return `
-    <div class="section-title"><h2>Sua lista</h2><span class="tag">${feitas} de ${minhas.length} chamados</span></div>
-    <div class="grid">
-      ${minhas.map(a => {
-        const j = jovem(a.jovem_id);
-        const outros = pj.get(a.jovem_id).filter(x => x.id !== a.id);
-        return `
-        <article class="card pcard st-${a.status}">
-          <div class="card-head">
-            <div class="titulo"><h3>${esc(j.nome)}</h3>${faixaBadge(j)}</div>
-            <button class="btn small ghost" data-act="jovem" data-id="${j.id}">Detalhes</button>
-          </div>
-          <div class="meta">
-            <span>${digitos(j.telefone) ? esc(fmtTel(j.telefone)) : 'sem telefone'}</span>
-            ${j.obs ? `<span>${esc(j.obs)}</span>` : ''}
-          </div>
-          ${botoesContato(j, a)}
-          ${segStatus(a)}
-          ${outros.length ? `<div class="outros">Também chama: ${outros.map(o => `<span class="pill st-${o.status}"><span class="dot"></span>${esc(diretor(o.diretor_id)?.nome)}: ${STATUS_BY_ID[o.status].label}</span>`).join('')}</div>` : ''}
-          ${a.nota ? `<div class="nota">📝 ${esc(a.nota)}</div>` : ''}
-          <div><button class="btn small ghost" data-act="nota" data-id="${a.id}">${a.nota ? 'Editar nota' : '+ Nota'}</button></div>
-        </article>`;
-      }).join('')}
-    </div>`;
+    <div class="minha-head">
+      <h2>Sua lista</h2>
+      <span class="tag">${feitas} de ${minhas.length} chamados</span>
+    </div>
+    ${grupos.map(([titulo, l]) => `
+      <section class="grupo">
+        <h4 class="grupo-titulo">${titulo} <span>${l.length}</span></h4>
+        <div class="pgrid">${l.map(a => cardMinha(a, pj)).join('')}</div>
+      </section>`).join('')}`;
 }
 
 function viewEquipe() {
