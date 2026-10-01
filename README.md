@@ -7,6 +7,7 @@ Central da diretoria do Box (ministério de jovens) pra dividir e acompanhar que
 - Status por chamada: **Pendente → Chamei → Confirmou / Não vai**, com nota. Todo mundo vê em tempo quase real (atualiza a cada ~12 s).
 - **Box (17+) × Sprint**: calculado pela data de nascimento. Cada evento define o público.
 - **Distribuição automática** por equipe (feminina/masculina), equilibrando a quantidade entre as pessoas.
+- **Presença** no dia do evento: marcar quem chegou, cadastrar visitante na hora e ver quantos confirmados vieram.
 - "Copiar lista pro grupo" gera o texto de quem chama quem para colar no WhatsApp.
 
 ## Estrutura
@@ -16,11 +17,12 @@ Central da diretoria do Box (ministério de jovens) pra dividir e acompanhar que
 | `index.html`, `styles.css`, `app.js` | O site (estático, sem build) |
 | `config.js` | URL e chave pública do Supabase. Vazio = modo demonstração |
 | `supabase/schema.sql` | Tabelas + funções. As tabelas ficam fechadas; o acesso é só pelas funções `box_*`, que exigem o código |
+| `supabase/0NN_*.sql` | Migrações, rodadas em ordem depois do schema (ex.: `002_presenca.sql`) |
 | `supabase/*.local.sql` | Dados reais (nomes). **Não vão pro Git.** |
 
 ## Configurar o banco
 
-1. Supabase > SQL Editor: rode `supabase/schema.sql`.
+1. Supabase > SQL Editor: rode `supabase/schema.sql` e depois as migrações numeradas, em ordem.
 2. Defina o código de acesso (última linha comentada do schema, com o código de vocês).
 3. (Opcional) rode o seed local com os nomes iniciais.
 4. Project Settings > API: copie a **Project URL** e a **publishable/anon key** para o `config.js`.

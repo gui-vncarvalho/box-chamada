@@ -42,6 +42,8 @@ const S = {
   histFiltro: 'todos',
   mgTab: LS.get('mgTab') || 'eventos',
   mgFiltro: 'todos',
+  buscaP: '',
+  pFiltro: 'todos',
   limJ: 20,
   buscaMg: '',
   data: null,
@@ -186,6 +188,7 @@ const ICON = {
   lixo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3"/></svg>',
   alerta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>',
   info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>',
+  entrada: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>',
   user: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
 };
 
@@ -247,7 +250,7 @@ const demo = (() => {
     const atribuicoes = distribuir(ev, jovens, diretores, [], false).map(p => ({
       id: uid(), evento_id: ev.id, ...p, status: 'pendente', nota: null, atualizado_por: null, atualizado_em: null,
     }));
-    return { diretores, jovens, eventos: [ev], atribuicoes, historico: [] };
+    return { diretores, jovens, eventos: [ev], atribuicoes, presencas: [], historico: [] };
   }
   function load() {
     try { const t = localStorage.getItem(KEY); if (t) return JSON.parse(t); } catch {}
@@ -267,6 +270,7 @@ const demo = (() => {
         jovens: [...db.jovens].sort(byNome),
         eventos: [...db.eventos].sort((a, b) => (b.data || '').localeCompare(a.data || '')),
         atribuicoes: db.atribuicoes.filter(a => ativos.has(a.evento_id)),
+        presencas: db.presencas || [],
         historico: db.historico.slice(0, 300),
       };
     },
@@ -305,7 +309,18 @@ const demo = (() => {
       db[p_tabela] = db[p_tabela].filter(x => x.id !== p_id);
       const campo = { jovens: 'jovem_id', diretores: 'diretor_id', eventos: 'evento_id' }[p_tabela];
       db.atribuicoes = db.atribuicoes.filter(a => a[campo] !== p_id);
+      db.presencas = (db.presencas || []).filter(x => x[campo] !== p_id);
       if (p_tabela === 'eventos') db.historico = db.historico.filter(h => h.evento_id !== p_id);
+      save(db);
+    },
+    box_presenca({ p_evento, p_jovem, p_presente, p_quem }) {
+      const db = load();
+      db.presencas = db.presencas || [];
+      const i = db.presencas.findIndex(x => x.evento_id === p_evento && x.jovem_id === p_jovem);
+      if (p_presente === i >= 0) return;
+      if (p_presente) db.presencas.push({ evento_id: p_evento, jovem_id: p_jovem, marcado_por: p_quem, em: new Date().toISOString() });
+      else db.presencas.splice(i, 1);
+      db.historico.unshift({ id: Date.now(), evento_id: p_evento, quem: p_quem, jovem: nome(db.jovens, p_jovem), status: p_presente ? 'presente' : 'ausente', em: new Date().toISOString() });
       save(db);
     },
     box_atribuir({ p_evento, p_pares }) {
@@ -360,6 +375,7 @@ async function rpc(fn, args = {}) {
 let primeiraCarga = true;
 async function carregar() {
   S.data = await rpc('box_carregar');
+  S.data.presencas ||= [];
   const evs = eventosAtivos();
   const salvo = evs.find(e => e.id === S.eventoId);
   const hoje = hojeISO();
@@ -454,6 +470,7 @@ function render() {
   const minhasPend = ev ? atribs().filter(a => a.diretor_id === S.me && a.status === 'pendente').length : 0;
   const tabs = [
     ['minha', 'Minha', minhasPend],
+    ...(presencaLiberada(ev) ? [['presenca', 'Presença']] : []),
     ['equipe', 'Equipe'],
     ['jovens', 'Jovens'],
     ['historico', 'Histórico'],
@@ -490,6 +507,7 @@ function renderView() {
   if (S.tab === 'equipe') return viewEquipe();
   if (S.tab === 'jovens') return viewJovens();
   if (S.tab === 'historico') return viewHistorico();
+  if (S.tab === 'presenca') return viewPresenca();
   return '';
 }
 
@@ -548,6 +566,7 @@ function renderHero(ev, evs) {
         </div>
         <h2 class="ev-nome">${esc(ev.nome)}</h2>
         <ul class="ev-chips">${chipsEvento(ev)}</ul>
+        ${cd && cd[1] === 'hoje' && S.tab !== 'presenca' ? `<button class="btn presenca-cta" data-act="tab" data-id="presenca">${ICON.entrada}Marcar presença</button>` : ''}
       </div>
       <div class="hero-prog">
         <div class="eyebrow">Progresso das chamadas</div>
@@ -614,6 +633,7 @@ function cardMinha(a, pj) {
   const temTel = !!digitos(j.telefone);
   const resolvido = a.status === 'confirmado' || a.status === 'nao_vai';
   const meta = [
+    presenca(j.id) ? '<span class="veio">Veio</span>' : '',
     faixa(j) ? faixaBadge(j) : '<span class="dim">idade não informada</span>',
     temTel ? `<span>${esc(fmtTel(j.telefone))}</span>` : '',
   ].filter(Boolean).join('<span class="sep" aria-hidden="true">·</span>');
@@ -725,7 +745,7 @@ function cardJovem({ j, l, s }) {
     <button class="jcard st-${s}" data-act="jovem" data-id="${j.id}">
       <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
       <span class="jcard-txt">
-        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}</span>
+        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}${presenca(j.id) ? '<span class="veio">Veio</span>' : ''}</span>
         <span class="jcard-resp">${l.length ? l.map(a => `<span class="st-${a.status}"><span class="dot"></span>${esc(diretor(a.diretor_id)?.nome)}${a.status === 'pendente' ? '' : ' · ' + STATUS_BY_ID[a.status].label}</span>`).join('') : '<span class="dim">Sem responsável</span>'}</span>
       </span>
       <span class="pill st-${s}">${s === 'pendente' ? 'Ninguém chamou' : STATUS_BY_ID[s].label}</span>
@@ -800,12 +820,191 @@ function atualizarListaJovens() {
   ligarScrollInfinito();
 }
 
-const HIST_ICON = { chamado: 'tel', confirmado: 'check', nao_vai: 'xis', pendente: 'desfazer' };
+/* ---------------------------------------------------------------------
+   Presença
+   --------------------------------------------------------------------- */
+const presencasEv = () => (S.data?.presencas || []).filter(p => p.evento_id === S.eventoId);
+const presenca = jid => presencasEv().find(p => p.jovem_id === jid);
+
+// A aba só faz sentido a partir do dia do evento.
+function presencaLiberada(ev) {
+  if (!ev) return false;
+  if (DEMO) return true;
+  const cd = contagem(ev);
+  return !cd || cd[1] === 'hoje' || cd[1] === 'passado';
+}
+
+const P_FILTROS = [
+  ['todos', 'Todos'],
+  ['presentes', 'Presentes'],
+  ['faltam', 'Confirmados que faltam'],
+];
+
+function dadosPresenca() {
+  const ev = evento();
+  const pj = porJovem();
+  const pres = new Map(presencasEv().map(p => [p.jovem_id, p]));
+  const rows = S.data.jovens
+    .filter(j => j.ativo || pres.has(j.id))
+    .map(j => {
+      const l = pj.get(j.id) || [];
+      return { j, l, s: statusJovem(l), p: pres.get(j.id) };
+    });
+  const presentes = rows.filter(r => r.p);
+  const confirmados = rows.filter(r => r.s === 'confirmado');
+  const novo = r => ev.data && r.j.criado_em && hojeISO(new Date(r.j.criado_em)) === ev.data;
+  return {
+    rows,
+    total: presentes.length,
+    confVieram: confirmados.filter(r => r.p).length,
+    confTotal: confirmados.length,
+    semConfirmar: presentes.filter(r => r.s !== 'confirmado').length,
+    novos: presentes.filter(novo).length,
+    box: presentes.filter(r => faixa(r.j) === 'box').length,
+    sprint: presentes.filter(r => faixa(r.j) === 'sprint').length,
+  };
+}
+
+const passaFiltroP = (r, f) => f === 'todos' || (f === 'presentes' ? !!r.p : !r.p && r.s === 'confirmado');
+
+function htmlTopoPresenca() {
+  const ev = evento();
+  const d = dadosPresenca();
+  return `
+    <div class="pres-num">
+      <span class="eyebrow">Presentes</span>
+      <strong>${d.total}</strong>
+      ${ev.publico === 'todos' && d.total ? `<small>${d.box} Box · ${d.sprint} Sprint</small>` : ''}
+    </div>
+    <div class="pres-tiles">
+      <div class="pres-tile st-confirmado"><strong>${d.confVieram}<span>/${d.confTotal}</span></strong><small>confirmados vieram</small></div>
+      <div class="pres-tile st-chamado"><strong>${d.semConfirmar}</strong><small>vieram sem confirmar</small></div>
+      <div class="pres-tile st-presente"><strong>${d.novos}</strong><small>primeira vez</small></div>
+    </div>`;
+}
+
+function cardPresenca({ j, l, s, p }) {
+  const quem = l.length ? l.map(a => esc(diretor(a.diretor_id)?.nome)).join(' e ') : '';
+  const sub = p
+    ? `Chegou ${new Date(p.em).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}${p.marcado_por ? ` · por ${esc(p.marcado_por)}` : ''}`
+    : s === 'pendente' ? (quem ? `Ninguém chamou ainda · ${quem}` : 'Não estava na lista de chamada')
+    : `${STATUS_BY_ID[s].label}${quem ? ` · ${quem}` : ''}`;
+  return `
+    <button class="pcheck ${p ? 'presente' : ''} st-${s}" data-act="presenca" data-id="${j.id}" aria-pressed="${!!p}">
+      <span class="avatar" aria-hidden="true">${p ? ICON.check : esc(iniciais(j.nome))}</span>
+      <span class="jcard-txt">
+        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}</span>
+        <span class="pcheck-sub">${!p && s === 'confirmado' ? '<span class="dot"></span>' : ''}${sub}</span>
+      </span>
+      <span class="pcheck-box" aria-hidden="true">${ICON.check}</span>
+    </button>`;
+}
+
+function htmlListaPresenca() {
+  const q = semAcento(S.buscaP);
+  const d = dadosPresenca();
+  const rows = d.rows
+    .filter(r => passaFiltroP(r, S.pFiltro) && (!q || semAcento(r.j.nome).includes(q)))
+    .sort((a, b) => byNome(a.j, b.j));
+  if (!rows.length) {
+    if (q) {
+      return `<div class="vazio"><p>Ninguém com “${esc(S.buscaP.trim())}” no cadastro.</p>
+        <button class="btn primary" data-act="visitante">${ICON.addPessoa}Cadastrar “${esc(S.buscaP.trim())}” como visitante</button></div>`;
+    }
+    return `<div class="vazio"><p>${S.pFiltro === 'faltam' ? 'Todos os confirmados já chegaram. 🙌' : S.pFiltro === 'presentes' ? 'Ninguém marcado ainda.' : 'Nenhum jovem no cadastro.'}</p></div>`;
+  }
+  return `<div class="jgrid">${rows.map(cardPresenca).join('')}</div>`;
+}
+
+function htmlChipsPresenca() {
+  const d = dadosPresenca();
+  return P_FILTROS.map(([id, l]) => `
+    <button class="chip" data-act="p-filtro" data-id="${id}" aria-pressed="${S.pFiltro === id}">${l}<span class="c">${d.rows.filter(r => passaFiltroP(r, id)).length}</span></button>`).join('');
+}
+
+function viewPresenca() {
+  const ev = evento();
+  const cd = contagem(ev);
+  const aviso = DEMO && cd && cd[1] !== 'hoje' && cd[1] !== 'passado'
+    ? `<div class="pres-aviso demo">${ICON.info}<div><strong>Liberada só no modo demonstração</strong>
+      <small>No site real, a aba Presença só aparece no dia do evento (${esc(dataEvento(ev))}).</small></div></div>`
+    : '';
+  return `
+    ${aviso}
+    <section class="pres-topo" id="ptopo">${htmlTopoPresenca()}</section>
+    <div class="jtoolbar">
+      <div class="pres-busca">
+        <label class="busca">${ICON.lupa}
+          <input type="search" id="busca-p" placeholder="Quem chegou?" value="${esc(S.buscaP)}" aria-label="Buscar jovem" autocomplete="off">
+        </label>
+        <button class="btn primary" data-act="visitante">${ICON.addPessoa}<span>Visitante</span></button>
+      </div>
+      <div class="jfiltros"><div class="chips" id="pchips" role="group" aria-label="Filtrar">${htmlChipsPresenca()}</div></div>
+    </div>
+    <div id="plista">${htmlListaPresenca()}</div>`;
+}
+
+function atualizarPresenca() {
+  if (S.tab !== 'presenca' || !$('#plista')) return render();
+  $('#ptopo').innerHTML = htmlTopoPresenca();
+  $('#pchips').innerHTML = htmlChipsPresenca();
+  $('#plista').innerHTML = htmlListaPresenca();
+}
+
+async function togglePresenca(jid) {
+  const ev = evento();
+  if (!presencaLiberada(ev)) return;
+  const atual = presenca(jid);
+  const lista = S.data.presencas;
+  if (atual) S.data.presencas = lista.filter(p => p !== atual);
+  else S.data.presencas = [...lista, { evento_id: ev.id, jovem_id: jid, marcado_por: nomeQuem(), em: new Date().toISOString() }];
+  navigator.vibrate?.(12);
+  S.data.historico.unshift({ evento_id: ev.id, quem: nomeQuem(), jovem: jovem(jid)?.nome, status: atual ? 'ausente' : 'presente', em: new Date().toISOString() });
+  atualizarPresenca();
+  try {
+    await rpc('box_presenca', { p_evento: ev.id, p_jovem: jid, p_presente: !atual, p_quem: nomeQuem() });
+  } catch (e) {
+    S.data.presencas = lista;
+    S.data.historico.shift();
+    atualizarPresenca();
+    falha(e);
+  }
+}
+
+function formVisitante() {
+  const ev = evento();
+  if (!presencaLiberada(ev)) return;
+  const nomeBusca = S.buscaP.trim();
+  abrirForm({
+    titulo: 'Visitante',
+    sub: `Cadastra e já marca presença em ${esc(ev.nome)}.`,
+    textoSalvar: 'Cadastrar e marcar presença',
+    campos: [
+      { nome: 'nome', label: 'Nome', obrig: true, full: true, autofocus: true, placeholder: 'Nome (apelido)' },
+      { nome: 'genero', label: 'Equipe', tipo: 'segmentado', padrao: 'F', opcoes: EQUIPES, full: true },
+      { nome: 'telefone', label: 'WhatsApp', tipo: 'tel', placeholder: '(11) 91234-5678' },
+      { nome: 'nascimento', label: 'Data de nascimento', tipo: 'date', dica: 'Opcional' },
+    ],
+    valores: { nome: nomeBusca },
+    onSalvar: async dados => {
+      dados.id = uid();
+      dados.obs = `Primeira vez: ${ev.nome}${ev.data ? ` (${dataEvento(ev, { day: '2-digit', month: '2-digit', year: 'numeric' })})` : ''}`;
+      await rpc('box_salvar', { p_tabela: 'jovens', p_dados: dados });
+      await rpc('box_presenca', { p_evento: ev.id, p_jovem: dados.id, p_presente: true, p_quem: nomeQuem() });
+      S.buscaP = '';
+      toast(`${primeiroNome(dados.nome)} cadastrado(a) e presente 🎉`);
+    },
+  });
+}
+
+const HIST_ICON = { chamado: 'tel', confirmado: 'check', nao_vai: 'xis', pendente: 'desfazer', presente: 'entrada', ausente: 'desfazer' };
 
 function fraseHist(x) {
   const quem = `<strong>${esc(x.quem)}</strong>`;
   const jov = `<strong>${esc(x.jovem)}</strong>`;
   const outro = x.diretor && x.diretor !== x.quem ? x.diretor : null;
+  if (x.status === 'presente') return [`${jov} chegou`, `presença marcada por ${esc(x.quem)}`];
+  if (x.status === 'ausente') return [`${quem} desmarcou a presença de ${jov}`, ''];
   if (x.status === 'chamado') {
     return [`${quem} chamou ${jov}`, outro ? `pela lista de ${esc(outro)}` : ''];
   }
@@ -1636,11 +1835,15 @@ document.addEventListener('click', async e => {
       LS.set('tab', id);
       render();
       const topo = $('.tabs').offsetTop;
-      if (window.scrollY > topo) window.scrollTo({ top: topo });
+      if (el.classList.contains('presenca-cta')) window.scrollTo({ top: topo - 8, behavior: 'smooth' });
+      else if (window.scrollY > topo) window.scrollTo({ top: topo });
       break;
     }
     case 'filtro': S.filtro = id; S.limJ = PAG_JOVENS; render(); break;
     case 'hist-filtro': S.histFiltro = id; render(); break;
+    case 'presenca': await togglePresenca(id); break;
+    case 'p-filtro': S.pFiltro = id; atualizarPresenca(); break;
+    case 'visitante': formVisitante(); break;
     case 'faixa-j': S.faixaJ = id; S.limJ = PAG_JOVENS; render(); break;
     case 'status': await setStatus(id, el.dataset.status); break;
     case 'contato': {
@@ -1706,6 +1909,11 @@ document.addEventListener('input', e => {
     S.busca = e.target.value;
     S.limJ = PAG_JOVENS;
     atualizarListaJovens();
+    return;
+  }
+  if (e.target.id === 'busca-p') {
+    S.buscaP = e.target.value;
+    $('#plista').innerHTML = htmlListaPresenca();
     return;
   }
   if (e.target.id === 'busca-mg') {

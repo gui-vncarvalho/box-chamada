@@ -2,8 +2,8 @@
 -- Central de Chamada BOX — esquema do banco (Supabase / Postgres)
 --
 -- Como usar: Supabase > SQL Editor > New query > cole este arquivo > Run.
--- Depois rode o seed.sql (opcional) e defina o código de acesso (final
--- deste arquivo).
+-- Depois rode as migrações numeradas (002_presenca.sql, ...), o seed
+-- (opcional) e defina o código de acesso (final deste arquivo).
 --
 -- Segurança: as tabelas ficam com RLS ligado e SEM policies, ou seja,
 -- ninguém lê nem escreve nelas direto pela API pública. Todo acesso
