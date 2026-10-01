@@ -189,6 +189,9 @@ const ICON = {
   alerta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>',
   info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>',
   entrada: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>',
+  engrenagem: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>',
+  lista: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 11l2 2 4-4M9 17h6"/></svg>',
+  jovens: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7.5" r="3"/><circle cx="5" cy="10" r="2.2"/><circle cx="19" cy="10" r="2.2"/><path d="M6.5 20c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5M1.5 19c0-2.2 1.4-3.8 3.5-4.2M22.5 19c0-2.2-1.4-3.8-3.5-4.2"/></svg>',
   user: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
 };
 
@@ -491,10 +494,33 @@ function render() {
     </header>
     ${renderHero(ev, evs)}
     <nav class="tabs" role="tablist">
-      ${tabs.map(([id, label, n]) => `<button class="tab" role="tab" data-act="tab" data-id="${id}" aria-selected="${S.tab === id}">${label}${n ? `<span class="n">${n}</span>` : ''}</button>`).join('')}
+      ${tabs.map(([id, label, n]) => `
+        <button class="tab" role="tab" data-act="tab" data-id="${id}" aria-selected="${S.tab === id}">
+          <span class="tab-ic">${TAB_ICON[id]}</span>
+          <span class="tab-lbl">${label}</span>${n ? `<span class="n" aria-label="${n} pendentes">${n}</span>` : ''}
+        </button>`).join('')}
     </nav>
     <main id="view">${renderView()}</main>`;
   ligarScrollInfinito();
+}
+
+const TAB_ICON = {
+  get minha() { return ICON.lista; },
+  get presenca() { return ICON.entrada; },
+  get equipe() { return ICON.grupo; },
+  get jovens() { return ICON.jovens; },
+  get historico() { return ICON.relogio; },
+  get gerenciar() { return ICON.engrenagem; },
+};
+const celular = () => matchMedia('(max-width: 700px)').matches;
+
+// Leva a tela pro começo do conteúdo da aba (sem esconder atrás das abas fixas no desktop).
+function rolarParaConteudo({ sempre = false, suave = false } = {}) {
+  const view = $('#view');
+  if (!view) return;
+  const folga = celular() ? 12 : $('.tabs').offsetHeight + 20;
+  const alvo = view.getBoundingClientRect().top + window.scrollY - folga;
+  if (sempre || window.scrollY > alvo) window.scrollTo({ top: alvo, behavior: suave ? 'smooth' : 'auto' });
 }
 
 function renderView() {
@@ -1825,8 +1851,7 @@ document.addEventListener('click', async e => {
       S.limJ = PAG_JOVENS;
       LS.set('tab', 'jovens');
       render();
-      const topo = $('.tabs').offsetTop;
-      if (window.scrollY < topo - 80) window.scrollTo({ top: topo - 8, behavior: 'smooth' });
+      rolarParaConteudo({ sempre: true, suave: true });
       break;
     }
     case 'tab': {
@@ -1834,9 +1859,7 @@ document.addEventListener('click', async e => {
       S.limJ = PAG_JOVENS;
       LS.set('tab', id);
       render();
-      const topo = $('.tabs').offsetTop;
-      if (el.classList.contains('presenca-cta')) window.scrollTo({ top: topo - 8, behavior: 'smooth' });
-      else if (window.scrollY > topo) window.scrollTo({ top: topo });
+      rolarParaConteudo({ sempre: el.classList.contains('presenca-cta'), suave: el.classList.contains('presenca-cta') });
       break;
     }
     case 'filtro': S.filtro = id; S.limJ = PAG_JOVENS; render(); break;
