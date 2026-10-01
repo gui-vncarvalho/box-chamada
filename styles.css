@@ -29,6 +29,7 @@ body {
 }
 .wrap { max-width: 1180px; margin: 0 auto; padding: 20px 16px 72px; }
 @media (min-width: 768px) { .wrap { padding: 32px 32px 96px; } }
+@media (display-mode: standalone) { .wrap { padding-top: calc(20px + env(safe-area-inset-top)); } }
 h1, h2, h3 { font-family: 'Oswald', sans-serif; margin: 0; line-height: 1.1; }
 h1 { font-size: clamp(26px, 6vw, 36px); font-weight: 700; }
 h1 span { color: var(--accent); }
@@ -432,6 +433,20 @@ ul.lista { list-style: none; margin: 0; padding: 0; display: flex; flex-directio
 .aniver-info small b { color: var(--gold); }
 .aniver-row .btn { flex: none; }
 .aniver-falta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--border); font-size: 13px; color: var(--text-dim); }
+
+/* ---------- instalar app ---------- */
+.instalar {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px 14px;
+  border-radius: 14px; border: 1px solid rgba(229, 57, 46, .35);
+  background: linear-gradient(100deg, var(--accent-soft), transparent 70%), var(--surface);
+}
+.instalar img { flex: none; border-radius: 11px; }
+.instalar-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.instalar-txt strong { font-size: 14.5px; }
+.instalar-txt small { font-size: 12.5px; color: var(--text-dim); line-height: 1.45; }
+.instalar-txt b { color: var(--text); }
+.ic-inline { width: 15px; height: 15px; vertical-align: -3px; color: var(--blue); }
+.instalar .x { margin: 0; }
 
 /* ---------- vínculos ---------- */
 .vinc-linha { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: -4px; font-size: 13px; color: var(--text-dim); }

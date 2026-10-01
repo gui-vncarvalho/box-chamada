@@ -205,6 +205,7 @@ const ICON = {
   engrenagem: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>',
   lista: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 11l2 2 4-4M9 17h6"/></svg>',
   jovens: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7.5" r="3"/><circle cx="5" cy="10" r="2.2"/><circle cx="19" cy="10" r="2.2"/><path d="M6.5 20c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5M1.5 19c0-2.2 1.4-3.8 3.5-4.2M22.5 19c0-2.2-1.4-3.8-3.5-4.2"/></svg>',
+  compartilhar: '<svg class="ic-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>',
   user: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
 };
 
@@ -752,6 +753,7 @@ function viewMinha() {
     ['Resolvidos', minhas.filter(a => a.status === 'confirmado' || a.status === 'nao_vai')],
   ].filter(([, l]) => l.length);
   return `
+    ${celular() ? cartaoInstalar({ dispensavel: true }) : ''}
     <div class="minha-head">
       <h2>Sua lista</h2>
       <span class="tag">${feitas} de ${minhas.length} chamados</span>
@@ -1599,6 +1601,47 @@ function mgJovens() {
     <div id="mglista">${htmlListaMgJovens()}</div>`;
 }
 
+/* ---------------------------------------------------------------------
+   Instalar como app (PWA)
+   --------------------------------------------------------------------- */
+let pedidoInstalar = null;
+const comoApp = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const ehIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  pedidoInstalar = e;
+  if (S.data && S.me) render();
+});
+window.addEventListener('appinstalled', () => {
+  pedidoInstalar = null;
+  toast('App instalado! Procure o ícone “Chamada BOX” na tela inicial.');
+  if (S.data && S.me) render();
+});
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+
+// Cartão de instalar: Android/Chrome instala com um toque; iPhone mostra o passo a passo.
+function cartaoInstalar({ dispensavel = false } = {}) {
+  if (comoApp()) return '';
+  if (dispensavel && LS.get('pwa-dispensado')) return '';
+  const ios = ehIOS();
+  if (!pedidoInstalar && !ios) return '';
+  return `
+    <div class="instalar ${dispensavel ? 'dispensavel' : ''}">
+      <img src="icons/icon-192.png" alt="" width="44" height="44">
+      <div class="instalar-txt">
+        <strong>Instale o Chamada BOX</strong>
+        <small>${ios
+          ? `No Safari, toque em ${ICON.compartilhar} <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>.`
+          : 'Abre em tela cheia, direto da tela inicial, como um app.'}</small>
+      </div>
+      ${ios ? '' : '<button class="btn primary small" data-act="instalar">Instalar</button>'}
+      ${dispensavel ? `<button class="x" data-act="instalar-dispensar" aria-label="Agora não">${ICON.xis}</button>` : ''}
+    </div>`;
+}
+
 function mgDiretoria() {
   const lista = atribs();
   const eu = diretor(S.me);
@@ -1628,6 +1671,7 @@ function mgDiretoria() {
       <button class="btn primary" data-act="novo-diretor">${ICON.mais1}Pessoa</button>
     </div>
     ${eu?.equipe === 'M' ? m + f : f + m}
+    ${cartaoInstalar()}
     <div class="aparelho">
       <div><strong>Este aparelho</strong><small>Você está como <b>${esc(eu ? eu.nome : 'Visitante')}</b>.</small></div>
       <div class="row-btns">
@@ -2279,6 +2323,19 @@ document.addEventListener('click', async e => {
     case 'p-filtro': S.pFiltro = id; atualizarPresenca(); break;
     case 'visitante': formVisitante(); break;
     case 'aniversarios': dlgAniversarios(); break;
+    case 'instalar':
+      if (pedidoInstalar) {
+        pedidoInstalar.prompt();
+        const { outcome } = await pedidoInstalar.userChoice;
+        if (outcome === 'accepted') pedidoInstalar = null;
+        render();
+      }
+      break;
+    case 'instalar-dispensar':
+      LS.set('pwa-dispensado', '1');
+      render();
+      toast('Dá pra instalar depois em Gerenciar › Diretoria.');
+      break;
     case 'vinc-novo': dlgNovoVinculo(id, () => atualizarTelaVinculos(id)); break;
     case 'vinc-remover': await removerVinculo(id, el.dataset.pessoa, () => atualizarTelaVinculos(el.dataset.pessoa)); break;
     case 'presenca-junto': await togglePresenca(id, true); break;
