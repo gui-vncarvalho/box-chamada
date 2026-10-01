@@ -224,7 +224,7 @@ function distribuir(ev, jovens, diretores, existentes, manter) {
    Modo demonstração (dados fictícios no navegador)
    --------------------------------------------------------------------- */
 const demo = (() => {
-  const KEY = 'box-demo-db-v2';
+  const KEY = 'box-demo-db-v3';
   function seed() {
     const dirF = ['Ana', 'Bia', 'Carol', 'Dani', 'Lu'];
     const dirM = ['Rafa', 'Téo', 'Vini', 'Zé'];
@@ -251,6 +251,13 @@ const demo = (() => {
     jovens[7].nascimento = daqui(12, 15);
     diretores.forEach((d, i) => { d.nascimento = daqui(20 + i * 37, 24 + i); d.telefone = `1197${String(1000000 + i * 7654321).slice(0, 7)}`; });
     diretores[1].nascimento = daqui(5, 26);
+    jovens[1].estado_civil = jovens[14].estado_civil = 'casado';
+    const vinculos = [
+      { id: uid(), a_id: jovens[1].id, b_id: jovens[14].id, tipo: 'conjuge' },
+      { id: uid(), a_id: jovens[3].id, b_id: jovens[15].id, tipo: 'irmao' },
+      { id: uid(), a_id: jovens[4].id, b_id: jovens[0].id, tipo: 'convidou' },
+      { id: uid(), a_id: diretores[0].id, b_id: jovens[5].id, tipo: 'irmao' },
+    ];
     const sab = new Date(hoje);
     sab.setDate(hoje.getDate() + ((6 - hoje.getDay() + 7) % 7 || 7));
     const ev = {
@@ -260,7 +267,7 @@ const demo = (() => {
     const atribuicoes = distribuir(ev, jovens, diretores, [], false).map(p => ({
       id: uid(), evento_id: ev.id, ...p, status: 'pendente', nota: null, atualizado_por: null, atualizado_em: null,
     }));
-    return { diretores, jovens, eventos: [ev], atribuicoes, presencas: [], historico: [] };
+    return { diretores, jovens, eventos: [ev], atribuicoes, presencas: [], vinculos, historico: [] };
   }
   function load() {
     try { const t = localStorage.getItem(KEY); if (t) return JSON.parse(t); } catch {}
@@ -281,6 +288,7 @@ const demo = (() => {
         eventos: [...db.eventos].sort((a, b) => (b.data || '').localeCompare(a.data || '')),
         atribuicoes: db.atribuicoes.filter(a => ativos.has(a.evento_id)),
         presencas: db.presencas || [],
+        vinculos: db.vinculos || [],
         historico: db.historico.slice(0, 300),
       };
     },
@@ -320,6 +328,7 @@ const demo = (() => {
       const campo = { jovens: 'jovem_id', diretores: 'diretor_id', eventos: 'evento_id' }[p_tabela];
       db.atribuicoes = db.atribuicoes.filter(a => a[campo] !== p_id);
       db.presencas = (db.presencas || []).filter(x => x[campo] !== p_id);
+      db.vinculos = (db.vinculos || []).filter(v => v.a_id !== p_id && v.b_id !== p_id);
       if (p_tabela === 'eventos') db.historico = db.historico.filter(h => h.evento_id !== p_id);
       save(db);
     },
@@ -331,6 +340,18 @@ const demo = (() => {
       if (p_presente) db.presencas.push({ evento_id: p_evento, jovem_id: p_jovem, marcado_por: p_quem, em: new Date().toISOString() });
       else db.presencas.splice(i, 1);
       db.historico.unshift({ id: Date.now(), evento_id: p_evento, quem: p_quem, jovem: nome(db.jovens, p_jovem), status: p_presente ? 'presente' : 'ausente', em: new Date().toISOString() });
+      save(db);
+    },
+    box_vinculo({ p_a, p_b, p_tipo, p_remover }) {
+      const db = load();
+      db.vinculos = db.vinculos || [];
+      const mesmo = v => v.tipo === p_tipo && ((v.a_id === p_a && v.b_id === p_b) || (v.a_id === p_b && v.b_id === p_a));
+      if (p_remover) db.vinculos = db.vinculos.filter(v => !mesmo(v));
+      else if (!db.vinculos.some(v => VINCULOS[p_tipo].rot ? mesmo(v) : v.tipo === p_tipo && v.a_id === p_a && v.b_id === p_b)) {
+        db.vinculos.push({ id: uid(), a_id: p_a, b_id: p_b, tipo: p_tipo, criado_em: new Date().toISOString() });
+        const st = { conjuge: 'casado', noivo: 'noivo', namoro: 'namorando' }[p_tipo];
+        if (st) [...db.jovens, ...db.diretores].forEach(x => { if (x.id === p_a || x.id === p_b) x.estado_civil = st; });
+      }
       save(db);
     },
     box_atribuir({ p_evento, p_pares }) {
@@ -386,6 +407,7 @@ let primeiraCarga = true;
 async function carregar() {
   S.data = await rpc('box_carregar');
   S.data.presencas ||= [];
+  S.data.vinculos ||= [];
   const evs = eventosAtivos();
   const salvo = evs.find(e => e.id === S.eventoId);
   const hoje = hojeISO();
@@ -688,6 +710,7 @@ function cardMinha(a, pj) {
         </div>
         <button class="icon-btn" data-act="jovem" data-id="${j.id}" aria-label="Detalhes de ${esc(j.nome)}" title="Detalhes">${ICON.mais}</button>
       </div>
+      ${linhaVinculos(j.id)}
       ${j.obs ? `<p class="pcard-obs">${esc(j.obs)}</p>` : ''}
       ${contato}
       ${segStatus(a)}
@@ -971,6 +994,201 @@ function dlgAniversarios() {
 }
 
 /* ---------------------------------------------------------------------
+   Vínculos (casal, família, amizade) e relacionamento
+   --------------------------------------------------------------------- */
+// rot: tipos simétricos; a/b: direcionais (a → b). Texto pelo gênero de quem é descrito.
+const VINCULOS = {
+  conjuge: { grupo: 'Casal', ic: '💍', rot: { F: 'Esposa', M: 'Marido' } },
+  noivo: { grupo: 'Casal', ic: '💍', rot: { F: 'Noiva', M: 'Noivo' } },
+  namoro: { grupo: 'Casal', ic: '❤️', rot: { F: 'Namorada', M: 'Namorado' } },
+  irmao: { grupo: 'Família', ic: '👨‍👩‍👧', rot: { F: 'Irmã', M: 'Irmão' } },
+  primo: { grupo: 'Família', ic: '👨‍👩‍👧', rot: { F: 'Prima', M: 'Primo' } },
+  pai: { grupo: 'Família', ic: '👨‍👩‍👧', a: { F: 'Mãe', M: 'Pai' }, b: { F: 'Filha', M: 'Filho' } },
+  tio: { grupo: 'Família', ic: '👨‍👩‍👧', a: { F: 'Tia', M: 'Tio' }, b: { F: 'Sobrinha', M: 'Sobrinho' } },
+  amigo: { grupo: 'Amizade', ic: '🤝', rot: { F: 'Amiga', M: 'Amigo' } },
+  convidou: { grupo: 'Amizade', ic: '✉️', verbo: true, a: { F: 'Convidou', M: 'Convidou' }, b: { F: 'Convidada por', M: 'Convidado por' } },
+};
+const ESTADO_CIVIL = [['', 'Não informado'], ['solteiro', 'Solteiro(a)'], ['namorando', 'Namorando'], ['noivo', 'Noivo(a)'], ['casado', 'Casado(a)']];
+const ESTADO_LABEL = {
+  solteiro: { F: 'Solteira', M: 'Solteiro' }, namorando: { F: 'Namorando', M: 'Namorando' },
+  noivo: { F: 'Noiva', M: 'Noivo' }, casado: { F: 'Casada', M: 'Casado' },
+};
+
+function pessoa(id) {
+  const j = jovem(id);
+  if (j) return { p: j, tipo: 'jovem', g: j.genero };
+  const d = diretor(id);
+  return d ? { p: d, tipo: 'diretor', g: d.equipe } : null;
+}
+
+const vinculosDe = id => (S.data?.vinculos || []).filter(v => v.a_id === id || v.b_id === id);
+
+// "Esposa de Caio", "Irmão de Duda", "Convidou Alice"
+function textoVinculo(v, id) {
+  const def = VINCULOS[v.tipo];
+  const eu = pessoa(id);
+  const outro = pessoa(v.a_id === id ? v.b_id : v.a_id);
+  if (!def || !eu || !outro) return null;
+  const rot = def.rot ? def.rot[eu.g] : (v.a_id === id ? def.a : def.b)[eu.g];
+  return { ic: def.ic, rot, texto: def.verbo ? `${rot} ${outro.p.nome}` : `${rot} de ${outro.p.nome}`, outro };
+}
+
+function linhaVinculos(id, max = 2) {
+  const itens = vinculosDe(id).map(v => textoVinculo(v, id)).filter(Boolean);
+  if (!itens.length) return '';
+  const vis = itens.slice(0, max).map(x => `<span>${x.ic} ${esc(x.texto)}</span>`).join('');
+  return `<div class="vinc-linha">${vis}${itens.length > max ? `<span class="mais">+${itens.length - max}</span>` : ''}</div>`;
+}
+
+function chipsVinculos(id, removivel = false) {
+  const vs = vinculosDe(id);
+  if (!vs.length) return '<p class="dim small" style="margin:0">Nenhum vínculo ainda.</p>';
+  return `<div class="vinc-chips">${vs.map(v => {
+    const t = textoVinculo(v, id);
+    if (!t) return '';
+    return `<span class="vinc-chip"><span>${t.ic} ${esc(t.texto)}</span>${removivel
+      ? `<button type="button" data-act="vinc-remover" data-id="${v.id}" data-pessoa="${id}" aria-label="Remover vínculo">${ICON.xis}</button>` : ''}</span>`;
+  }).join('')}</div>`;
+}
+
+// Opções do ponto de vista de quem está sendo editado: "Ana é ___ de ___"
+function opcoesVinculo(g) {
+  const op = [];
+  for (const [tipo, def] of Object.entries(VINCULOS)) {
+    if (def.rot) op.push({ tipo, lado: 'a', grupo: def.grupo, label: def.rot[g] });
+    else {
+      op.push({ tipo, lado: 'a', grupo: def.grupo, label: def.a[g] });
+      op.push({ tipo, lado: 'b', grupo: def.grupo, label: def.b[g] });
+    }
+  }
+  return op;
+}
+
+function dlgNovoVinculo(pid, aoSalvar) {
+  const eu = pessoa(pid);
+  if (!eu) return;
+  const d = $('#dlg2');
+  const ops = opcoesVinculo(eu.g);
+  const grupos = ['Casal', 'Família', 'Amizade'];
+  let escolha = null;
+  let alvo = null;
+  let busca = '';
+
+  const frase = () => {
+    if (!escolha) return `<span class="dim">Escolha o tipo e a pessoa.</span>`;
+    const def = VINCULOS[escolha.tipo];
+    const nomeAlvo = alvo ? `<b>${esc(pessoa(alvo).p.nome)}</b>` : '<span class="dim">…</span>';
+    const rot = escolha.label.toLowerCase();
+    return def.verbo
+      ? `<b>${esc(eu.p.nome)}</b> ${rot} ${nomeAlvo}`
+      : `<b>${esc(eu.p.nome)}</b> é ${rot} de ${nomeAlvo}`;
+  };
+  const listaPessoas = () => {
+    const q = semAcento(busca);
+    const todos = [
+      ...S.data.jovens.filter(j => j.ativo).map(p => ({ p, tipo: 'jovem' })),
+      ...S.data.diretores.filter(x => x.ativo).map(p => ({ p, tipo: 'diretor' })),
+    ].filter(x => x.p.id !== pid && (!q || semAcento(x.p.nome).includes(q))).sort((a, b) => byNome(a.p, b.p));
+    if (!todos.length) return '<p class="dim small" style="padding:10px;margin:0">Ninguém encontrado.</p>';
+    return todos.slice(0, 40).map(x => `
+      <button type="button" class="vinc-pessoa ${alvo === x.p.id ? 'sel' : ''}" data-alvo="${x.p.id}">
+        <span class="avatar" aria-hidden="true">${esc(iniciais(x.p.nome))}</span>
+        <span>${esc(x.p.nome)}</span>
+        ${x.tipo === 'diretor' ? '<span class="pill st-chamado">Diretoria</span>' : faixa(x.p) ? faixaBadge(x.p) : ''}
+      </button>`).join('');
+  };
+  const pintar = () => {
+    d.querySelector('[data-frase]').innerHTML = frase();
+    d.querySelector('[data-pessoas]').innerHTML = listaPessoas();
+    d.querySelectorAll('[data-op]').forEach(b => b.setAttribute('aria-pressed', String(escolha && b.dataset.op === `${escolha.tipo}:${escolha.lado}`)));
+    d.querySelector('[data-salvar]').disabled = !(escolha && alvo);
+  };
+
+  abrirDlg(`
+    <div class="dlg-head"><div><h2>Novo vínculo</h2><p class="dlg-sub">${esc(eu.p.nome)}</p></div></div>
+    <div class="vinc-frase" data-frase></div>
+    ${grupos.map(gr => `
+      <div class="vinc-grupo"><span class="eyebrow">${gr}</span>
+        <div class="chips">${ops.filter(o => o.grupo === gr).map(o => `<button type="button" class="chip" data-op="${o.tipo}:${o.lado}" aria-pressed="false">${o.label}</button>`).join('')}</div>
+      </div>`).join('')}
+    <label class="busca">${ICON.lupa}<input type="search" data-busca placeholder="Buscar pessoa…" autocomplete="off" aria-label="Buscar pessoa"></label>
+    <div class="vinc-pessoas" data-pessoas></div>
+    <div class="dlg-foot fim">
+      <button type="button" class="btn ghost" data-r="0">Cancelar</button>
+      <button type="button" class="btn primary" data-salvar disabled>Salvar vínculo</button>
+    </div>`, null, d);
+  pintar();
+
+  const fechar = () => { d.onclick = d.oninput = d.oncancel = null; return fecharDlg(d); };
+  d.oninput = e => { if (e.target.matches('[data-busca]')) { busca = e.target.value; d.querySelector('[data-pessoas]').innerHTML = listaPessoas(); } };
+  d.oncancel = e => { e.preventDefault(); fechar(); };
+  d.onclick = async e => {
+    const op = e.target.closest('[data-op]');
+    if (op) { const [tipo, lado] = op.dataset.op.split(':'); escolha = ops.find(o => o.tipo === tipo && o.lado === lado); return pintar(); }
+    const pe = e.target.closest('[data-alvo]');
+    if (pe) { alvo = pe.dataset.alvo; return pintar(); }
+    if (e.target.closest('[data-r]') || e.target === d) return fechar();
+    const salvar = e.target.closest('[data-salvar]');
+    if (salvar && escolha && alvo) {
+      salvar.disabled = true;
+      salvar.classList.add('carregando');
+      const [a, b] = escolha.lado === 'a' ? [pid, alvo] : [alvo, pid];
+      try {
+        await rpc('box_vinculo', { p_a: a, p_b: b, p_tipo: escolha.tipo, p_remover: false });
+        await fechar();
+        await carregar();
+        toast('Vínculo salvo');
+        aoSalvar?.();
+      } catch (err) { falha(err); salvar.disabled = false; salvar.classList.remove('carregando'); }
+    }
+  };
+}
+
+async function atualizarTelaVinculos(pid) {
+  if (dlg().open && S.dlg?.tipo === 'jovem') renderDlgJovem(S.dlg.id);
+  else atualizarVinculosForm(pid);
+  const y = window.scrollY;
+  const dialogoAberto = dlg().open;
+  if (dialogoAberto) {
+    // atualiza a tela de trás sem mexer no diálogo
+    const v = $('#view');
+    if (v) { v.innerHTML = renderView(); ligarScrollInfinito(); }
+  } else render();
+  window.scrollTo(0, y);
+}
+
+async function removerVinculo(vid, pid, aoRemover) {
+  const v = (S.data.vinculos || []).find(x => x.id === vid);
+  if (!v) return;
+  const t = textoVinculo(v, pid);
+  const ok = await confirmar({ titulo: 'Remover vínculo?', ok: 'Remover', perigo: true, texto: t ? `“${esc(t.texto)}” deixa de aparecer pras duas pessoas.` : '' });
+  if (!ok) return;
+  try {
+    await rpc('box_vinculo', { p_a: v.a_id, p_b: v.b_id, p_tipo: v.tipo, p_remover: true });
+    await carregar();
+    aoRemover?.();
+  } catch (err) { falha(err); }
+}
+
+// Seção de vínculos dentro do formulário de cadastro (pessoas já salvas)
+function secaoVinculosForm(pid) {
+  return `
+    <div class="vinc-secao full">
+      <div class="vinc-secao-head"><span class="lbl">Vínculos</span>
+        ${pid ? `<button type="button" class="link-btn" data-act="vinc-novo" data-id="${pid}">+ Adicionar vínculo</button>` : ''}</div>
+      <div data-vinc-lista>${pid ? chipsVinculos(pid, true) : '<p class="dim small" style="margin:0">Salve o cadastro primeiro pra adicionar vínculos.</p>'}</div>
+    </div>`;
+}
+function atualizarVinculosForm(pid) {
+  const el = $('#form-dlg [data-vinc-lista]');
+  if (el) el.innerHTML = chipsVinculos(pid, true);
+  // casal muda o relacionamento no banco; reflete no formulário aberto
+  const p = pessoa(pid)?.p;
+  const radio = p && $(`#form-dlg input[name="estado_civil"][value="${p.estado_civil || ''}"]`);
+  if (radio) radio.checked = true;
+}
+
+/* ---------------------------------------------------------------------
    Presença
    --------------------------------------------------------------------- */
 const presencasEv = () => (S.data?.presencas || []).filter(p => p.evento_id === S.eventoId);
@@ -1063,7 +1281,16 @@ function htmlListaPresenca() {
     }
     return `<div class="vazio"><p>${S.pFiltro === 'faltam' ? 'Todos os confirmados já chegaram. 🙌' : S.pFiltro === 'presentes' ? 'Ninguém marcado ainda.' : 'Nenhum jovem no cadastro.'}</p></div>`;
   }
-  return `<div class="jgrid">${rows.map(cardPresenca).join('')}</div>`;
+  const sug = S.sugJunto;
+  return `<div class="jgrid">${rows.map(r => cardPresenca(r) + (sug && sug.jid === r.j.id ? `
+    <div class="pres-junto">
+      <span><b>Veio junto?</b> Toque pra marcar também:</span>
+      <div class="chips">${sug.ids.map(id => {
+        const t = textoVinculo(vinculosDe(r.j.id).find(v => v.a_id === id || v.b_id === id), id);
+        return `<button class="chip" data-act="presenca-junto" data-id="${id}">${ICON.check}${esc(jovem(id).nome)}${t ? ` <small>· ${esc(t.rot.toLowerCase())}</small>` : ''}</button>`;
+      }).join('')}</div>
+      <button class="x" data-act="junto-fechar" aria-label="Dispensar">${ICON.xis}</button>
+    </div>` : '')).join('')}</div>`;
 }
 
 function htmlChipsPresenca() {
@@ -1101,16 +1328,25 @@ function atualizarPresenca() {
   $('#plista').innerHTML = htmlListaPresenca();
 }
 
-async function togglePresenca(jid) {
+async function togglePresenca(jid, junto = false) {
   const ev = evento();
   if (!presencaLiberada(ev)) return;
   const atual = presenca(jid);
   const lista = S.data.presencas;
   if (atual) S.data.presencas = lista.filter(p => p !== atual);
   else S.data.presencas = [...lista, { evento_id: ev.id, jovem_id: jid, marcado_por: nomeQuem(), em: new Date().toISOString() }];
+  if (!junto) {
+    // ao marcar alguém, sugere quem tem vínculo e ainda não chegou
+    const ligados = atual ? [] : vinculosDe(jid).map(v => (v.a_id === jid ? v.b_id : v.a_id)).filter(id => jovem(id)?.ativo && !presenca(id));
+    S.sugJunto = ligados.length ? { jid, ids: [...new Set(ligados)] } : null;
+  } else if (S.sugJunto) {
+    S.sugJunto.ids = S.sugJunto.ids.filter(id => id !== jid);
+    if (!S.sugJunto.ids.length) S.sugJunto = null;
+  }
   navigator.vibrate?.(12);
   S.data.historico.unshift({ evento_id: ev.id, quem: nomeQuem(), jovem: jovem(jid)?.nome, status: atual ? 'ausente' : 'presente', em: new Date().toISOString() });
   atualizarPresenca();
+  if (!junto && S.sugJunto) $('.pres-junto')?.scrollIntoView({ block: 'nearest', behavior: semAnimacao() ? 'auto' : 'smooth' });
   try {
     await rpc('box_presenca', { p_evento: ev.id, p_jovem: jid, p_presente: !atual, p_quem: nomeQuem() });
   } catch (e) {
@@ -1511,6 +1747,11 @@ function renderDlgJovem(jid) {
       <button class="x" data-act="fechar" aria-label="Fechar">${ICON.xis}</button>
     </div>
     ${j.obs ? `<p class="pcard-obs">${esc(j.obs)}</p>` : ''}
+    <div class="vinc-det">
+      <div class="vinc-secao-head"><span class="eyebrow">Família e vínculos${j.estado_civil ? ` · ${ESTADO_LABEL[j.estado_civil][j.genero]}` : ''}</span>
+        <button class="link-btn" data-act="vinc-novo" data-id="${j.id}">+ Vínculo</button></div>
+      ${chipsVinculos(j.id, true)}
+    </div>
     ${digitos(j.telefone) ? `<div class="acoes">
       <a class="btn wa" href="${esc(linkWhats(ev, j))}" target="_blank" rel="noopener" data-act="contato" ${minha ? `data-id="${minha.id}"` : ''}>${ICON.wa}WhatsApp</a>
       <a class="btn" href="tel:+${telIntl(j.telefone)}" data-act="contato" ${minha ? `data-id="${minha.id}"` : ''}>${ICON.tel}Ligar</a>
@@ -1554,7 +1795,7 @@ function textoIdade(nasc, semFaixa = false) {
   return semFaixa ? `${i} anos` : `${i} anos · ${i >= IDADE_BOX ? 'Box' : 'Sprint'}`;
 }
 
-function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir, textoExcluir = 'Excluir', textoSalvar = 'Salvar' }) {
+function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir, textoExcluir = 'Excluir', textoSalvar = 'Salvar', extra = '' }) {
   const campo = c => {
     const v = valores[c.nome] ?? c.padrao ?? '';
     const cls = `field ${c.full ? 'full' : ''}`;
@@ -1568,7 +1809,7 @@ function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir
         </label>`;
       case 'segmentado':
         return `<fieldset class="${cls}"><legend>${c.label}</legend>
-          <div class="seg-form ${c.opcoes.some(o => o[2]) ? 'com-desc' : ''}">${c.opcoes.map(([ov, ol, od]) => `
+          <div class="seg-form ${c.opcoes.some(o => o[2]) ? 'com-desc' : ''} ${c.quebra ? 'quebra' : ''}">${c.opcoes.map(([ov, ol, od]) => `
             <label><input type="radio" name="${c.nome}" value="${ov}" ${String(v) === ov ? 'checked' : ''}>
               <span><strong>${ol}</strong>${od ? `<small>${od}</small>` : ''}</span></label>`).join('')}
           </div>${dica}</fieldset>`;
@@ -1605,7 +1846,7 @@ function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir
         <div><h2>${titulo}</h2>${sub ? `<p class="dlg-sub">${sub}</p>` : ''}</div>
         <button type="button" class="x" data-act="fechar" aria-label="Fechar">${ICON.xis}</button>
       </div>
-      <div class="form-grid">${campos.map(campo).join('')}</div>
+      <div class="form-grid">${campos.map(campo).join('')}${extra}</div>
       <div class="dlg-foot">
         ${onExcluir ? `<button type="button" class="btn danger" id="btn-excluir">${ICON.lixo}${textoExcluir}</button>` : '<span></span>'}
         <div class="row-btns"><button type="button" class="btn ghost" data-act="fechar">Cancelar</button><button class="btn primary" type="submit">${textoSalvar}</button></div>
@@ -1696,8 +1937,10 @@ function formJovem(j) {
       { nome: 'nascimento', label: 'Data de nascimento', tipo: 'date', dica: `Define Box (${IDADE_BOX}+) ou Sprint` },
       { nome: 'telefone', label: 'WhatsApp', tipo: 'tel', placeholder: '(11) 91234-5678' },
       { nome: 'obs', label: 'Observação', full: true, placeholder: 'Ex.: veio pela primeira vez na vigília' },
+      { nome: 'estado_civil', label: 'Relacionamento', tipo: 'segmentado', padrao: '', opcoes: ESTADO_CIVIL, full: true, quebra: true },
       { nome: 'ativo', label: 'Ativo', tipo: 'switch', padrao: true, dica: 'Entra nas distribuições de chamada' },
     ],
+    extra: secaoVinculosForm(j?.id),
     valores: j || {},
     onSalvar: dados => rpc('box_salvar', { p_tabela: 'jovens', p_dados: dados }),
     onExcluir: j && (async () => {
@@ -1720,8 +1963,10 @@ function formDiretor(p) {
       { nome: 'equipe', label: 'Equipe', tipo: 'segmentado', padrao: 'F', opcoes: EQUIPES, full: true },
       { nome: 'telefone', label: 'Telefone', tipo: 'tel', placeholder: '(11) 91234-5678' },
       { nome: 'nascimento', label: 'Data de nascimento', tipo: 'date', semFaixa: true, dica: 'Pra entrar nos aniversariantes' },
+      { nome: 'estado_civil', label: 'Relacionamento', tipo: 'segmentado', padrao: '', opcoes: ESTADO_CIVIL, full: true, quebra: true },
       { nome: 'ativo', label: 'Ativo', tipo: 'switch', padrao: true, dica: 'Recebe jovens na distribuição' },
     ],
+    extra: secaoVinculosForm(p?.id),
     valores: p || {},
     onSalvar: dados => rpc('box_salvar', { p_tabela: 'diretores', p_dados: dados }),
     onExcluir: p && (async () => {
@@ -1994,6 +2239,10 @@ document.addEventListener('click', async e => {
     case 'p-filtro': S.pFiltro = id; atualizarPresenca(); break;
     case 'visitante': formVisitante(); break;
     case 'aniversarios': dlgAniversarios(); break;
+    case 'vinc-novo': dlgNovoVinculo(id, () => atualizarTelaVinculos(id)); break;
+    case 'vinc-remover': await removerVinculo(id, el.dataset.pessoa, () => atualizarTelaVinculos(el.dataset.pessoa)); break;
+    case 'presenca-junto': await togglePresenca(id, true); break;
+    case 'junto-fechar': S.sugJunto = null; atualizarPresenca(); break;
     case 'ir-sem-nasc':
       await fecharDlg();
       Object.assign(S, { tab: 'gerenciar', mgTab: 'jovens', mgFiltro: 'sem_nasc' });
