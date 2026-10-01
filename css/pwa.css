@@ -1,0 +1,14 @@
+/* Cartão de instalar o app. */
+
+.instalar {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px 14px;
+  border-radius: 14px; border: 1px solid rgba(229, 57, 46, .35);
+  background: linear-gradient(100deg, var(--accent-soft), transparent 70%), var(--surface);
+}
+.instalar img { flex: none; border-radius: 11px; }
+.instalar-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.instalar-txt strong { font-size: 14.5px; }
+.instalar-txt small { font-size: 12.5px; color: var(--text-dim); line-height: 1.45; }
+.instalar-txt b { color: var(--text); }
+.ic-inline { width: 15px; height: 15px; vertical-align: -3px; color: var(--blue); }
+.instalar .x { margin: 0; }

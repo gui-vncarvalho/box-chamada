@@ -1,0 +1,68 @@
+/* Aba Presença. */
+
+.presenca-cta {
+  align-self: flex-start; margin-top: 16px; min-height: 44px; padding: 9px 18px;
+  background: var(--success); border-color: var(--success); color: #06281b; font-size: 15px;
+  box-shadow: 0 6px 20px rgba(56, 183, 135, .25);
+}
+.presenca-cta:hover { filter: brightness(1.08); border-color: var(--success); }
+.veio {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase;
+  background: var(--success-soft); color: var(--success);
+}
+.veio::before { content: "✓"; }
+.pres-topo {
+  display: flex; flex-wrap: wrap; align-items: stretch; gap: 14px 24px; margin-bottom: 18px;
+  padding: 20px; border-radius: 18px; border: 1px solid var(--border);
+  background: radial-gradient(80% 140% at 0% 0%, rgba(56, 183, 135, .14), transparent 60%), var(--surface);
+}
+.pres-num { display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
+.pres-num strong { font-family: 'Oswald', sans-serif; font-size: 56px; font-weight: 700; line-height: 1; color: var(--success); }
+.pres-num small { color: var(--text-dim); font-size: 13px; }
+.pres-tiles { flex: 1; min-width: 260px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pres-tile { display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0, 0, 0, .14); }
+.pres-tile strong { font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 600; line-height: 1; color: var(--st); }
+.pres-tile strong span { font-size: 16px; color: var(--text-dim); }
+.pres-tile small { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+.pres-busca { display: flex; gap: 8px; }
+.pres-busca .busca { flex: 1; min-width: 0; }
+.pres-busca .btn { min-height: 48px; border-radius: 12px; }
+.pcheck {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface);
+  transition: border-color .15s, background .15s, transform .1s;
+}
+.pcheck:hover { border-color: var(--text-dim); }
+.pcheck:active { transform: scale(.985); }
+.pcheck .avatar { width: 42px; height: 42px; font-size: 15px; box-shadow: inset 0 0 0 1px var(--border); transition: background .2s, color .2s; }
+.pcheck .avatar svg { width: 20px; height: 20px; }
+.pcheck-sub { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-dim); }
+.pcheck-sub .dot { width: 7px; height: 7px; }
+.pcheck-box {
+  flex: none; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center;
+  border: 2px solid var(--border); color: transparent; transition: background .2s, border-color .2s, color .2s;
+}
+.pcheck-box svg { width: 17px; height: 17px; }
+.pcheck.presente { border-color: rgba(56, 183, 135, .5); background: linear-gradient(90deg, var(--success-soft), transparent 70%), var(--surface); }
+.pcheck.presente .avatar { background: var(--success); color: #06281b; box-shadow: none; }
+.pcheck.presente .pcheck-box { background: var(--success); border-color: var(--success); color: #06281b; animation: marca .3s cubic-bezier(.3, .7, .3, 1.5); }
+.pcheck.presente .pcheck-sub { color: var(--success); }
+@keyframes marca { from { transform: scale(.6); } }
+.pres-aviso {
+  display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; padding: 14px 16px;
+  border-radius: 14px; border: 1px solid rgba(90, 134, 238, .35); background: var(--blue-soft); color: var(--blue);
+}
+.pres-aviso svg { flex: none; width: 20px; height: 20px; margin-top: 1px; }
+.pres-aviso div { display: flex; flex-direction: column; gap: 3px; }
+.pres-aviso strong { color: var(--text); font-size: 14.5px; }
+.pres-aviso small { color: var(--text-dim); font-size: 13px; line-height: 1.45; }
+@media (max-width: 520px) {
+  .pres-topo { padding: 16px; }
+  .pres-num { flex-direction: row; align-items: baseline; gap: 10px; min-width: 0; width: 100%; }
+  .pres-num strong { font-size: 44px; order: -1; }
+  .pres-tiles { min-width: 0; }
+  .pres-tile { padding: 10px; }
+  .pres-tile strong { font-size: 22px; }
+  .pres-tile small { font-size: 11px; }
+}

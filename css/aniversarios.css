@@ -1,0 +1,44 @@
+/* Aniversariantes. */
+
+.aniver-faixa {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  margin: -6px 0 20px; padding: 11px 14px; border-radius: 14px;
+  border: 1px solid var(--border); background: var(--surface); transition: border-color .15s, background .15s;
+}
+.aniver-faixa:hover { border-color: var(--text-dim); }
+.aniver-faixa.hoje {
+  border-color: rgba(232, 165, 61, .5);
+  background: linear-gradient(100deg, rgba(232, 165, 61, .18), rgba(229, 57, 46, .08) 60%, transparent), var(--surface);
+}
+.aniver-ic { flex: none; width: 38px; height: 38px; display: grid; place-items: center; font-size: 20px; border-radius: 11px; background: var(--gold-soft); }
+.aniver-faixa.hoje .aniver-ic { animation: balanca 2.4s ease-in-out infinite; }
+@keyframes balanca { 0%, 100% { transform: rotate(0); } 8% { transform: rotate(-12deg); } 16% { transform: rotate(10deg); } 24% { transform: rotate(0); } }
+.aniver-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.aniver-txt strong { font-size: 14px; }
+.aniver-faixa.hoje .aniver-txt strong { color: var(--gold); }
+.aniver-nomes { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 13px; color: var(--text-dim); }
+.aniver-nomes b { color: var(--text); font-weight: 600; }
+.aniver-nomes .mais { color: var(--gold); font-weight: 600; }
+.aniver-badge {
+  display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 6px; white-space: nowrap;
+  font-size: 11.5px; font-weight: 700; background: var(--gold-soft); color: var(--gold);
+}
+.aniver-badge.hoje { background: var(--gold); color: #2b1c05; }
+.dir-txt strong .aniver-badge { margin-left: 6px; vertical-align: 1px; }
+.aniver-lista { list-style: none; margin: 0 0 6px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.aniver-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; border-radius: 14px; border: 1px solid var(--border); background: rgba(0, 0, 0, .12); }
+.aniver-row.hoje { border-color: rgba(232, 165, 61, .5); background: var(--gold-soft); }
+.aniver-row .cal-tile { width: 46px; }
+.aniver-row .cal-tile strong { font-size: 19px; padding: 4px 0 5px; }
+.aniver-row.hoje .cal-tile small { background: var(--gold); color: #2b1c05; }
+.aniver-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.aniver-nome { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.aniver-nome strong { font-size: 15px; }
+.aniver-info small { color: var(--text-dim); font-size: 12.5px; }
+.aniver-info small b { color: var(--gold); }
+.aniver-row .btn { flex: none; }
+.aniver-falta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--border); font-size: 13px; color: var(--text-dim); }
+@media (max-width: 520px) {
+  .aniver-faixa { padding: 10px 12px; }
+  .aniver-row .btn { padding: 4px 9px; }
+}

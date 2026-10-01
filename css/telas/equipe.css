@@ -1,0 +1,4 @@
+/* Aba Equipe. */
+
+.card-eu { border-color: rgba(229, 57, 46, .45); box-shadow: 0 0 0 1px rgba(229, 57, 46, .15); }
+.voce { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 999px; vertical-align: middle; margin-left: 4px; }

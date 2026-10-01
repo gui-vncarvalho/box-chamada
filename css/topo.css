@@ -1,0 +1,100 @@
+/* Topo, card do evento e progresso. */
+
+.topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.marca { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.marca-nome { font-family: 'Alfa Slab One', serif; font-size: 24px; line-height: 1; letter-spacing: .6px; text-transform: uppercase; color: var(--cream); }
+.marca-sub { font-size: 12.5px; color: var(--text-dim); margin-top: 5px; white-space: nowrap; }
+.me-chip {
+  display: inline-flex; align-items: center; gap: 6px; max-width: 45%;
+  padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface); font-size: 13.5px; font-weight: 600;
+}
+.me-chip:hover { border-color: var(--text-dim); }
+.me-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hero {
+  position: relative; overflow: hidden;
+  display: grid; gap: 22px; padding: 26px 20px 20px; margin-bottom: 20px;
+  border: 1px solid var(--border); border-radius: 18px;
+  background:
+    radial-gradient(90% 120% at 0% 0%, rgba(47, 95, 208, .20), transparent 60%),
+    radial-gradient(70% 90% at 100% 100%, rgba(229, 57, 46, .10), transparent 60%),
+    linear-gradient(160deg, var(--surface) 0%, var(--surface-2) 100%);
+}
+.hero::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px;
+  background: conic-gradient(var(--cream) 25%, transparent 0 50%, var(--cream) 0 75%, transparent 0) 0 0 / 8px 8px;
+  opacity: .16;
+}
+.eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--text-dim); }
+.hero-label { display: flex; align-items: center; gap: 10px; min-height: 34px; }
+.trocar { margin-left: auto; }
+.trocar svg { width: 15px; height: 15px; }
+.ev-nome {
+  font-family: 'Alfa Slab One', serif; font-weight: 400;
+  font-size: clamp(30px, 7vw, 48px); line-height: 1.02; letter-spacing: .5px;
+  text-transform: uppercase; color: var(--cream); margin: 10px 0 16px; overflow-wrap: anywhere;
+}
+.ev-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.ev-chips li {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px;
+  border-radius: 999px; background: rgba(255, 255, 255, .04); border: 1px solid var(--border);
+  font-size: 13.5px; font-weight: 500;
+}
+.ev-chips svg { width: 15px; height: 15px; color: var(--text-dim); flex: none; }
+.countdown { font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.cd-hoje { background: var(--accent); color: #fff; }
+.cd-breve { background: var(--gold-soft); color: var(--gold); }
+.cd-futuro { background: var(--blue-soft); color: var(--blue); }
+.cd-passado { background: var(--surface-2); color: var(--text-dim); }
+.hero-prog { padding-top: 20px; border-top: 1px solid var(--border); }
+.prog-num { display: flex; align-items: baseline; gap: 10px; margin: 10px 0 14px; }
+.prog-num strong { font-family: 'Oswald', sans-serif; font-size: 46px; font-weight: 700; line-height: 1; }
+.prog-num span { color: var(--text-dim); font-size: 15px; }
+.prog-num em { margin-left: auto; font-style: normal; font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; color: var(--accent); }
+.pista { position: relative; margin-right: 30px; height: 14px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); }
+.pista-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--royal), var(--accent)); transition: width .5s ease; }
+.bandeira { position: absolute; right: -30px; top: 50%; transform: translateY(-62%); width: 24px; height: 24px; color: var(--text-dim); }
+.bandeira svg { width: 100%; height: 100%; }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
+.tile {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;
+  padding: 11px 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255, 255, 255, .03);
+  transition: border-color .15s, background .15s;
+}
+.tile:hover { border-color: var(--st); background: var(--st-soft); }
+.tile strong { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 600; line-height: 1; color: var(--st); }
+.tile.st-pendente strong { color: var(--text); }
+.tile > span { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--text-dim); }
+.hero-vazio { align-items: center; }
+@media (min-width: 760px) {
+  .marca-nome { font-size: 28px; }
+  .hero { padding: 30px 28px 26px; }
+}
+@media (min-width: 960px) {
+  .hero { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 36px; padding: 32px 32px 28px; }
+  .hero-prog { padding-top: 0; border-top: none; padding-left: 36px; border-left: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; }
+  .hero-ev { display: flex; flex-direction: column; justify-content: center; }
+}
+
+/* escolher evento */
+.ev-opcoes { display: flex; flex-direction: column; gap: 8px; }
+.ev-opcao {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg);
+}
+.ev-opcao:hover { border-color: var(--text-dim); }
+.ev-opcao.atual { border-color: var(--accent); background: var(--accent-soft); }
+.ev-opcao-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.ev-opcao-txt strong { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; }
+.ev-opcao-txt small { color: var(--text-dim); font-size: 13px; }
+.ev-check { width: 20px; height: 20px; color: var(--accent); flex: none; }
+@media (max-width: 520px) {
+  .marca-nome { font-size: 20px; }
+  .marca-sub { font-size: 11.5px; }
+  .hero { padding: 22px 16px 16px; border-radius: 16px; }
+  .ev-chips li { font-size: 13px; padding: 6px 10px; }
+  .tile { padding: 10px; }
+  .tile strong { font-size: 24px; }
+  .tile > span { font-size: 11.5px; }
+  .trocar { padding: 4px 9px; }
+}

@@ -1,0 +1,49 @@
+/* Cores, fontes, campos e layout geral. */
+
+:root {
+  --bg: #12161c;
+  --surface: #1a2029;
+  --surface-2: #212934;
+  --border: #2c343f;
+  --text: #eef1f4;
+  --text-dim: #8d97a3;
+  --accent: #e5392e;
+  --accent-soft: rgba(229, 57, 46, 0.14);
+  --cream: #f3e9d2;
+  --gold: #e8a53d;
+  --gold-soft: rgba(232, 165, 61, 0.14);
+  --success: #38b787;
+  --success-soft: rgba(56, 183, 135, 0.14);
+  --blue: #5a86ee;
+  --blue-soft: rgba(90, 134, 238, 0.15);
+  --royal: #2f5fd0;
+  --wa: #25d366;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 20px 16px 72px; }
+@media (min-width: 768px) { .wrap { padding: 32px 32px 96px; } }
+@media (display-mode: standalone) { .wrap { padding-top: calc(20px + env(safe-area-inset-top)); } }
+h1, h2, h3 { font-family: 'Oswald', sans-serif; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(26px, 6vw, 36px); font-weight: 700; }
+h1 span { color: var(--accent); }
+h2 { font-size: 21px; font-weight: 600; }
+h3 { font-size: 17px; font-weight: 600; }
+.dim { color: var(--text-dim); }
+.small { font-size: 13px; }
+a { color: var(--gold); }
+button, .btn, input, select, textarea {
+  transition: border-color .15s, box-shadow .15s; font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

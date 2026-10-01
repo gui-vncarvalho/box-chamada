@@ -2,9 +2,24 @@
 // Rede primeiro: sempre tenta a versão mais nova do site e só usa a cópia
 // guardada quando está sem internet. Dados do Supabase (outro domínio)
 // nunca passam por aqui nem ficam guardados no aparelho.
-const CACHE = 'chamada-box-v2';
+const CACHE = 'chamada-box-v3';
 const ARQUIVOS = [
-  './', './index.html', './styles.css', './config.js', './manifest.webmanifest', './icons/icon-192.png',
+  './', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png',
+  './css/base.css',
+  './css/componentes.css',
+  './css/entrada.css',
+  './css/topo.css',
+  './css/abas.css',
+  './css/telas/minha.css',
+  './css/telas/jovens.css',
+  './css/aniversarios.css',
+  './css/pwa.css',
+  './css/vinculos.css',
+  './css/telas/presenca.css',
+  './css/telas/equipe.css',
+  './css/telas/historico.css',
+  './css/dialogos.css',
+  './css/telas/gerenciar.css',
   './js/acoes.js',
   './js/aniversarios.js',
   './js/api.js',
