@@ -1217,7 +1217,7 @@ const presenca = jid => presencasEv().find(p => p.jovem_id === jid);
 // A aba só faz sentido a partir do dia do evento.
 function presencaLiberada(ev) {
   if (!ev) return false;
-  if (DEMO) return true;
+  if (DEMO && !S.simularReal) return true;
   const cd = contagem(ev);
   return !cd || cd[1] === 'hoje' || cd[1] === 'passado';
 }
@@ -2621,6 +2621,14 @@ async function poll() {
 }
 setInterval(poll, POLL_MS);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+
+// Gancho pros testes automatizados (só no modo demonstração).
+if (DEMO) {
+  window.__box = {
+    S, render, carregar, faixa, idade, mensagem, evento, proximoAniver, digitos,
+    vinculosDe, textoVinculo, semAcento, presenca, contagem, horaPara, buscaInteligente,
+  };
+}
 
 (async function iniciar() {
   if (S.codigo) {

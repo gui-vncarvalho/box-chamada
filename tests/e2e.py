@@ -1,0 +1,354 @@
+"""Testes de ponta a ponta do Chamada BOX (modo demonstração, sem tocar no banco).
+
+Uso:
+    python tests/e2e.py                 # roda os testes (desktop e celular)
+    python tests/e2e.py --prints DIR    # também salva prints de todas as telas em DIR
+    python tests/e2e.py --comparar A B  # compara pixel a pixel duas pastas de prints
+
+Precisa de: pip install playwright pillow && playwright install chromium
+Os dados do demo são gerados de forma determinística (aleatoriedade e
+relógio fixos), então os prints de duas versões podem ser comparados.
+"""
+import functools, http.server, os, re, sys, threading, urllib.parse
+
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Aleatoriedade e ids previsíveis: mesmos dados em toda execução.
+DETERMINISTICO = """
+(() => {
+  let s = 20261003;
+  Math.random = () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  let n = 0;
+  crypto.randomUUID = () => '00000000-0000-4000-8000-' + String(++n).padStart(12, '0');
+})();
+"""
+
+ANTES = '2026-09-30T15:00:00-03:00'   # 3 dias antes do sábado
+NO_DIA = '2026-10-03T19:00:00-03:00'  # sábado, dia do evento do demo seguinte
+
+
+class Falha(Exception):
+    pass
+
+
+def checar(cond, msg):
+    if not cond:
+        raise Falha(msg)
+
+
+def servidor():
+    class Silencioso(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+    h = functools.partial(Silencioso, directory=RAIZ)
+    srv = http.server.ThreadingHTTPServer(('127.0.0.1', 0), h)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return f'http://127.0.0.1:{srv.server_address[1]}'
+
+
+class Sessao:
+    def __init__(self, browser, base, tela, quando=ANTES, prints=None, ua=None):
+        self.nome = tela
+        vp = {'width': 1440, 'height': 950} if tela == 'desktop' else {'width': 390, 'height': 844}
+        self.ctx = browser.new_context(viewport=vp, device_scale_factor=1 if tela == 'desktop' else 2,
+                                       timezone_id='America/Sao_Paulo', locale='pt-BR', service_workers='block',
+                                       **({'user_agent': ua} if ua else {}))
+        self.ctx.add_init_script(DETERMINISTICO)
+        self.pg = self.ctx.new_page()
+        self.erros = []
+        self.pg.on('pageerror', lambda e: self.erros.append(str(e)))
+        # erros dentro de funções assíncronas (ex.: cliques) só aparecem no console
+        self.pg.on('console', lambda m: m.type == 'error' and 'Failed to load resource' not in m.text and self.erros.append(m.text))
+        self.pg.clock.install(time=quando)
+        self.base, self.prints = base, prints
+
+    def entrar(self, quem='Rafa'):
+        pg = self.pg
+        pg.goto(self.base + '/?demo')
+        pg.fill('input[name=codigo]', 'x')
+        pg.click('text=Entrar')
+        pg.click(f'.pick-grid >> text={quem}')
+        pg.wait_for_selector('.hero')
+        return pg
+
+    def js(self, expr):
+        return self.pg.evaluate(f'(() => {{ const B = window.__box; return {expr}; }})()')
+
+    def aba(self, id):
+        self.pg.click(f'.tab[data-id={id}]')
+        self.pg.wait_for_timeout(120)
+
+    def print(self, nome, full=True):
+        if self.prints:
+            self.pg.wait_for_timeout(450)  # deixa as animações terminarem
+            self.pg.screenshot(path=os.path.join(self.prints, f'{self.nome}-{nome}.png'), full_page=full, animations='disabled')
+
+    def fechar(self):
+        checar(not self.erros, f'erros de JavaScript: {self.erros[:2]}')
+        self.ctx.close()
+
+
+# ---------------------------------------------------------------- testes
+def t_minha_lista(s):
+    pg = s.entrar()
+    s.print('minha')
+    n = pg.locator('.pcard').count()
+    checar(n > 0, 'Minha lista vazia')
+    pg.locator('.pcard').first.locator('button:has-text("Confirmou")').click()
+    pg.wait_for_timeout(150)
+    checar(pg.locator('.grupo-titulo:has-text("Resolvidos")').count() == 1, 'card não foi pra "Resolvidos"')
+    # nota com modal próprio
+    pg.locator('.pcard .link-btn').first.click()
+    pg.wait_for_selector('#dlg2[open]')
+    pg.keyboard.type('Vai levar a irmã')
+    pg.keyboard.press('Enter')
+    pg.wait_for_timeout(400)
+    checar(pg.locator('.pcard .nota:has-text("Vai levar a irmã")').count() == 1, 'nota não salvou')
+    # WhatsApp marca "Chamei" e a mensagem tem emoji inteiro
+    with s.ctx.expect_page() as pop:
+        pg.locator('.pcard.st-pendente .btn.wa').first.click()
+    url = pop.value.url
+    pop.value.close()
+    checar('api.whatsapp.com/send' in url and '%F0%9F%98%8A' in url, f'link do WhatsApp errado: {url[:80]}')
+    pg.wait_for_timeout(600)
+    checar(pg.locator('.pcard.st-chamado').count() >= 1, 'WhatsApp não marcou "Chamei"')
+    s.print('minha-marcada')
+
+
+def t_equipe_historico(s):
+    pg = s.entrar()
+    pg.locator('.pcard').first.locator('button:has-text("Chamei")').click()
+    pg.wait_for_timeout(150)
+    s.aba('equipe')
+    s.print('equipe')
+    checar(pg.locator('.card-eu').count() == 1, 'card "você" ausente')
+    checar('Equipe masculina' in pg.locator('.section-title h2').first.inner_text(), 'equipe do usuário não vem primeiro')
+    s.aba('historico')
+    s.print('historico')
+    checar(pg.locator('.tl.st-chamado').count() >= 1, 'histórico sem a marcação')
+
+
+def t_jovens_e_busca(s):
+    pg = s.entrar()
+    s.aba('jovens')
+    s.print('jovens')
+    casos = {
+        '18': 'j => B.idade(j.nascimento) === 18',
+        '15-17': 'j => { const i = B.idade(j.nascimento); return i != null && i >= 15 && i <= 17; }',
+        '17+': 'j => (B.idade(j.nascimento) ?? -1) >= 17',
+        'box': "j => B.faixa(j) === 'box'",
+        'casado': "j => j.estado_civil === 'casado'",
+        'meninas box': "j => j.genero === 'F' && B.faixa(j) === 'box'",
+        'outubro': "j => !!j.nascimento && j.nascimento.slice(5, 7) === '10'",
+        'semana': 'j => { const a = B.proximoAniver(j.nascimento); return !!a && a.dias <= 6; }',
+        'esposa': "j => B.vinculosDe(j.id).some(v => (B.textoVinculo(v, j.id)?.texto || '').startsWith('Esposa'))",
+    }
+    s.aba('gerenciar')
+    pg.click('.mg-abas >> text=Jovens')
+    for termo, esperado in casos.items():
+        pg.fill('#busca-mg', termo)
+        pg.wait_for_timeout(60)
+        achou = pg.locator('#mglista .jcard').count()
+        esp = s.js(f'B.S.data.jovens.filter({esperado}).length')
+        checar(achou == esp, f'busca "{termo}": achou {achou}, esperado {esp}')
+    pg.fill('#busca-mg', '')
+    pg.click('[data-act=mgf-painel]')
+    pg.click('#mgpainel [data-k=faixa][data-v=box]')
+    pg.click('#mgpainel [data-k=equipe][data-v=F]')
+    pg.fill('[data-mgf-idade=idadeMin]', '18')
+    pg.wait_for_timeout(80)
+    esp = s.js("B.S.data.jovens.filter(j => B.faixa(j) === 'box' && j.genero === 'F' && B.idade(j.nascimento) >= 18).length")
+    checar(pg.locator('#mglista .jcard').count() == esp, 'painel de filtros com resultado errado')
+    checar(pg.locator('.chip-filtro').count() == 3, 'chips de filtros ativos')
+    s.print('gerenciar-jovens-filtros')
+    pg.click('[data-act=mgf-limpar][data-id=tudo]')
+    checar(pg.locator('.chip-filtro').count() == 0, '"Limpar tudo" não limpou')
+
+
+def t_presenca(s):
+    pg = s.entrar()
+    s.aba('presenca')
+    pg.fill('#busca-p', 'Bruna')
+    pg.locator('.pcheck').first.click()
+    pg.wait_for_timeout(250)
+    checar(pg.locator('.pres-junto').count() == 1, '"Veio junto?" não apareceu')
+    s.print('presenca-junto', full=False)
+    pg.click('[data-act=presenca-junto]')
+    pg.wait_for_timeout(200)
+    checar(s.js("!!B.presenca(B.S.data.jovens.find(j => j.nome === 'Caio').id)"), 'presença de quem veio junto não marcou')
+    pg.fill('#busca-p', 'Zezinho')
+    pg.click('#plista >> text=como visitante')
+    pg.wait_for_selector('#form-dlg')
+    checar(pg.input_value('#form-dlg input[name=nome]') == 'Zezinho', 'nome do visitante não veio da busca')
+    pg.click('#form-dlg button[type=submit]')
+    pg.wait_for_timeout(900)
+    checar(s.js("!!B.presenca(B.S.data.jovens.find(j => j.nome === 'Zezinho')?.id)"), 'visitante não ficou presente')
+    checar(pg.inner_text('.pres-num strong') == '3', 'contador de presentes')
+    s.print('presenca')
+    # no site real, antes do dia, a aba some
+    s.js('(B.S.simularReal = true, B.render(), 0)')
+    checar(pg.locator('.tab[data-id=presenca]').count() == 0, 'aba Presença visível antes do dia no modo real')
+
+
+def t_presenca_no_dia(s):
+    pg = s.entrar()
+    s.js('(B.S.simularReal = true, B.render(), 0)')
+    s.aba('gerenciar')
+    pg.click('.mg-head .btn.primary')
+    pg.fill('#form-dlg input[name=nome]', 'Box Day')
+    pg.fill('#form-dlg input[name=data]', '2026-10-03')
+    pg.click('#form-dlg button[type=submit]')
+    pg.wait_for_timeout(1500)
+    checar(pg.locator('.countdown').inner_text().upper().startswith('É HOJE'), 'contagem do dia errada')
+    checar(pg.locator('.presenca-cta').count() == 1, 'botão "Marcar presença" ausente no dia')
+    pg.reload()
+    pg.wait_for_selector('.hero')
+    checar(pg.locator('.ev-nome').inner_text().upper() == 'BOX DAY', 'recarregar pulou do evento de hoje')
+
+
+def t_modais_e_cadastros(s):
+    pg = s.entrar()
+    s.aba('gerenciar')
+    s.print('gerenciar-eventos')
+    pg.click('.mg-head .btn.primary')
+    pg.wait_for_selector('#form-dlg')
+    checar(s.js('document.activeElement.name') == 'nome', 'foco não foi pro nome')
+    pg.click('#form-dlg button[type=submit]')
+    checar(pg.locator('.field.invalido').count() == 1, 'obrigatório não marcou')
+    pg.fill('#form-dlg input[name=nome]', 'Box Day')
+    pg.fill('#form-dlg input[name=data]', '2026-10-03')
+    pg.click('#form-dlg .seg-form >> text=Box + Sprint')
+    pg.fill('#form-dlg input[name=hora_sprint]', '17h')
+    pg.fill('#form-dlg input[name=hora_box]', '20h')
+    previas = [re.search(r'às [^.]*\.', t).group(0) for t in pg.locator('[data-previa] .bolha').all_inner_texts()]
+    checar(previas == ['às 20h.', 'às 17h.'], f'prévias por faixa: {previas}')
+    s.print('modal-evento', full=False)
+    pg.click('#form-dlg button[type=submit]')
+    pg.wait_for_timeout(1500)
+    msg = s.js("['Bruna', 'Alice', 'Helena'].map(n => { const j = B.S.data.jovens.find(x => x.nome === n); return B.mensagem(B.evento(), j).match(/às [^.]*\\./)[0]; })")
+    checar(msg == ['às 20h.', 'às 17h.', 'às 17h (Sprint) e 20h (Box).'], f'horário por faixa: {msg}')
+    # cadastro de jovem: máscara, idade e vínculos
+    pg.click('.mg-abas >> text=Jovens')
+    pg.fill('#busca-mg', 'Bruna')
+    pg.locator('#mglista .jcard').first.click()
+    pg.wait_for_selector('#form-dlg')
+    pg.fill('#form-dlg input[name=telefone]', '11987654321')
+    checar(pg.input_value('#form-dlg input[name=telefone]') == '(11) 98765-4321', 'máscara de telefone')
+    pg.fill('#form-dlg input[name=nascimento]', '2008-05-10')
+    checar(pg.inner_text('[data-hint-idade]') == '18 anos · Box', 'idade calculada')
+    checar('Esposa de Caio' in ' '.join(pg.locator('#form-dlg .vinc-chip').all_inner_texts()), 'vínculo existente')
+    pg.click('#form-dlg [data-act=vinc-novo]')
+    pg.wait_for_selector('#dlg2[open]')
+    pg.click('#dlg2 [data-op="primo:a"]')
+    pg.fill('#dlg2 [data-busca]', 'duda')
+    pg.click('#dlg2 [data-alvo]')
+    checar(pg.inner_text('#dlg2 [data-frase]') == 'Bruna é prima de Duda', 'frase do vínculo')
+    pg.click('#dlg2 [data-salvar]')
+    pg.wait_for_timeout(700)
+    checar('Prima de Duda' in ' '.join(pg.locator('#form-dlg .vinc-chip').all_inner_texts()), 'vínculo novo não apareceu')
+    s.print('modal-jovem', full=False)
+    pg.click('#btn-excluir')
+    pg.wait_for_selector('#dlg2[open]')
+    s.print('modal-confirmar', full=False)
+    pg.click('#dlg2 [data-r="0"]')
+    pg.wait_for_timeout(400)
+    pg.keyboard.press('Escape')
+    pg.wait_for_timeout(450)
+    checar(not s.js("document.querySelector('#dlg').open"), 'ESC não fechou o modal')
+    # importar
+    pg.click('text=Importar lista')
+    pg.fill('textarea[name=texto]', 'Maria Teste; 11 91234-5678; 14/03/2007\nAlice; 11 90000-1111')
+    checar(pg.inner_text('#form-imp [type=submit]') == 'Importar 2', 'prévia da importação')
+    pg.click('#form-imp button[type=submit]')
+    pg.wait_for_timeout(800)
+    # diretoria com nascimento
+    pg.click('.mg-abas >> text=Diretoria')
+    s.print('gerenciar-diretoria')
+    pg.locator('.dir-card').first.click()
+    pg.wait_for_selector('#form-dlg')
+    pg.fill('#form-dlg input[name=nascimento]', '1999-10-02')
+    checar(pg.inner_text('[data-hint-idade]') == '26 anos', 'idade da diretoria sem faixa')
+    pg.keyboard.press('Escape')
+
+
+def t_aniversarios(s):
+    pg = s.entrar()
+    checar('Tem aniversário hoje' in pg.inner_text('.aniver-faixa'), 'faixa de aniversário')
+    pg.click('.aniver-faixa')
+    pg.wait_for_selector('dialog[open] .aniver-lista')
+    href = pg.get_attribute('dialog .aniver-row.hoje a', 'href')
+    texto = urllib.parse.parse_qs(urllib.parse.urlparse(href).query)['text'][0]
+    checar(texto.startswith('Feliz aniversário, '), 'mensagem de parabéns')
+    checar(pg.locator('dialog .aniver-row:has-text("Diretoria")').count() > 0, 'diretoria fora dos aniversários')
+    s.print('aniversarios', full=False)
+
+
+def t_abas_e_pwa(s):
+    pg = s.entrar()
+    fit = s.js("(n => n.scrollWidth <= n.clientWidth + 1)(document.querySelector('.tabs'))")
+    checar(fit, 'abas não cabem')
+    if s.nome == 'celular':
+        checar(s.js("getComputedStyle(document.querySelector('.tabs')).position") == 'fixed', 'barra de abas não está fixa')
+        cortados = s.js("[...document.querySelectorAll('.tab-lbl')].filter(e => e.scrollWidth > e.clientWidth).length")
+        checar(cortados == 0, 'nome de aba cortado')
+    man = s.pg.evaluate("fetch('manifest.webmanifest').then(r => r.json())")
+    checar(man['display'] == 'standalone' and len(man['icons']) == 3, 'manifesto')
+
+
+TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
+          t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa]
+
+
+def rodar(prints=None):
+    from playwright.sync_api import sync_playwright
+    base = servidor()
+    if prints:
+        os.makedirs(prints, exist_ok=True)
+    falhas = 0
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        for tela in ['desktop', 'celular']:
+            for t in TESTES:
+                quando = NO_DIA if t is t_presenca_no_dia else ANTES
+                s = Sessao(b, base, tela, quando, prints)
+                try:
+                    t(s)
+                    s.fechar()
+                    print(f'  ok    {tela:8} {t.__name__[2:]}')
+                except Exception as e:  # noqa: BLE001
+                    falhas += 1
+                    print(f'  FALHA {tela:8} {t.__name__[2:]}: {e}')
+                    s.ctx.close()
+        b.close()
+    print(f'\n{len(TESTES) * 2 - falhas} ok, {falhas} falha(s)')
+    return falhas
+
+
+def comparar(a, b):
+    from PIL import Image, ImageChops
+    nomes = sorted(set(os.listdir(a)) | set(os.listdir(b)))
+    difs = 0
+    for n in nomes:
+        pa, pb = os.path.join(a, n), os.path.join(b, n)
+        if not (os.path.exists(pa) and os.path.exists(pb)):
+            print(f'  falta {n}'); difs += 1; continue
+        ia, ib = Image.open(pa).convert('RGB'), Image.open(pb).convert('RGB')
+        if ia.size != ib.size:
+            print(f'  DIFERENTE {n}: tamanho {ia.size} × {ib.size}'); difs += 1; continue
+        # ignora ruído de até 2 tons (o desfoque atrás dos modais varia um pouquinho)
+        caixa = ImageChops.difference(ia, ib).convert('L').point(lambda v: 255 if v > 2 else 0).getbbox()
+        if caixa:
+            print(f'  DIFERENTE {n}: região {caixa}'); difs += 1
+        else:
+            print(f'  igual {n}')
+    print(f'\n{len(nomes) - difs} iguais, {difs} diferente(s)')
+    return difs
+
+
+if __name__ == '__main__':
+    if '--comparar' in sys.argv:
+        i = sys.argv.index('--comparar')
+        sys.exit(1 if comparar(sys.argv[i + 1], sys.argv[i + 2]) else 0)
+    pasta = sys.argv[sys.argv.index('--prints') + 1] if '--prints' in sys.argv else None
+    sys.exit(1 if rodar(pasta) else 0)
