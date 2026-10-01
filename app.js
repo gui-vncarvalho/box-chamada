@@ -224,7 +224,7 @@ function distribuir(ev, jovens, diretores, existentes, manter) {
    Modo demonstração (dados fictícios no navegador)
    --------------------------------------------------------------------- */
 const demo = (() => {
-  const KEY = 'box-demo-db';
+  const KEY = 'box-demo-db-v2';
   function seed() {
     const dirF = ['Ana', 'Bia', 'Carol', 'Dani', 'Lu'];
     const dirM = ['Rafa', 'Téo', 'Vini', 'Zé'];
@@ -244,6 +244,13 @@ const demo = (() => {
       telefone: i % 5 === 3 ? null : `119${String(80000000 + i * 1234567).slice(0, 8)}`,
       nascimento: i % 6 === 5 ? null : nasc(i),
     }));
+    // alguns aniversários perto de hoje, pra faixa de aniversariantes aparecer
+    const daqui = (dias, anos) => { const d = new Date(hoje); d.setDate(d.getDate() + dias); d.setFullYear(d.getFullYear() - anos); return hojeISO(d); };
+    jovens[2].nascimento = daqui(0, 17);
+    jovens[13].nascimento = daqui(3, 19);
+    jovens[7].nascimento = daqui(12, 15);
+    diretores.forEach((d, i) => { d.nascimento = daqui(20 + i * 37, 24 + i); d.telefone = `1197${String(1000000 + i * 7654321).slice(0, 7)}`; });
+    diretores[1].nascimento = daqui(5, 26);
     const sab = new Date(hoje);
     sab.setDate(hoje.getDate() + ((6 - hoje.getDay() + 7) % 7 || 7));
     const ev = {
@@ -493,6 +500,7 @@ function render() {
       <button class="me-chip" data-act="trocar-eu" title="Trocar pessoa">${ICON.user}<span>${esc(eu ? eu.nome : 'Visitante')}</span></button>
     </header>
     ${renderHero(ev, evs)}
+    ${renderAniver()}
     <nav class="tabs" role="tablist">
       ${tabs.map(([id, label, n]) => `
         <button class="tab" role="tab" data-act="tab" data-id="${id}" aria-selected="${S.tab === id}">
@@ -660,6 +668,7 @@ function cardMinha(a, pj) {
   const resolvido = a.status === 'confirmado' || a.status === 'nao_vai';
   const meta = [
     presenca(j.id) ? '<span class="veio">Veio</span>' : '',
+    badgeAniver(j),
     faixa(j) ? faixaBadge(j) : '<span class="dim">idade não informada</span>',
     temTel ? `<span>${esc(fmtTel(j.telefone))}</span>` : '',
   ].filter(Boolean).join('<span class="sep" aria-hidden="true">·</span>');
@@ -771,7 +780,7 @@ function cardJovem({ j, l, s }) {
     <button class="jcard st-${s}" data-act="jovem" data-id="${j.id}">
       <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
       <span class="jcard-txt">
-        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}${presenca(j.id) ? '<span class="veio">Veio</span>' : ''}</span>
+        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}${presenca(j.id) ? '<span class="veio">Veio</span>' : ''}${badgeAniver(j)}</span>
         <span class="jcard-resp">${l.length ? l.map(a => `<span class="st-${a.status}"><span class="dot"></span>${esc(diretor(a.diretor_id)?.nome)}${a.status === 'pendente' ? '' : ' · ' + STATUS_BY_ID[a.status].label}</span>`).join('') : '<span class="dim">Sem responsável</span>'}</span>
       </span>
       <span class="pill st-${s}">${s === 'pendente' ? 'Ninguém chamou' : STATUS_BY_ID[s].label}</span>
@@ -847,6 +856,121 @@ function atualizarListaJovens() {
 }
 
 /* ---------------------------------------------------------------------
+   Aniversariantes (jovens e diretoria)
+   --------------------------------------------------------------------- */
+function proximoAniver(nasc, base = new Date()) {
+  if (!nasc) return null;
+  const [y, m, d] = nasc.split('-').map(Number);
+  const hoje = new Date(base.getFullYear(), base.getMonth(), base.getDate());
+  const bissexto = a => (a % 4 === 0 && a % 100 !== 0) || a % 400 === 0;
+  // quem nasceu em 29/02 comemora em 28/02 nos anos que não são bissextos
+  const noAno = a => new Date(a, m - 1, m === 2 && d === 29 && !bissexto(a) ? 28 : d);
+  let data = noAno(hoje.getFullYear());
+  if (data < hoje) data = noAno(hoje.getFullYear() + 1);
+  return { data, dias: Math.round((data - hoje) / 86400000), idade: data.getFullYear() - y };
+}
+
+function quandoAniver(a, longo = false) {
+  if (a.dias === 0) return 'Hoje';
+  if (a.dias === 1) return 'Amanhã';
+  if (a.dias < 7) {
+    const dia = a.data.toLocaleDateString('pt-BR', { weekday: longo ? 'long' : 'short' }).replace('.', '');
+    return dia.charAt(0).toUpperCase() + dia.slice(1);
+  }
+  return longo ? `em ${a.dias} dias` : a.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
+function aniversariantes() {
+  return [
+    ...S.data.jovens.filter(j => j.ativo && j.nascimento).map(p => ({ tipo: 'jovem', p })),
+    ...S.data.diretores.filter(d => d.ativo && d.nascimento).map(p => ({ tipo: 'diretor', p })),
+  ]
+    .map(x => ({ ...x, ...proximoAniver(x.p.nascimento) }))
+    .sort((a, b) => a.dias - b.dias || byNome(a.p, b.p));
+}
+
+function badgeAniver(p) {
+  const a = proximoAniver(p.nascimento);
+  if (!a || a.dias > 6) return '';
+  return `<span class="aniver-badge ${a.dias === 0 ? 'hoje' : ''}" title="Aniversário ${a.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}">🎂 ${quandoAniver(a)}</span>`;
+}
+
+function renderAniver() {
+  if (!S.data) return '';
+  const lista = aniversariantes();
+  if (!lista.length) return '';
+  const semana = lista.filter(x => x.dias <= 6);
+  const temHoje = semana.some(x => x.dias === 0);
+  const nomes = semana.length
+    ? semana.slice(0, 3).map(x => `<span><b>${quandoAniver(x)}</b> ${esc(primeiroNome(x.p.nome))}</span>`).join('')
+      + (semana.length > 3 ? `<span class="mais">+${semana.length - 3}</span>` : '')
+    : `<span>Próximo: <b>${esc(primeiroNome(lista[0].p.nome))}</b>, em ${lista[0].dias} dias (${lista[0].data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })})</span>`;
+  return `
+    <button class="aniver-faixa ${temHoje ? 'hoje' : ''}" data-act="aniversarios">
+      <span class="aniver-ic" aria-hidden="true">🎂</span>
+      <span class="aniver-txt">
+        <strong>${temHoje ? 'Tem aniversário hoje!' : semana.length ? 'Aniversariantes da semana' : 'Aniversariantes'}</strong>
+        <span class="aniver-nomes">${nomes}</span>
+      </span>
+      <span class="chevron">${ICON.chevron}</span>
+    </button>`;
+}
+
+function mensagemParabens(p) {
+  const eu = diretor(S.me);
+  return `Feliz aniversário, ${primeiroNome(p.nome)}! 🎉🎂 Que Deus te abençoe muito nesse novo ano de vida. ` +
+    `Um abraço de toda a galera do Box!${eu ? ` — ${eu.nome}` : ''}`;
+}
+
+function dlgAniversarios() {
+  const lista = aniversariantes();
+  const semData = S.data.jovens.filter(j => j.ativo && !j.nascimento).length;
+  const dirSemData = S.data.diretores.filter(d => d.ativo && !d.nascimento).length;
+  const grupos = [];
+  for (const x of lista) {
+    let titulo;
+    if (x.dias <= 6) titulo = 'Esta semana';
+    else {
+      titulo = x.data.toLocaleDateString('pt-BR', { month: 'long' });
+      titulo = titulo.charAt(0).toUpperCase() + titulo.slice(1);
+      if (x.data.getFullYear() !== new Date().getFullYear()) titulo += ` de ${x.data.getFullYear()}`;
+    }
+    if (!grupos.length || grupos[grupos.length - 1][0] !== titulo) grupos.push([titulo, []]);
+    grupos[grupos.length - 1][1].push(x);
+  }
+  const linha = x => {
+    const tel = telIntl(x.p.telefone);
+    const mes = x.data.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+    const tag = x.tipo === 'diretor' ? '<span class="pill st-chamado">Diretoria</span>' : (faixa(x.p) ? faixaBadge(x.p) : '');
+    return `
+      <li class="aniver-row ${x.dias === 0 ? 'hoje' : ''}">
+        <span class="cal-tile"><small>${mes}</small><strong>${x.data.getDate()}</strong></span>
+        <span class="aniver-info">
+          <span class="aniver-nome"><strong>${esc(x.p.nome)}</strong>${tag}</span>
+          <small>Faz ${x.idade} anos · ${x.dias === 0 ? '<b>hoje 🎉</b>' : x.dias === 1 ? 'amanhã' : quandoAniver(x, true).toLowerCase()}</small>
+        </span>
+        ${tel ? `<a class="btn small ${x.dias === 0 ? 'wa' : ''}" href="https://api.whatsapp.com/send?phone=${tel}&text=${encodeURIComponent(mensagemParabens(x.p))}" target="_blank" rel="noopener">${ICON.wa}Parabéns</a>` : ''}
+      </li>`;
+  };
+  abrirDlg(`
+    <div class="dlg-head">
+      <div><h2>🎂 Aniversariantes</h2><p class="dlg-sub">Jovens e diretoria, a partir de hoje.</p></div>
+      <button class="x" data-act="fechar" aria-label="Fechar">${ICON.xis}</button>
+    </div>
+    ${lista.length ? grupos.map(([t, itens]) => `
+      <section>
+        <h4 class="grupo-titulo">${t} <span>${itens.length}</span></h4>
+        <ul class="aniver-lista">${itens.map(linha).join('')}</ul>
+      </section>`).join('') : '<div class="vazio"><p>Ninguém com data de nascimento cadastrada ainda.</p></div>'}
+    ${semData || dirSemData ? `
+      <div class="aniver-falta">
+        <span>${[semData && plural(semData, 'jovem', 'jovens'), dirSemData && `${dirSemData} da diretoria`].filter(Boolean).join(' e ')} sem data de nascimento.</span>
+        ${semData ? '<button class="link-btn" data-act="ir-sem-nasc">Completar →</button>' : ''}
+      </div>` : ''}
+    <div class="dlg-foot fim"><button class="btn" data-act="fechar">Fechar</button></div>`);
+}
+
+/* ---------------------------------------------------------------------
    Presença
    --------------------------------------------------------------------- */
 const presencasEv = () => (S.data?.presencas || []).filter(p => p.evento_id === S.eventoId);
@@ -919,7 +1043,7 @@ function cardPresenca({ j, l, s, p }) {
     <button class="pcheck ${p ? 'presente' : ''} st-${s}" data-act="presenca" data-id="${j.id}" aria-pressed="${!!p}">
       <span class="avatar" aria-hidden="true">${p ? ICON.check : esc(iniciais(j.nome))}</span>
       <span class="jcard-txt">
-        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}</span>
+        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}${badgeAniver(j)}</span>
         <span class="pcheck-sub">${!p && s === 'confirmado' ? '<span class="dot"></span>' : ''}${sub}</span>
       </span>
       <span class="pcheck-box" aria-hidden="true">${ICON.check}</span>
@@ -1240,8 +1364,8 @@ function mgDiretoria() {
         <button class="dir-card ${p.ativo ? '' : 'inativo'}" data-act="editar-diretor" data-id="${p.id}">
           <span class="avatar" aria-hidden="true">${esc(iniciais(p.nome))}</span>
           <span class="dir-txt">
-            <strong>${esc(p.nome)}${p.id === S.me ? ' <span class="voce">você</span>' : ''}</strong>
-            <small>${p.ativo ? (evento() ? plural(n, 'chamada', 'chamadas') + ' neste evento' : 'Ativo') : 'Inativo · fora das distribuições'}</small>
+            <strong>${esc(p.nome)}${p.id === S.me ? ' <span class="voce">você</span>' : ''}${badgeAniver(p)}</strong>
+            <small>${p.ativo ? (evento() ? plural(n, 'chamada', 'chamadas') + ' neste evento' : 'Ativo') : 'Inativo · fora das distribuições'}${p.nascimento ? '' : ' · <span class="falta">sem nascimento</span>'}</small>
           </span>
           <span class="chevron">${ICON.lapis}</span>
         </button>`;
@@ -1424,10 +1548,10 @@ function mascaraTel(v) {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
-function textoIdade(nasc) {
+function textoIdade(nasc, semFaixa = false) {
   const i = idade(nasc);
   if (i == null || i < 0 || i > 120) return null;
-  return `${i} anos · ${i >= IDADE_BOX ? 'Box' : 'Sprint'}`;
+  return semFaixa ? `${i} anos` : `${i} anos · ${i >= IDADE_BOX ? 'Box' : 'Sprint'}`;
 }
 
 function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir, textoExcluir = 'Excluir', textoSalvar = 'Salvar' }) {
@@ -1466,7 +1590,7 @@ function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir
         const val = tipo === 'tel' ? mascaraTel(v) : v;
         const extra = tipo === 'tel' ? 'inputmode="tel" data-tel' : tipo === 'date' ? 'data-idade' : '';
         const hint = tipo === 'date'
-          ? `<span class="hint" data-hint-idade data-padrao="${esc(c.dica || '')}">${textoIdade(v) || c.dica || ''}</span>`
+          ? `<span class="hint ${textoIdade(v) ? 'ok' : ''}" data-hint-idade data-padrao="${esc(c.dica || '')}" ${c.semFaixa ? 'data-sem-faixa' : ''}>${textoIdade(v, c.semFaixa) || c.dica || ''}</span>`
           : dica;
         return `<label class="${cls}"><span class="lbl">${c.label}</span>
           <input name="${c.nome}" type="${tipo}" value="${esc(val)}" ${c.obrig ? 'required' : ''} ${af} ${extra}
@@ -1502,8 +1626,9 @@ function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir
     if (t.matches('[data-tel]')) t.value = mascaraTel(t.value);
     if (t.matches('[data-idade]')) {
       const h = form.querySelector('[data-hint-idade]');
-      h.textContent = textoIdade(t.value) || h.dataset.padrao;
-      h.classList.toggle('ok', !!textoIdade(t.value));
+      const txt = textoIdade(t.value, 'semFaixa' in h.dataset);
+      h.textContent = txt || h.dataset.padrao;
+      h.classList.toggle('ok', !!txt);
     }
     t.closest('.field')?.classList.remove('invalido');
     atualizarPrevia();
@@ -1593,7 +1718,8 @@ function formDiretor(p) {
     campos: [
       { nome: 'nome', label: 'Nome', obrig: true, full: true, autofocus: !p },
       { nome: 'equipe', label: 'Equipe', tipo: 'segmentado', padrao: 'F', opcoes: EQUIPES, full: true },
-      { nome: 'telefone', label: 'Telefone', tipo: 'tel', full: true, placeholder: '(11) 91234-5678' },
+      { nome: 'telefone', label: 'Telefone', tipo: 'tel', placeholder: '(11) 91234-5678' },
+      { nome: 'nascimento', label: 'Data de nascimento', tipo: 'date', semFaixa: true, dica: 'Pra entrar nos aniversariantes' },
       { nome: 'ativo', label: 'Ativo', tipo: 'switch', padrao: true, dica: 'Recebe jovens na distribuição' },
     ],
     valores: p || {},
@@ -1867,6 +1993,13 @@ document.addEventListener('click', async e => {
     case 'presenca': await togglePresenca(id); break;
     case 'p-filtro': S.pFiltro = id; atualizarPresenca(); break;
     case 'visitante': formVisitante(); break;
+    case 'aniversarios': dlgAniversarios(); break;
+    case 'ir-sem-nasc':
+      await fecharDlg();
+      Object.assign(S, { tab: 'gerenciar', mgTab: 'jovens', mgFiltro: 'sem_nasc' });
+      render();
+      rolarParaConteudo({ sempre: true });
+      break;
     case 'faixa-j': S.faixaJ = id; S.limJ = PAG_JOVENS; render(); break;
     case 'status': await setStatus(id, el.dataset.status); break;
     case 'contato': {
