@@ -51,7 +51,8 @@ class Sessao:
     def __init__(self, browser, base, tela, quando=ANTES, prints=None, ua=None):
         self.nome = tela
         vp = {'width': 1440, 'height': 950} if tela == 'desktop' else {'width': 390, 'height': 844}
-        self.ctx = browser.new_context(viewport=vp, device_scale_factor=1 if tela == 'desktop' else 2,
+        toque = {} if tela == 'desktop' else {'has_touch': True, 'is_mobile': True}
+        self.ctx = browser.new_context(viewport=vp, device_scale_factor=1 if tela == 'desktop' else 2, **toque,
                                        timezone_id='America/Sao_Paulo', locale='pt-BR', service_workers='block',
                                        **({'user_agent': ua} if ua else {}))
         self.ctx.add_init_script(DETERMINISTICO)
@@ -296,8 +297,30 @@ def t_abas_e_pwa(s):
     checar(man['display'] == 'standalone' and len(man['icons']) == 3, 'manifesto')
 
 
+def t_campos_sem_zoom_e_sem_estouro(s):
+    """No celular, campo com letra < 16px faz o iOS dar zoom; nenhum modal pode ter rolagem lateral."""
+    pg = s.entrar()
+    minimo = 16 if s.nome == 'celular' else 15
+    MEDIR = """min => [...document.querySelectorAll('input:not([type=radio]):not([type=checkbox]), textarea, select')]
+      .filter(e => e.offsetParent && parseFloat(getComputedStyle(e).fontSize) < min).map(e => e.name || e.id || e.type)"""
+    pequenos = []
+    s.aba('jovens'); pequenos += pg.evaluate(MEDIR, minimo)
+    s.aba('gerenciar')
+    for abrir in [lambda: pg.click('.mg-head .btn.primary'),
+                  lambda: (pg.click('.mg-abas >> text=Jovens'), pg.click('[data-act=mgf-painel]'), pg.locator('#mglista .jcard').first.click()),
+                  lambda: (pg.click('.mg-abas >> text=Diretoria'), pg.locator('.dir-card').first.click())]:
+        abrir()
+        pg.wait_for_selector('#form-dlg')
+        pg.wait_for_timeout(350)
+        pequenos += pg.evaluate(MEDIR, minimo)
+        checar(not s.js("(d => d.scrollWidth > d.clientWidth + 1)(document.querySelector('#dlg'))"), 'modal com rolagem lateral')
+        pg.keyboard.press('Escape')
+        pg.wait_for_timeout(450)
+    checar(not pequenos, f'campos com letra menor que {minimo}px: {sorted(set(pequenos))}')
+
+
 TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
-          t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa]
+          t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro]
 
 
 def rodar(prints=None):

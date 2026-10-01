@@ -47,6 +47,7 @@ details[open] summary { margin-bottom: 10px; }
 .mudar { border-top: 1px solid var(--border); padding-top: 14px; }
 .form-grid { display: grid; gap: 16px 14px; grid-template-columns: 1fr 1fr; }
 .form-grid .full { grid-column: 1 / -1; }
+.form-grid > * { min-width: 0; } /* nenhum campo empurra o modal pra fora */
 
 /* opções em botões (equipe, público) */
 .seg-form { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; }
