@@ -2,8 +2,34 @@
 // Rede primeiro: sempre tenta a versão mais nova do site e só usa a cópia
 // guardada quando está sem internet. Dados do Supabase (outro domínio)
 // nunca passam por aqui nem ficam guardados no aparelho.
-const CACHE = 'chamada-box-v1';
-const ARQUIVOS = ['./', './index.html', './styles.css', './app.js', './config.js', './manifest.webmanifest', './icons/icon-192.png'];
+const CACHE = 'chamada-box-v2';
+const ARQUIVOS = [
+  './', './index.html', './styles.css', './config.js', './manifest.webmanifest', './icons/icon-192.png',
+  './js/acoes.js',
+  './js/aniversarios.js',
+  './js/api.js',
+  './js/busca.js',
+  './js/cadastros.js',
+  './js/dados.js',
+  './js/demo.js',
+  './js/dialogos.js',
+  './js/distribuir.js',
+  './js/estado.js',
+  './js/formulario.js',
+  './js/icones.js',
+  './js/main.js',
+  './js/pwa.js',
+  './js/render.js',
+  './js/telas/entrada.js',
+  './js/telas/equipe.js',
+  './js/telas/gerenciar.js',
+  './js/telas/historico.js',
+  './js/telas/jovens.js',
+  './js/telas/minha.js',
+  './js/telas/presenca.js',
+  './js/util.js',
+  './js/vinculos.js',
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARQUIVOS)).then(() => self.skipWaiting()));
