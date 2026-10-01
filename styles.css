@@ -555,7 +555,7 @@ dialog.fechando::backdrop { animation: fundo-sai .18s ease-in forwards; }
 .x svg { width: 16px; height: 16px; }
 .dlg-foot {
   display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
-  position: sticky; bottom: -22px; margin: 4px -22px -22px; padding: 14px 22px;
+  position: sticky; bottom: 0; margin: 4px -22px -22px; padding: 14px 22px;
   background: var(--surface); border-top: 1px solid var(--border);
 }
 .dlg-foot.fim { justify-content: flex-end; }
@@ -759,7 +759,7 @@ button.mg-stat.ativo { border-color: var(--gold); background: var(--gold-soft); 
   dialog.fechando { animation: gaveta-sai .22s ease-in forwards; }
   dialog::before { content: ""; display: block; width: 40px; height: 4px; margin: 10px auto -8px; border-radius: 999px; background: var(--border); }
   .dlg-body { padding: 20px 18px calc(18px + env(safe-area-inset-bottom)); }
-  .dlg-foot { bottom: calc(-18px - env(safe-area-inset-bottom)); margin: 4px -18px calc(-18px - env(safe-area-inset-bottom)); padding: 12px 18px calc(12px + env(safe-area-inset-bottom)); }
+  .dlg-foot { bottom: 0; margin: 4px -18px calc(-18px - env(safe-area-inset-bottom)); padding: 12px 18px calc(12px + env(safe-area-inset-bottom)); }
   .dlg-foot .row-btns { flex: 1; justify-content: flex-end; }
   .mg-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mg-atual { padding: 16px; }
