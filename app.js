@@ -108,8 +108,20 @@ function dataEvento(ev, opts = { weekday: 'long', day: '2-digit', month: '2-digi
   const [y, m, d] = ev.data.split('-').map(Number);
   return new Date(y, m - 1, d).toLocaleDateString('pt-BR', opts);
 }
+// Horário de cada faixa só vale em evento Box + Sprint.
+const porFaixa = ev => ev.publico === 'todos' && (ev.hora_box || ev.hora_sprint);
+function horaGeral(ev) {
+  if (ev.hora || !porFaixa(ev)) return ev.hora || '';
+  return [ev.hora_sprint && `${ev.hora_sprint} (Sprint)`, ev.hora_box && `${ev.hora_box} (Box)`].filter(Boolean).join(' e ');
+}
+function horaPara(ev, j) {
+  const f = porFaixa(ev) && j && faixa(j);
+  if (f === 'box' && ev.hora_box) return ev.hora_box;
+  if (f === 'sprint' && ev.hora_sprint) return ev.hora_sprint;
+  return horaGeral(ev);
+}
 function quandoEvento(ev) {
-  return [dataEvento(ev), ev.hora].filter(Boolean).join(' · ');
+  return [dataEvento(ev), horaGeral(ev)].filter(Boolean).join(' · ');
 }
 const PUBLICO_LABEL = { box: 'Box (17+)', sprint: 'Sprint (até 16)', todos: 'Box + Sprint' };
 
@@ -119,7 +131,8 @@ function mensagem(ev, jovem) {
   const eu = diretor(S.me);
   let quando = '';
   if (ev.data) quando += ` ${dataEvento(ev)}`;
-  if (ev.hora) quando += `, às ${ev.hora}`;
+  const hora = horaPara(ev, jovem);
+  if (hora) quando += `, às ${hora}`;
   if (quando) quando = ',' + quando;
   return (ev.mensagem || MSG_PADRAO)
     .replaceAll('{nome}', primeiroNome(jovem.nome))
@@ -127,7 +140,7 @@ function mensagem(ev, jovem) {
     .replaceAll('{evento}', ev.nome)
     .replaceAll('{quando}', quando)
     .replaceAll('{data}', dataEvento(ev))
-    .replaceAll('{hora}', ev.hora || '');
+    .replaceAll('{hora}', hora);
 }
 function linkWhats(ev, jovem) {
   const n = telIntl(jovem.telefone);
@@ -583,7 +596,7 @@ function chipsEvento(ev) {
   const data = dataEvento(ev);
   return [
     data && [ICON.cal, data.charAt(0).toUpperCase() + data.slice(1)],
-    ev.hora && [ICON.relogio, ev.hora],
+    horaGeral(ev) && [ICON.relogio, horaGeral(ev)],
     [ICON.grupo, PUBLICO_LABEL[ev.publico]],
     [ICON.tel, plural(ev.chamadas_por_jovem, 'chamada', 'chamadas') + ' por jovem'],
   ].filter(Boolean).map(([ic, t]) => `<li>${ic}<span>${esc(t)}</span></li>`).join('');
@@ -1514,7 +1527,7 @@ function mgEventos() {
       return `
       <button class="ev-item ${e.arquivado ? 'arq' : ''}" data-act="editar-evento" data-id="${e.id}">
         ${calTile(e)}
-        <span class="ev-item-txt"><strong>${esc(e.nome)}</strong><small>${esc([dataEvento(e, { weekday: 'long' }), e.hora, PUBLICO_LABEL[e.publico]].filter(Boolean).join(' · '))}</small></span>
+        <span class="ev-item-txt"><strong>${esc(e.nome)}</strong><small>${esc([dataEvento(e, { weekday: 'long' }), horaGeral(e), PUBLICO_LABEL[e.publico]].filter(Boolean).join(' · '))}</small></span>
         <span class="pill ${cls}">${st}</span>
         <span class="chevron">${ICON.chevron}</span>
       </button>`;
@@ -1797,11 +1810,20 @@ function textoIdade(nasc, semFaixa = false) {
 
 function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir, textoExcluir = 'Excluir', textoSalvar = 'Salvar', extra = '' }) {
   const campo = c => {
+    if (c.quando) {
+      const html = campoBase(c);
+      return `<div class="${c.full ? 'full' : ''} campo-cond" data-quando="${c.quando}">${html}</div>`;
+    }
+    return campoBase(c);
+  };
+  const campoBase = c => {
     const v = valores[c.nome] ?? c.padrao ?? '';
     const cls = `field ${c.full ? 'full' : ''}`;
     const dica = c.dica ? `<span class="hint">${c.dica}</span>` : '';
     const af = c.autofocus ? 'autofocus' : '';
     switch (c.tipo) {
+      case 'nota':
+        return `<p class="form-nota">${ICON.info}<span>${c.texto}</span></p>`;
       case 'switch':
         return `<label class="switch-row full">
           <span class="switch-txt"><strong>${c.label}</strong>${c.dica ? `<small>${c.dica}</small>` : ''}</span>
@@ -1824,7 +1846,7 @@ function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir
         return `<div class="${cls}"><span class="lbl">${c.label}</span>
           <textarea name="${c.nome}" rows="4" placeholder="${esc(MSG_PADRAO)}">${esc(v)}</textarea>
           <div class="vars"><span class="hint">Inserir:</span>${['nome', 'eu', 'evento', 'quando'].map(x => `<button type="button" class="var" data-var="{${x}}">{${x}}</button>`).join('')}</div>
-          <div class="previa"><span class="eyebrow">Prévia no WhatsApp</span><div class="bolha" data-previa></div></div>
+          <div class="previa"><span class="eyebrow">Prévia no WhatsApp</span><div class="previa-bolhas" data-previa></div></div>
           ${dica}</div>`;
       default: {
         const tipo = c.tipo || 'text';
@@ -1854,11 +1876,24 @@ function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir
     </form>`, { tipo: 'form' });
 
   const form = $('#form-dlg');
+  const aplicarQuando = () => form.querySelectorAll('[data-quando]').forEach(el => {
+    const [k, v] = el.dataset.quando.split('=');
+    el.hidden = form.elements[k]?.value !== v;
+  });
+  aplicarQuando();
   const previa = form.querySelector('[data-previa]');
   const atualizarPrevia = () => {
     if (!previa) return;
-    const ev = { nome: form.elements.nome?.value.trim() || 'Evento', data: form.elements.data?.value, hora: form.elements.hora?.value.trim(), mensagem: form.elements.mensagem.value.trim() };
-    previa.textContent = mensagem(ev, { nome: 'Ana' });
+    const val = k => form.elements[k]?.value.trim() || '';
+    const ev = {
+      nome: val('nome') || 'Evento', data: val('data'), hora: val('hora'), publico: val('publico'),
+      hora_box: val('hora_box'), hora_sprint: val('hora_sprint'), mensagem: val('mensagem'),
+    };
+    const ano = new Date().getFullYear();
+    previa.innerHTML = porFaixa(ev)
+      ? [['Pra quem é do Box', { nome: 'Ana', nascimento: `${ano - 20}-01-01` }], ['Pra quem é do Sprint', { nome: 'Léo', nascimento: `${ano - 15}-01-01` }]]
+        .map(([t, j]) => `<small class="previa-rot">${t}</small><div class="bolha">${esc(mensagem(ev, j))}</div>`).join('')
+      : `<div class="bolha">${esc(mensagem(ev, { nome: 'Ana' }))}</div>`;
   };
   atualizarPrevia();
 
@@ -1872,6 +1907,7 @@ function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir
       h.classList.toggle('ok', !!txt);
     }
     t.closest('.field')?.classList.remove('invalido');
+    aplicarQuando();
     atualizarPrevia();
   });
   form.addEventListener('click', e => {
@@ -1895,7 +1931,7 @@ function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, onExcluir
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const dados = { ...valores };
-    for (const c of campos) {
+    for (const c of campos.filter(c => c.tipo !== 'nota')) {
       const el = form.elements[c.nome];
       dados[c.nome] = c.tipo === 'switch' ? el.checked : c.tipo === 'stepper' ? Number(el.value) : String(el.value).trim();
     }
@@ -1989,10 +2025,14 @@ function formEvento(e) {
     campos: [
       { nome: 'nome', label: 'Nome', obrig: true, full: true, autofocus: !e, placeholder: 'Ex.: Box Day, Vigília, Retiro' },
       { nome: 'data', label: 'Data', tipo: 'date' },
-      { nome: 'hora', label: 'Horário', placeholder: 'Ex.: 17h Teens · 20h Juventude' },
+      { nome: 'hora', label: 'Horário', placeholder: 'Ex.: 19h30' },
       { nome: 'publico', label: 'Quem chamar', tipo: 'segmentado', padrao: 'box', full: true, opcoes: [
         ['box', 'Box', `${IDADE_BOX} anos ou mais`], ['sprint', 'Sprint', `até ${IDADE_BOX - 1} anos`], ['todos', 'Box + Sprint', 'todo mundo'],
       ] },
+      { nome: 'hora_sprint', label: 'Horário do Sprint', placeholder: 'Ex.: 17h', quando: 'publico=todos', dica: 'Opcional' },
+      { nome: 'hora_box', label: 'Horário do Box', placeholder: 'Ex.: 20h', quando: 'publico=todos', dica: 'Opcional' },
+      { nome: 'faixa_info', tipo: 'nota', quando: 'publico=todos', full: true,
+        texto: 'Com os horários por faixa, cada jovem recebe na mensagem o horário da faixa dele. Quem está sem data de nascimento recebe o horário geral.' },
       { nome: 'chamadas_por_jovem', label: 'Diretores por jovem', tipo: 'stepper', padrao: 2, min: 1, max: 5, full: true, dica: 'Quantas pessoas da diretoria chamam cada jovem' },
       { nome: 'mensagem', label: 'Mensagem do WhatsApp', tipo: 'mensagem', full: true, dica: 'Deixe vazio pra usar a mensagem padrão.' },
       ...(e ? [{ nome: 'arquivado', label: 'Arquivar evento', tipo: 'switch', dica: 'Some da lista de eventos abertos' }] : []),
