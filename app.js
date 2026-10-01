@@ -42,6 +42,9 @@ const S = {
   histFiltro: 'todos',
   mgTab: LS.get('mgTab') || 'eventos',
   mgFiltro: 'todos',
+  mgF: { faixa: '', idadeMin: '', idadeMax: '', mes: '', civil: '', equipe: '' },
+  mgOrdem: 'nome',
+  mgPainel: false,
   buscaP: '',
   pFiltro: 'todos',
   limJ: 20,
@@ -206,6 +209,7 @@ const ICON = {
   lista: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 11l2 2 4-4M9 17h6"/></svg>',
   jovens: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7.5" r="3"/><circle cx="5" cy="10" r="2.2"/><circle cx="19" cy="10" r="2.2"/><path d="M6.5 20c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5M1.5 19c0-2.2 1.4-3.8 3.5-4.2M22.5 19c0-2.2-1.4-3.8-3.5-4.2"/></svg>',
   compartilhar: '<svg class="ic-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>',
+  filtro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>',
   user: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
 };
 
@@ -827,8 +831,9 @@ function cardJovem({ j, l, s }) {
 
 function htmlListaJovens() {
   const q = semAcento(S.busca);
+  const busca = buscaInteligente(S.busca);
   const rows = linhasJovens()
-    .filter(r => passaFiltro(r, S.filtro) && (!q || semAcento(r.j.nome).includes(q)))
+    .filter(r => passaFiltro(r, S.filtro) && busca(r.j))
     .sort((a, b) => byNome(a.j, b.j));
   if (!rows.length) {
     return `<div class="vazio"><p>${q ? `Ninguém encontrado com “${esc(S.busca.trim())}”.` : 'Ninguém nesse filtro.'}</p></div>`;
@@ -854,7 +859,7 @@ function viewJovens() {
   return `
     <div class="jtoolbar">
       <label class="busca">${ICON.lupa}
-        <input type="search" id="busca" placeholder="Buscar pelo nome…" value="${esc(S.busca)}" aria-label="Buscar jovem" autocomplete="off">
+        <input type="search" id="busca" placeholder="Nome, 18, box, casado, outubro…" value="${esc(S.busca)}" aria-label="Buscar jovem" autocomplete="off">
       </label>
       <div class="jfiltros">
         <div class="chips" role="group" aria-label="Filtrar por status">${filtros.map(([id, l]) => `
@@ -1285,9 +1290,10 @@ function cardPresenca({ j, l, s, p }) {
 
 function htmlListaPresenca() {
   const q = semAcento(S.buscaP);
+  const busca = buscaInteligente(S.buscaP);
   const d = dadosPresenca();
   const rows = d.rows
-    .filter(r => passaFiltroP(r, S.pFiltro) && (!q || semAcento(r.j.nome).includes(q)))
+    .filter(r => passaFiltroP(r, S.pFiltro) && busca(r.j))
     .sort((a, b) => byNome(a.j, b.j));
   if (!rows.length) {
     if (q) {
@@ -1536,35 +1542,166 @@ function mgEventos() {
     }).join('') || '<div class="vazio"><p>Nenhum evento ainda.</p></div>'}</div>`;
 }
 
+/* ---------------------------------------------------------------------
+   Busca inteligente: cada termo precisa bater em algum dado da pessoa.
+   "18" idade · "18-25" faixa de idade · "17+" · "box"/"sprint" ·
+   "casado"/"solteira"… · "outubro"/"out" mês do aniversário · "12/10" dia ·
+   "semana" aniversário nos próximos 7 dias · "meninas"/"masculino" ·
+   pedaço do telefone · nome, sobrenome, observação e vínculos.
+   --------------------------------------------------------------------- */
+const MESES = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+const PALAVRAS_VAZIAS = new Set(['de', 'do', 'da', 'dos', 'das', 'e', 'em', 'com', 'anos', 'ano', 'idade', 'aniversario', 'aniversariante', 'aniversariantes', 'niver', 'mes', 'quem', 'faz', 'que']);
+const TERMOS_CIVIL = {
+  casado: 'casado', casada: 'casado', casados: 'casado', casadas: 'casado',
+  solteiro: 'solteiro', solteira: 'solteiro', solteiros: 'solteiro', solteiras: 'solteiro',
+  namorando: 'namorando', namorado: 'namorando', namorada: 'namorando',
+  noivo: 'noivo', noiva: 'noivo', noivos: 'noivo', noivas: 'noivo',
+};
+const TERMOS_EQUIPE = {
+  feminina: 'F', feminino: 'F', meninas: 'F', menina: 'F', mulheres: 'F', mulher: 'F',
+  masculina: 'M', masculino: 'M', meninos: 'M', menino: 'M', homens: 'M', homem: 'M',
+};
+
+function termoBusca(t) {
+  let m;
+  if ((m = t.match(/^(\d{1,3})\s*(?:-|a|ate)\s*(\d{1,3})$/))) {
+    const [a, b] = [Number(m[1]), Number(m[2])].sort((x, y) => x - y);
+    return p => { const i = idade(p.nascimento); return i != null && i >= a && i <= b; };
+  }
+  if ((m = t.match(/^(\d{1,3})\+$/))) return p => (idade(p.nascimento) ?? -1) >= Number(m[1]);
+  if (/^\d{1,3}$/.test(t) && Number(t) <= 120) return p => idade(p.nascimento) === Number(t);
+  if ((m = t.match(/^(\d{1,2})\/(\d{1,2})$/))) {
+    const alvo = `-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+    return p => !!p.nascimento && p.nascimento.endsWith(alvo);
+  }
+  if (/^\d{4,}$/.test(t)) return p => digitos(p.telefone).includes(t);
+  if (t === 'box' || t === 'boxer' || t === 'boxers') return p => faixa(p) === 'box';
+  if (t === 'sprint' || t === 'teens' || t === 'teen') return p => faixa(p) === 'sprint';
+  if (t === 'semana') return p => { const a = proximoAniver(p.nascimento); return !!a && a.dias <= 6; };
+  if (t === 'hoje') return p => proximoAniver(p.nascimento)?.dias === 0;
+  if (TERMOS_CIVIL[t]) return p => p.estado_civil === TERMOS_CIVIL[t];
+  if (TERMOS_EQUIPE[t]) return p => (p.genero || p.equipe) === TERMOS_EQUIPE[t];
+  const mes = t.length >= 3 ? MESES.findIndex(n => n === t || (t.length === 3 && n.startsWith(t))) : -1;
+  if (mes >= 0) return p => !!p.nascimento && Number(p.nascimento.slice(5, 7)) === mes + 1;
+  return p => {
+    const vinc = vinculosDe(p.id).map(v => textoVinculo(v, p.id)?.texto || '').join(' ');
+    return semAcento(`${p.nome} ${p.obs || ''} ${vinc}`).includes(t);
+  };
+}
+
+function buscaInteligente(texto) {
+  const termos = semAcento(texto).split(/\s+/).filter(t => t && !PALAVRAS_VAZIAS.has(t));
+  if (!termos.length) return () => true;
+  const testes = termos.map(termoBusca);
+  return p => testes.every(f => f(p));
+}
+
+/* ---------------------------------------------------------------------
+   Gerenciar › Jovens: filtros, ordem e lista
+   --------------------------------------------------------------------- */
 const MG_FILTROS = {
   todos: ['Todos', () => true],
   sem_tel: ['Sem telefone', j => j.ativo && !digitos(j.telefone)],
   sem_nasc: ['Sem nascimento', j => j.ativo && !j.nascimento],
   inativos: ['Inativos', j => !j.ativo],
 };
+const MG_F_PADRAO = { faixa: '', idadeMin: '', idadeMax: '', mes: '', civil: '', equipe: '' };
+const MES_CURTO = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+const MG_ORDENS = [['nome', 'Nome'], ['idade', 'Idade'], ['aniver', 'Próximo aniversário']];
+
+function filtroPainel(j) {
+  const f = S.mgF;
+  if (f.faixa === 'box' || f.faixa === 'sprint') { if (faixa(j) !== f.faixa) return false; }
+  else if (f.faixa === 'sem' && j.nascimento) return false;
+  const i = idade(j.nascimento);
+  if (f.idadeMin !== '' && (i == null || i < Number(f.idadeMin))) return false;
+  if (f.idadeMax !== '' && (i == null || i > Number(f.idadeMax))) return false;
+  if (f.mes === 'semana') { const a = proximoAniver(j.nascimento); if (!a || a.dias > 6) return false; }
+  else if (f.mes !== '' && (!j.nascimento || Number(j.nascimento.slice(5, 7)) !== Number(f.mes))) return false;
+  if (f.civil === 'nao' ? !!j.estado_civil : f.civil && j.estado_civil !== f.civil) return false;
+  if (f.equipe && j.genero !== f.equipe) return false;
+  return true;
+}
+
+function resumoFiltros() {
+  const f = S.mgF;
+  const ch = [];
+  if (f.faixa) ch.push(['faixa', { box: 'Box', sprint: 'Sprint', sem: 'Sem idade' }[f.faixa]]);
+  if (f.idadeMin !== '' || f.idadeMax !== '') {
+    ch.push(['idade', f.idadeMin !== '' && f.idadeMax !== '' ? `${f.idadeMin} a ${f.idadeMax} anos` : f.idadeMin !== '' ? `${f.idadeMin}+ anos` : `até ${f.idadeMax} anos`]);
+  }
+  if (f.mes) ch.push(['mes', f.mes === 'semana' ? '🎂 esta semana' : `🎂 ${MESES[f.mes - 1].replace('marco', 'março')}`]);
+  if (f.civil) ch.push(['civil', f.civil === 'nao' ? 'Relacionamento não informado' : ESTADO_CIVIL.find(e => e[0] === f.civil)[1]]);
+  if (f.equipe) ch.push(['equipe', f.equipe === 'F' ? 'Feminina' : 'Masculina']);
+  return ch;
+}
+
+function listaMgFiltrada() {
+  const busca = buscaInteligente(S.buscaMg);
+  const js = S.data.jovens.filter(j => MG_FILTROS[S.mgFiltro][1](j) && filtroPainel(j) && busca(j));
+  const ord = {
+    nome: (a, b) => byNome(a, b),
+    idade: (a, b) => (idade(a.nascimento) ?? 999) - (idade(b.nascimento) ?? 999) || byNome(a, b),
+    aniver: (a, b) => (proximoAniver(a.nascimento)?.dias ?? 999) - (proximoAniver(b.nascimento)?.dias ?? 999) || byNome(a, b),
+  }[S.mgOrdem];
+  return js.sort(ord);
+}
 
 function htmlListaMgJovens() {
-  const q = semAcento(S.buscaMg);
-  const js = S.data.jovens
-    .filter(MG_FILTROS[S.mgFiltro][1])
-    .filter(j => !q || semAcento(j.nome).includes(q));
-  if (!js.length) return `<div class="vazio"><p>${q ? `Ninguém encontrado com “${esc(S.buscaMg.trim())}”.` : 'Ninguém nesse filtro. 🎉'}</p></div>`;
-  return `<div class="jgrid">${js.map(j => {
+  const js = listaMgFiltrada();
+  const total = S.data.jovens.length;
+  const ch = resumoFiltros();
+  const resumo = `
+    <div class="mg-resumo">
+      <span class="dim small">${js.length === total ? plural(total, 'jovem', 'jovens') : `${js.length} de ${total} jovens`}</span>
+      ${ch.map(([k, t]) => `<button class="chip-filtro" data-act="mgf-limpar" data-id="${k}">${esc(t)}${ICON.xis}</button>`).join('')}
+      ${ch.length > 1 ? '<button class="link-btn" data-act="mgf-limpar" data-id="tudo">Limpar tudo</button>' : ''}
+    </div>`;
+  if (!js.length) {
+    return resumo + `<div class="vazio"><p>${S.buscaMg.trim() || ch.length ? 'Ninguém com essa combinação.' : 'Ninguém nesse filtro. 🎉'}</p></div>`;
+  }
+  return resumo + `<div class="jgrid">${js.map(j => {
     const tel = digitos(j.telefone);
+    const an = proximoAniver(j.nascimento);
     return `
     <button class="jcard mg-jovem ${j.ativo ? '' : 'inativo'}" data-act="editar-jovem" data-id="${j.id}">
       <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
       <span class="jcard-txt">
-        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}${j.ativo ? '' : '<span class="pill">Inativo</span>'}</span>
+        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}${badgeAniver(j)}${j.ativo ? '' : '<span class="pill">Inativo</span>'}</span>
         <span class="jcard-resp">
           <span>${j.genero === 'F' ? 'Feminina' : 'Masculina'}</span>
           ${tel ? `<span>${esc(fmtTel(j.telefone))}</span>` : '<span class="falta">sem telefone</span>'}
-          ${j.nascimento ? '' : '<span class="falta">sem nascimento</span>'}
+          ${an ? `<span>🎂 ${an.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</span>` : '<span class="falta">sem nascimento</span>'}
+          ${j.estado_civil ? `<span>${ESTADO_LABEL[j.estado_civil][j.genero]}</span>` : ''}
         </span>
       </span>
       <span class="chevron">${ICON.lapis}</span>
     </button>`;
   }).join('')}</div>`;
+}
+
+function painelFiltros() {
+  const f = S.mgF;
+  const grupo = (titulo, chave, opcoes) => `
+    <div class="pf-grupo"><span class="eyebrow">${titulo}</span>
+      <div class="chips">${opcoes.map(([v, l]) => `<button class="chip" data-act="mgf" data-k="${chave}" data-v="${v}" aria-pressed="${String(chave === 'ordem' ? S.mgOrdem : f[chave]) === String(v)}">${l}</button>`).join('')}</div>
+    </div>`;
+  return `
+    <div class="painel-filtros" id="mgpainel">
+      ${grupo('Faixa', 'faixa', [['', 'Todas'], ['box', 'Box'], ['sprint', 'Sprint'], ['sem', 'Sem idade']])}
+      <div class="pf-grupo"><span class="eyebrow">Idade</span>
+        <div class="pf-idade">
+          <input type="number" inputmode="numeric" min="0" max="120" placeholder="de" data-mgf-idade="idadeMin" value="${esc(f.idadeMin)}" aria-label="Idade mínima">
+          <span class="dim">até</span>
+          <input type="number" inputmode="numeric" min="0" max="120" placeholder="até" data-mgf-idade="idadeMax" value="${esc(f.idadeMax)}" aria-label="Idade máxima">
+          <span class="dim">anos</span>
+        </div>
+      </div>
+      ${grupo('Aniversário', 'mes', [['', 'Qualquer'], ['semana', 'Esta semana'], ...MES_CURTO.map((m, i) => [String(i + 1), m])])}
+      ${grupo('Relacionamento', 'civil', [['', 'Qualquer'], ['solteiro', 'Solteiro(a)'], ['namorando', 'Namorando'], ['noivo', 'Noivo(a)'], ['casado', 'Casado(a)'], ['nao', 'Não informado']])}
+      ${grupo('Equipe', 'equipe', [['', 'Todas'], ['F', 'Feminina'], ['M', 'Masculina']])}
+      ${grupo('Ordenar por', 'ordem', MG_ORDENS)}
+    </div>`;
 }
 
 function mgJovens() {
@@ -1575,7 +1712,8 @@ function mgJovens() {
   const nFiltro = id => d.jovens.filter(MG_FILTROS[id][1]).length;
   const stat = (n, label, cls, filtro) => filtro
     ? `<button class="mg-stat ${cls} ${S.mgFiltro === filtro ? 'ativo' : ''}" data-act="mg-filtro" data-id="${S.mgFiltro === filtro ? 'todos' : filtro}"><strong>${n}</strong><span>${label}</span></button>`
-    : `<div class="mg-stat ${cls}"><strong>${n}</strong><span>${label}</span></div>`;
+    : `<button class="mg-stat ${cls} ${S.mgF.faixa === cls ? 'ativo' : ''}" data-act="mgf" data-k="faixa" data-v="${S.mgF.faixa === cls ? '' : cls}"><strong>${n}</strong><span>${label}</span></button>`;
+  const nAtivos = resumoFiltros().length;
   return `
     <div class="mg-head">
       <div><h2>Jovens</h2><p>${plural(ativos.length, 'jovem ativo', 'jovens ativos')} no cadastro.</p></div>
@@ -1591,10 +1729,15 @@ function mgJovens() {
       ${stat(nFiltro('sem_nasc'), 'sem nascimento', nFiltro('sem_nasc') ? 'alerta' : '', 'sem_nasc')}
     </div>
     <div class="jtoolbar">
-      <label class="busca">${ICON.lupa}
-        <input type="search" id="busca-mg" placeholder="Buscar pelo nome…" value="${esc(S.buscaMg)}" aria-label="Buscar jovem" autocomplete="off">
-      </label>
-      <div class="jfiltros"><div class="chips" role="group" aria-label="Filtrar">${Object.entries(MG_FILTROS).map(([id, [l]]) => `
+      <div class="pres-busca">
+        <label class="busca">${ICON.lupa}
+          <input type="search" id="busca-mg" placeholder="Nome, 18, box, casado, outubro…" value="${esc(S.buscaMg)}" aria-label="Buscar jovem" autocomplete="off">
+        </label>
+        <button class="btn ${S.mgPainel || nAtivos ? 'ativo-filtro' : ''}" data-act="mgf-painel" aria-expanded="${S.mgPainel}">${ICON.filtro}<span>Filtros</span>${nAtivos ? `<span class="n-filtro">${nAtivos}</span>` : ''}</button>
+      </div>
+      <p class="busca-dica">Combine termos: <code>sprint outubro</code> · <code>casado 25-30</code> · <code>17+</code> · <code>12/10</code> · <code>semana</code> · pedaço do telefone</p>
+      ${S.mgPainel ? painelFiltros() : ''}
+      <div class="jfiltros"><div class="chips" role="group" aria-label="Cadastro">${Object.entries(MG_FILTROS).map(([id, [l]]) => `
         <button class="chip" data-act="mg-filtro" data-id="${id}" aria-pressed="${S.mgFiltro === id}">${l}<span class="c">${nFiltro(id)}</span></button>`).join('')}
       </div></div>
     </div>
@@ -2399,6 +2542,18 @@ document.addEventListener('click', async e => {
       LS.set('mgTab', id);
       render();
       break;
+    case 'mgf-painel': S.mgPainel = !S.mgPainel; render(); break;
+    case 'mgf':
+      if (el.dataset.k === 'ordem') S.mgOrdem = el.dataset.v;
+      else S.mgF[el.dataset.k] = el.dataset.v;
+      render();
+      break;
+    case 'mgf-limpar':
+      if (id === 'tudo') S.mgF = { ...MG_F_PADRAO };
+      else if (id === 'idade') Object.assign(S.mgF, { idadeMin: '', idadeMax: '' });
+      else S.mgF[id] = '';
+      render();
+      break;
     case 'mg-filtro':
       S.mgFiltro = id;
       render();
@@ -2416,6 +2571,11 @@ document.addEventListener('input', e => {
   if (e.target.id === 'busca-p') {
     S.buscaP = e.target.value;
     $('#plista').innerHTML = htmlListaPresenca();
+    return;
+  }
+  if (e.target.matches('[data-mgf-idade]')) {
+    S.mgF[e.target.dataset.mgfIdade] = e.target.value.replace(/\D/g, '').slice(0, 3);
+    $('#mglista').innerHTML = htmlListaMgJovens();
     return;
   }
   if (e.target.id === 'busca-mg') {
