@@ -25,11 +25,13 @@
 .vinc-pessoa.sel { border-color: var(--accent); background: var(--accent-soft); }
 .seg-form.quebra { grid-auto-flow: row; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); }
 .pres-junto {
-  grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: -4px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
   padding: 10px 8px 10px 14px; border-radius: 12px; border: 1px dashed rgba(56, 183, 135, .5); background: var(--success-soft);
   font-size: 13.5px; animation: fundo-entra .25s ease-out;
 }
 .pres-junto .chips { flex: 1; }
+.pres-grid { align-items: start; }
+.pcell { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .pres-junto .chip { display: inline-flex; align-items: center; gap: 5px; border-color: rgba(56, 183, 135, .5); color: var(--text); background: var(--bg); }
 .pres-junto .chip svg { width: 13px; height: 13px; color: var(--success); }
 .pres-junto .chip small { color: var(--text-dim); font-weight: 500; }

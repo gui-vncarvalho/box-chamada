@@ -8,12 +8,15 @@ import { distribuir } from './distribuir.js';
 import { LS, S, STATUS_BY_ID } from './estado.js';
 import { ICON } from './icones.js';
 import { instalarApp } from './pwa.js';
-import { dlgEventos, render, rolarParaConteudo } from './render.js';
+import { dlgEventos, render, renderView, rolarParaConteudo } from './render.js';
 import { htmlListaMgJovens, MG_F_PADRAO } from './telas/gerenciar.js';
 import { atualizarListaJovens, PAG_JOVENS } from './telas/jovens.js';
 import { atualizarPresenca, formVisitante, htmlListaPresenca, presenca, togglePresenca } from './telas/presenca.js';
 import { $, esc, faixa, idade, plural, quandoEvento, toast } from './util.js';
 import { atualizarTelaVinculos, dlgNovoVinculo, pessoa, removerVinculo } from './vinculos.js';
+import { dlgResumoCulto } from './frequencia.js';
+import { dlgJustificar } from './justificativas.js';
+import { encerrarPresenca, reabrirPresenca } from './telas/presenca.js';
 
 export function textoGrupo() {
   const ev = evento();
@@ -148,8 +151,16 @@ export async function aoClicar(e) {
     }
     case 'filtro': S.filtro = id; S.limJ = PAG_JOVENS; render(); break;
     case 'hist-filtro': S.histFiltro = id; render(); break;
+    case 'hist-modo': S.histModo = id; render(); break;
+    case 'p-culto': S.pCulto = id; S.sugJunto = null; render(); break;
+    case 'encerrar-presenca': await encerrarPresenca(); break;
+    case 'reabrir-presenca': await reabrirPresenca(); break;
+    case 'resumo-culto': S.resumo = null; dlgResumoCulto(id); break;
+    case 'resumo-aba': S.resumo.aba = id; dlgResumoCulto(S.resumo.eid); break;
+    case 'resumo-culto-filtro': S.resumo.culto = id; dlgResumoCulto(S.resumo.eid); break;
+    case 'justificar': dlgJustificar(el.dataset.evento, id, atualizarAposJustificar); break;
     case 'presenca': await togglePresenca(id); break;
-    case 'p-filtro': S.pFiltro = id; atualizarPresenca(); break;
+    case 'p-filtro': S.pFiltro = id; S.pFiltroManual = true; atualizarPresenca(); break;
     case 'visitante': formVisitante(); break;
     case 'aniversarios': dlgAniversarios(); break;
     case 'instalar':
@@ -280,4 +291,13 @@ export async function aoEnviar(e) {
     S.erroLogin = err.codigoInvalido ? 'Código incorreto.' : 'Não consegui conectar. Confira a internet.';
   }
   render();
+}
+
+// Depois de anotar um motivo: redesenha o modal aberto (resumo ou jovem) e a tela de trás.
+function atualizarAposJustificar() {
+  if (dlg().open && S.dlg?.tipo === 'resumo') dlgResumoCulto(S.dlg.id);
+  else if (dlg().open && S.dlg?.tipo === 'jovem') renderDlgJovem(S.dlg.id);
+  const y = window.scrollY;
+  if (dlg().open) { const v = $('#view'); if (v) v.innerHTML = renderView(); } else render();
+  window.scrollTo(0, y);
 }

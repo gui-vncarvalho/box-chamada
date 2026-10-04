@@ -1,0 +1,71 @@
+/* Presença ao longo do tempo (histórico, resumo, frequência) e justificativas. */
+
+.hist-modos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; margin-bottom: 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); }
+.hist-modos button { min-height: 40px; border: none; border-radius: 9px; background: transparent; color: var(--text-dim); font-weight: 600; font-size: 14px; }
+.hist-modos button[aria-selected="true"] { background: var(--surface-2); color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
+.sumiu-vazio { margin: 0; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--border); }
+.jcard.sumiu { border-color: rgba(232, 165, 61, .45); }
+.jcard.sumiu .avatar { box-shadow: inset 0 0 0 2px var(--gold); }
+
+/* resumo de um culto */
+.resumo-nums { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.resumo-nums > div { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0, 0, 0, .12); }
+.resumo-nums strong { font-family: 'Oswald', sans-serif; font-size: 26px; line-height: 1; }
+.resumo-nums strong span { font-size: 16px; color: var(--text-dim); }
+.resumo-nums small { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+.nomes { display: flex; flex-wrap: wrap; gap: 6px; }
+.nomes span { padding: 4px 10px; border-radius: 999px; background: var(--surface-2); font-size: 13px; }
+.nomes span.dir { background: var(--gold-soft); color: var(--gold); }
+.just-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.just-lista li { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; }
+
+/* justificativa */
+.just-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; background: var(--blue-soft); color: var(--text); font-size: 12.5px; font-weight: 500; }
+.just-editar { border: none; background: none; padding: 0; text-align: left; }
+.just-editar:hover .just-pill { box-shadow: inset 0 0 0 1px var(--blue); }
+.motivos { gap: 6px; }
+.motivos .chip { padding: 7px 12px; font-size: 13.5px; }
+.pcard-just { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; margin-top: -4px; border-radius: 10px; background: var(--surface-2); font-size: 13px; color: var(--text-dim); }
+.pcard-just b { color: var(--accent); }
+
+/* frequência de uma pessoa */
+.freq-resumo { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; }
+.freq-pontos { display: inline-flex; gap: 4px; }
+.freq-pontos span { width: 12px; height: 12px; border-radius: 50%; }
+.freq-pontos .veio { background: var(--success); }
+.freq-pontos .faltou { background: transparent; box-shadow: inset 0 0 0 2px var(--accent); }
+.freq-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; }
+.freq-lista li { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.freq-lista li:last-child { border-bottom: none; }
+.freq-lista li.veio > span:first-child { color: var(--success); }
+.freq-lista li.faltou > span:first-child { color: var(--text-dim); }
+.freq-lista small { color: var(--text-dim); }
+
+/* resumo do culto: abas, grade compacta e faltas */
+.resumo-cultos { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: -4px 0 0; font-size: 13px; color: var(--text-dim); }
+.resumo-cultos b { color: var(--text); font-weight: 600; }
+.resumo-abas { margin-bottom: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.resumo-abas button { padding: 0 6px; white-space: nowrap; }
+.resumo-abas .c { font-size: 11.5px; padding: 0 7px; border-radius: 999px; background: var(--bg); color: var(--text-dim); margin-left: 4px; }
+.resumo-abas [aria-selected="true"] .c { background: var(--accent); color: #fff; }
+.resumo-corpo { display: flex; flex-direction: column; gap: 12px; min-height: 200px; }
+.resumo-corpo .grupo-titulo { margin: 4px 0 -2px; }
+.resumo-filtro { gap: 6px; }
+.rp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 6px; }
+.rp { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 7px 10px; border-radius: 10px; background: rgba(0, 0, 0, .14); border: 1px solid var(--border); }
+.rp .avatar { width: 32px; height: 32px; font-size: 12px; box-shadow: inset 0 0 0 1px var(--border); }
+.rp.dir .avatar { box-shadow: inset 0 0 0 1px rgba(232, 165, 61, .55); }
+.rp-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rp-txt strong { font-size: 13.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rp-txt small { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-dim); }
+.rp-txt .faixa, .rp-txt .pill { font-size: 10.5px; padding: 1px 6px; }
+.rp-cultos { color: var(--success); font-weight: 600; }
+.faltas-resumo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); font-size: 13.5px; }
+.faltas-resumo strong { margin-right: 4px; }
+.just-lista li { justify-content: flex-start; }
+.just-lista li .avatar { width: 30px; height: 30px; font-size: 11.5px; box-shadow: inset 0 0 0 1px var(--border); }
+.just-lista .jf-nome { flex: 1; min-width: 120px; }
+
+@media (max-width: 520px) {
+  .resumo-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

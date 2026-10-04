@@ -66,3 +66,47 @@
   .pres-tile strong { font-size: 22px; }
   .pres-tile small { font-size: 11px; }
 }
+
+/* cultos do dia (Sprint / Box) */
+.pres-cultos { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; margin-bottom: 14px; }
+.pres-cultos button {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 12px;
+  border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text-dim);
+  font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; letter-spacing: .3px;
+}
+.pres-cultos button[aria-selected="true"] { color: var(--text); border-color: var(--success); background: linear-gradient(180deg, var(--success-soft), transparent), var(--surface); box-shadow: inset 0 0 0 1px var(--success); }
+.pres-cultos .c { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; min-width: 22px; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--text-dim); }
+.pres-cultos button[aria-selected="true"] .c { background: var(--success); color: #06281b; }
+.st-diretoria { --st: var(--gold); --st-soft: var(--gold-soft); }
+.pres-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.pcheck .no-outro { color: var(--success); font-weight: 600; }
+.pcheck.dir .avatar { box-shadow: inset 0 0 0 1px rgba(232, 165, 61, .5); }
+
+/* lista encerrada: card no padrão dos outros e lista só pra consulta */
+.pres-fechada .pcheck { pointer-events: none; }
+.pres-fechada .pcheck:not(.presente) .pcheck-box { visibility: hidden; }
+.pres-encerrada, .pres-encerrar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 18px 20px; border-radius: 18px;
+  border: 1px solid var(--border); background: var(--surface);
+}
+.pres-encerrada {
+  margin-bottom: 16px;
+  background: radial-gradient(80% 160% at 0% 0%, rgba(56, 183, 135, .14), transparent 60%), var(--surface);
+}
+.pres-encerrada-ic, .pres-encerrar-ic { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; }
+.pres-encerrada-ic { background: var(--success); color: #06281b; }
+.pres-encerrar-ic { background: var(--surface-2); color: var(--text-dim); box-shadow: inset 0 0 0 1px var(--border); }
+.pres-encerrada-ic svg, .pres-encerrar-ic svg { width: 20px; height: 20px; }
+.pres-encerrada-txt { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 4px; }
+.pres-encerrada-txt strong { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.1; }
+.pres-encerrada small, .pres-encerrar small { color: var(--text-dim); font-size: 13px; line-height: 1.45; }
+.pres-encerrar { margin-top: 22px; }
+.pres-encerrar > div { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 3px; }
+@media (max-width: 520px) {
+  .pres-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pres-num { flex-wrap: wrap; }
+  .pres-num small { width: 100%; }
+  .pres-cultos button { font-size: 16px; }
+  .pres-encerrar .btn, .pres-encerrada .row-btns { width: 100%; }
+  .pres-encerrada .row-btns .btn { flex: 1; }
+}

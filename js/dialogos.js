@@ -5,6 +5,8 @@ import { ICON } from './icones.js';
 import { segStatus } from './telas/minha.js';
 import { $, byNome, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, telIntl, tempoAtras } from './util.js';
 import { chipsVinculos, ESTADO_LABEL, pessoa } from './vinculos.js';
+import { htmlFrequencia } from './frequencia.js';
+import { botaoJustificar } from './justificativas.js';
 
 export const dlg = () => $('#dlg');
 
@@ -15,6 +17,7 @@ export function abrirDlg(html, estado, d = dlg()) {
   const trocou = d === dlg() && S.dlg && S.dlg.tipo !== novoTipo;
   if (d === dlg()) S.dlg = estado || { tipo: 'html' };
   d.classList.remove('fechando');
+  if (d === dlg()) d.classList.toggle('dlg-largo', !!estado?.largo);
   const rolagem = !trocou && d.open ? d.scrollTop : 0;
   d.innerHTML = `<div class="dlg-body ${trocou ? 'troca' : ''}" tabindex="-1">${html}</div>`;
   if (!d.open) d.showModal();
@@ -121,6 +124,11 @@ export function renderDlgJovem(jid) {
       <div class="vinc-secao-head"><span class="eyebrow">Família e vínculos${j.estado_civil ? ` · ${ESTADO_LABEL[j.estado_civil][j.genero]}` : ''}</span>
         <button class="link-btn" data-act="vinc-novo" data-id="${j.id}">+ Vínculo</button></div>
       ${chipsVinculos(j.id, true)}
+    </div>
+    <div class="vinc-det">
+      <div class="vinc-secao-head"><span class="eyebrow">Presença</span>
+        ${s === 'nao_vai' ? `<span class="small">Motivo de não ir: ${botaoJustificar(ev.id, j.id)}</span>` : ''}</div>
+      ${htmlFrequencia(j.id)}
     </div>
     ${digitos(j.telefone) ? `<div class="acoes">
       <a class="btn wa" href="${esc(linkWhats(ev, j))}" target="_blank" rel="noopener" data-act="contato" ${minha ? `data-id="${minha.id}"` : ''}>${ICON.wa}WhatsApp</a>

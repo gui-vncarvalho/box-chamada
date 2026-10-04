@@ -6,7 +6,7 @@ import { $, byNome, faixa, hojeISO, mensagem, uid } from './util.js';
 import { VINCULOS } from './vinculos.js';
 
 export const demo = (() => {
-  const KEY = 'box-demo-db-v3';
+  const KEY = 'box-demo-db-v4';
   function seed() {
     const dirF = ['Ana', 'Bia', 'Carol', 'Dani', 'Lu'];
     const dirM = ['Rafa', 'Téo', 'Vini', 'Zé'];
@@ -49,7 +49,43 @@ export const demo = (() => {
     const atribuicoes = distribuir(ev, jovens, diretores, [], false).map(p => ({
       id: uid(), evento_id: ev.id, ...p, status: 'pendente', nota: null, atualizado_por: null, atualizado_em: null,
     }));
-    return { diretores, jovens, eventos: [ev], atribuicoes, presencas: [], vinculos, historico: [] };
+    // três cultos passados, já encerrados, pra ter histórico de presença
+    const passados = [];
+    const presencas = [];
+    const justificativas = [];
+    const some = new Set([jovens[6].id, jovens[17].id]); // vinham e pararam de vir
+    [28, 21, 14].forEach((dias, k) => {
+      const d = new Date(sab); d.setDate(d.getDate() - dias);
+      const doisCultos = k === 2;
+      const e = {
+        id: uid(), nome: doisCultos ? 'Box Day' : 'Culto Box', data: hojeISO(d), hora: doisCultos ? null : '19h30',
+        hora_sprint: doisCultos ? '17h' : null, hora_box: doisCultos ? '20h' : null, publico: doisCultos ? 'todos' : 'box',
+        chamadas_por_jovem: 2, mensagem: null, arquivado: true, criado_em: d.toISOString(),
+        presenca_encerrada_em: new Date(d.getTime() + 22 * 3600000).toISOString(), presenca_encerrada_por: 'Ana',
+      };
+      const vieram = jovens.filter((j, i) => some.has(j.id) ? k === 0 : (i + k) % 3 !== 0);
+      const culto = j => !doisCultos ? 'geral' : (faixa(j) === 'sprint' ? 'sprint' : 'box');
+      vieram.forEach(j => presencas.push({ id: uid(), evento_id: e.id, jovem_id: j.id, diretor_id: null, culto: culto(j), marcado_por: 'Ana', em: e.presenca_encerrada_em }));
+      if (doisCultos) presencas.push({ id: uid(), evento_id: e.id, jovem_id: jovens[13].id, diretor_id: null, culto: 'sprint', marcado_por: 'Ana', em: e.presenca_encerrada_em });
+      diretores.slice(0, 4).forEach(x => presencas.push({ id: uid(), evento_id: e.id, jovem_id: null, diretor_id: x.id, culto: doisCultos ? 'box' : 'geral', marcado_por: 'Ana', em: e.presenca_encerrada_em }));
+      const confirmados = jovens.slice(0, 10).map(j => j.id);
+      const veio = new Set(vieram.map(j => j.id));
+      const faltaram = confirmados.filter(id => !veio.has(id));
+      faltaram.slice(0, 1).forEach(id => justificativas.push({ evento_id: e.id, jovem_id: id, motivo: ['trabalho', 'saude', 'viagem'][k], texto: null, por: 'Ana', em: e.presenca_encerrada_em }));
+      const cultos = {};
+      for (const c of doisCultos ? ['sprint', 'box'] : ['geral']) {
+        const pc = presencas.filter(x => x.evento_id === e.id && x.culto === c);
+        const js = pc.filter(x => x.jovem_id).map(x => jovens.find(j => j.id === x.jovem_id));
+        cultos[c] = { rotulo: c === 'geral' ? 'Presença' : c === 'box' ? 'Box 20h' : 'Sprint 17h', jovens: js.length, diretoria: pc.filter(x => x.diretor_id).length,
+          box: js.filter(j => faixa(j) === 'box').length, sprint: js.filter(j => faixa(j) === 'sprint').length };
+      }
+      e.presenca_resumo = {
+        cultos, jovens: new Set(presencas.filter(x => x.evento_id === e.id && x.jovem_id).map(x => x.jovem_id)).size, diretoria: 4,
+        confirmados: confirmados.length, confirmados_vieram: confirmados.length - faltaram.length, faltaram, nao_vao: [], visitantes: 0,
+      };
+      passados.push(e);
+    });
+    return { diretores, jovens, eventos: [ev, ...passados], atribuicoes, presencas, justificativas, vinculos, historico: [] };
   }
   function load() {
     try { const t = localStorage.getItem(KEY); if (t) return JSON.parse(t); } catch {}
@@ -70,6 +106,7 @@ export const demo = (() => {
         eventos: [...db.eventos].sort((a, b) => (b.data || '').localeCompare(a.data || '')),
         atribuicoes: db.atribuicoes.filter(a => ativos.has(a.evento_id)),
         presencas: db.presencas || [],
+        justificativas: db.justificativas || [],
         vinculos: db.vinculos || [],
         historico: db.historico.slice(0, 300),
       };
@@ -109,19 +146,38 @@ export const demo = (() => {
       db[p_tabela] = db[p_tabela].filter(x => x.id !== p_id);
       const campo = { jovens: 'jovem_id', diretores: 'diretor_id', eventos: 'evento_id' }[p_tabela];
       db.atribuicoes = db.atribuicoes.filter(a => a[campo] !== p_id);
-      db.presencas = (db.presencas || []).filter(x => x[campo] !== p_id);
+      db.presencas = (db.presencas || []).filter(x => x[campo] !== p_id && (p_tabela !== 'diretores' || x.diretor_id !== p_id));
+      db.justificativas = (db.justificativas || []).filter(x => x[campo] !== p_id);
       db.vinculos = (db.vinculos || []).filter(v => v.a_id !== p_id && v.b_id !== p_id);
       if (p_tabela === 'eventos') db.historico = db.historico.filter(h => h.evento_id !== p_id);
       save(db);
     },
-    box_presenca({ p_evento, p_jovem, p_presente, p_quem }) {
+    box_presenca({ p_evento, p_jovem, p_presente, p_quem, p_culto = 'geral' }) {
       const db = load();
       db.presencas = db.presencas || [];
-      const i = db.presencas.findIndex(x => x.evento_id === p_evento && x.jovem_id === p_jovem);
+      const ev = db.eventos.find(e => e.id === p_evento);
+      if (ev?.presenca_encerrada_em) throw new Error('lista_encerrada');
+      const dir = db.diretores.some(d => d.id === p_jovem);
+      const culto = p_culto || 'geral';
+      const i = db.presencas.findIndex(x => x.evento_id === p_evento && (x.culto || 'geral') === culto && (x.jovem_id || x.diretor_id) === p_jovem);
       if (p_presente === i >= 0) return;
-      if (p_presente) db.presencas.push({ evento_id: p_evento, jovem_id: p_jovem, marcado_por: p_quem, em: new Date().toISOString() });
+      if (p_presente) db.presencas.push({ id: uid(), evento_id: p_evento, jovem_id: dir ? null : p_jovem, diretor_id: dir ? p_jovem : null, culto, marcado_por: p_quem, em: new Date().toISOString() });
       else db.presencas.splice(i, 1);
-      db.historico.unshift({ id: Date.now(), evento_id: p_evento, quem: p_quem, jovem: nome(db.jovens, p_jovem), status: p_presente ? 'presente' : 'ausente', em: new Date().toISOString() });
+      db.historico.unshift({ id: Date.now(), evento_id: p_evento, quem: p_quem, jovem: nome(dir ? db.diretores : db.jovens, p_jovem), status: p_presente ? 'presente' : 'ausente', em: new Date().toISOString() });
+      save(db);
+    },
+    box_encerrar_presenca({ p_evento, p_encerrar, p_quem, p_resumo }) {
+      const db = load();
+      const ev = db.eventos.find(e => e.id === p_evento);
+      Object.assign(ev, p_encerrar
+        ? { presenca_encerrada_em: new Date().toISOString(), presenca_encerrada_por: p_quem, presenca_resumo: p_resumo }
+        : { presenca_encerrada_em: null, presenca_encerrada_por: null });
+      save(db);
+    },
+    box_justificar({ p_evento, p_jovem, p_motivo, p_texto, p_quem }) {
+      const db = load();
+      db.justificativas = (db.justificativas || []).filter(x => !(x.evento_id === p_evento && x.jovem_id === p_jovem));
+      if (p_motivo) db.justificativas.push({ evento_id: p_evento, jovem_id: p_jovem, motivo: p_motivo, texto: (p_texto || '').trim() || null, por: p_quem, em: new Date().toISOString() });
       save(db);
     },
     box_vinculo({ p_a, p_b, p_tipo, p_remover }) {

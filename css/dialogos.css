@@ -7,6 +7,7 @@ dialog {
   box-shadow: 0 30px 80px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .03) inset;
 }
 dialog.dlg-pequeno { width: min(420px, calc(100vw - 32px)); }
+dialog.dlg-largo { width: min(900px, calc(100vw - 32px)); }
 dialog::backdrop { background: rgba(6, 9, 14, .72); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 dialog[open] { animation: dlg-entra .26s cubic-bezier(.2, .8, .2, 1); }
 dialog[open]::backdrop { animation: fundo-entra .26s ease-out; }
@@ -132,7 +133,7 @@ details[open] summary { margin-bottom: 10px; }
 .imp-lista em { font-style: normal; color: var(--gold); font-size: 12px; }
 .falta { color: var(--gold) !important; }
 @media (max-width: 600px) {
-  dialog, dialog.dlg-pequeno {
+  dialog, dialog.dlg-pequeno, dialog.dlg-largo {
     width: 100%; max-width: 100%; margin: auto 0 0; max-height: 92dvh;
     border-radius: 22px 22px 0 0; border-bottom: none;
   }

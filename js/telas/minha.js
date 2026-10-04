@@ -4,6 +4,8 @@ import { atribs, diretor, evento, jovem, porJovem } from '../dados.js';
 import { S, STATUS, STATUS_BY_ID } from '../estado.js';
 import { ICON } from '../icones.js';
 import { cartaoInstalar } from '../pwa.js';
+import { encerrada } from '../frequencia.js';
+import { botaoJustificar } from '../justificativas.js';
 import { presenca } from './presenca.js';
 import { $, byNome, celular, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, telIntl } from '../util.js';
 import { linhaVinculos } from '../vinculos.js';
@@ -65,8 +67,12 @@ export function cardMinha(a, pj) {
           : '<span class="dim">Só você chama</span>'}</div>
         ${a.nota ? '' : `<button class="link-btn" data-act="nota" data-id="${a.id}">+ Nota</button>`}
       </div>
+      ${faltou(a, j) ? `<div class="pcard-just"><span>${a.status === 'nao_vai' ? 'Motivo de não ir:' : '<b>Confirmou e faltou.</b> Motivo:'}</span>${botaoJustificar(a.evento_id, j.id)}</div>` : ''}
     </article>`;
 }
+
+// pede o motivo de quem avisou que não vai, ou confirmou e não veio (lista encerrada)
+const faltou = (a, j) => a.status === 'nao_vai' || (a.status === 'confirmado' && encerrada(evento()) && !presenca(j.id));
 
 export function viewMinha() {
   const minhas = atribs().filter(a => a.diretor_id === S.me);

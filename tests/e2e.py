@@ -319,8 +319,114 @@ def t_campos_sem_zoom_e_sem_estouro(s):
     checar(not pequenos, f'campos com letra menor que {minimo}px: {sorted(set(pequenos))}')
 
 
+def t_presenca_cultos_e_encerrar(s):
+    pg = s.entrar()
+    s.aba('gerenciar')
+    pg.click('.mg-head .btn.primary')
+    pg.fill('#form-dlg input[name=nome]', 'Box Day')
+    pg.fill('#form-dlg input[name=data]', '2026-10-03')
+    pg.click('#form-dlg .seg-form >> text=Box + Sprint')
+    pg.fill('#form-dlg input[name=hora_sprint]', '17h')
+    pg.fill('#form-dlg input[name=hora_box]', '20h')
+    pg.click('#form-dlg button[type=submit]')
+    pg.wait_for_timeout(1500)
+    s.aba('presenca')
+    checar(pg.locator('.pres-cultos button').all_inner_texts()[0].startswith('Sprint 17h'), 'abas de culto')
+    # Bruna no Sprint
+    pg.fill('#busca-p', 'Bruna')
+    pg.locator('.pcheck').first.click()
+    pg.wait_for_timeout(200)
+    pg.click('[data-act=junto-fechar]')
+    # no Box ela ainda não está, mas aparece "também no Sprint"
+    pg.click('.pres-cultos [data-id=box]')
+    pg.fill('#busca-p', 'Bruna')
+    card = pg.locator('.pcheck').first
+    checar('presente' not in (card.get_attribute('class') or ''), 'presença vazou pro outro culto')
+    checar('também no Sprint' in card.inner_text(), 'aviso de presença no outro culto')
+    card.click()
+    pg.wait_for_timeout(200)
+    cultos = s.js("B.S.data.presencas.filter(p => p.evento_id === B.S.eventoId && p.jovem_id === B.S.data.jovens.find(j => j.nome === 'Bruna').id).map(p => p.culto).sort().join(',')")
+    checar(cultos == 'box,sprint', f'presença nos dois cultos: {cultos}')
+    # diretoria
+    pg.fill('#busca-p', '')
+    pg.click('.chip[data-id=diretoria]')
+    pg.locator('.pcheck.dir').first.click()
+    pg.wait_for_timeout(200)
+    checar(pg.inner_text('.pres-tile.st-diretoria strong') == '1', 'contador da diretoria')
+    s.print('presenca-cultos')
+    # encerrar trava e mostra o resumo
+    pg.click('[data-act=encerrar-presenca]')
+    pg.wait_for_selector('#dlg2[open]')
+    pg.click('#dlg2 [data-r="1"]')
+    pg.wait_for_selector('#dlg[open] .resumo-nums')
+    nums = pg.locator('.resumo-nums strong').all_inner_texts()
+    checar(nums[0] == '1' and nums[1] == '1', f'resumo: {nums}')
+    s.print('resumo-culto', full=False)
+    pg.keyboard.press('Escape')
+    pg.wait_for_timeout(450)
+    checar(pg.locator('.pres-encerrada').count() == 1, 'faixa de lista encerrada')
+    antes = s.js('B.S.data.presencas.length')
+    pg.locator('.pcheck').nth(2).click(force=True)
+    pg.wait_for_timeout(200)
+    checar(s.js('B.S.data.presencas.length') == antes, 'lista encerrada aceitou marcação')
+    pg.click('[data-act=reabrir-presenca]')
+    pg.wait_for_selector('#dlg2[open]')
+    pg.click('#dlg2 [data-r="1"]')
+    pg.wait_for_timeout(600)
+    checar(pg.locator('.pres-encerrada').count() == 0 and pg.locator('[data-act=encerrar-presenca]').count() == 1, 'reabrir')
+
+
+def t_historico_presencas_e_justificativas(s):
+    pg = s.entrar()
+    s.aba('historico')
+    pg.click('[data-act=hist-modo][data-id=presencas]')
+    sumiu = sorted(t.split('\n')[0] for t in pg.locator('.jcard.sumiu .jcard-nome').all_inner_texts())
+    checar(sumiu == ['Heitor', 'Isa'], f'quem sumiu: {sumiu}')
+    checar(pg.locator('[data-act=resumo-culto]').count() == 3, 'cultos passados')
+    s.print('historico-presencas')
+    pg.locator('[data-act=resumo-culto]').first.click()
+    pg.wait_for_selector('#dlg[open] .resumo-nums')
+    checar(pg.locator('#dlg .resumo-filtro .chip').count() == 3, 'filtro Todos/Sprint/Box no resumo')
+    pg.click('#dlg [data-act=resumo-culto-filtro][data-id=sprint]')
+    culto_sprint = pg.locator('#dlg .rp').count()
+    pg.click('#dlg [data-act=resumo-culto-filtro][data-id=todos]')
+    checar(0 < culto_sprint < pg.locator('#dlg .rp').count(), 'filtro por culto no resumo')
+    s.print('resumo-presentes', full=False)
+    pg.click('#dlg [data-act=resumo-aba][data-id=faltas]')
+    alvo = pg.locator('#dlg .just-lista li:has(.link-btn)').first
+    nome = alvo.locator('.jf-nome').inner_text()
+    alvo.locator('.link-btn').click()
+    pg.wait_for_selector('#dlg2[open]')
+    pg.click('#dlg2 [data-motivo=viagem]')
+    pg.fill('#dlg2 textarea', 'Voltou no domingo')
+    pg.click('#dlg2 [data-salvar]')
+    pg.wait_for_timeout(700)
+    checar('Viagem · Voltou no domingo' in pg.locator(f'#dlg .just-lista li:has-text("{nome}")').inner_text(), 'justificativa no resumo')
+    pg.keyboard.press('Escape')
+    pg.wait_for_timeout(450)
+    # frequência nos detalhes do jovem
+    s.aba('jovens')
+    pg.fill('#busca', 'Isa')
+    pg.locator('#jlista .jcard', has=pg.locator('strong', has_text=re.compile(r'^Isa$'))).click()
+    pg.wait_for_selector('#dlg[open] .freq-resumo')
+    checar('Veio em 1 de 3' in pg.inner_text('#dlg .freq-resumo'), 'frequência por pessoa')
+    pg.keyboard.press('Escape')
+    pg.wait_for_timeout(450)
+    # Minha lista: "não vai" pede o motivo
+    s.aba('minha')
+    pg.locator('.pcard').first.locator('button:has-text("Não vai")').click()
+    pg.wait_for_timeout(200)
+    pg.locator('.pcard-just .link-btn').first.click()
+    pg.wait_for_selector('#dlg2[open]')
+    pg.click('#dlg2 [data-motivo=trabalho]')
+    pg.click('#dlg2 [data-salvar]')
+    pg.wait_for_timeout(700)
+    checar('Trabalho' in pg.inner_text('.pcard-just'), 'motivo na Minha lista')
+
+
 TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
-          t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro]
+          t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro,
+          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas]
 
 
 def rodar(prints=None):

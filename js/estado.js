@@ -51,6 +51,8 @@ export const S = {
   mgOrdem: 'nome',
   mgPainel: false,
   buscaP: '',
+  pCulto: '',
+  histModo: 'marcacoes',
   pFiltro: 'todos',
   limJ: 20,
   buscaMg: '',

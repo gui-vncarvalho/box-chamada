@@ -98,3 +98,11 @@
   .tile > span { font-size: 11.5px; }
   .trocar { padding: 4px 9px; }
 }
+
+/* botão de destaque na cor creme da marca (ex.: "Encerrar lista") */
+.btn.hero-cta {
+  min-height: 44px; padding: 9px 18px; font-size: 15px;
+  background: var(--cream); border-color: var(--cream); color: #1b1e24;
+  box-shadow: 0 6px 20px rgba(243, 233, 210, .12);
+}
+.btn.hero-cta:hover { filter: brightness(1.05); border-color: var(--cream); }

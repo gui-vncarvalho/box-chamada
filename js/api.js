@@ -33,6 +33,7 @@ export async function carregar() {
   S.data = await rpc('box_carregar');
   S.data.presencas ||= [];
   S.data.vinculos ||= [];
+  S.data.justificativas ||= [];
   const evs = eventosAtivos();
   const salvo = evs.find(e => e.id === S.eventoId);
   const hoje = hojeISO();

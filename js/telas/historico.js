@@ -3,6 +3,7 @@ import { diretor, evento, jovem } from '../dados.js';
 import { S } from '../estado.js';
 import { ICON } from '../icones.js';
 import { $, esc, plural, tempoAtras } from '../util.js';
+import { viewPresencasHist } from '../frequencia.js';
 
 export const HIST_ICON = { chamado: 'tel', confirmado: 'check', nao_vai: 'xis', pendente: 'desfazer', presente: 'entrada', ausente: 'desfazer' };
 
@@ -33,7 +34,20 @@ export function diaHist(iso) {
   return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
+function modos() {
+  const m = S.histModo === 'presencas' ? 'presencas' : 'marcacoes';
+  return `
+    <div class="hist-modos" role="tablist" aria-label="Histórico">
+      <button role="tab" data-act="hist-modo" data-id="marcacoes" aria-selected="${m === 'marcacoes'}">Marcações</button>
+      <button role="tab" data-act="hist-modo" data-id="presencas" aria-selected="${m === 'presencas'}">Presenças</button>
+    </div>`;
+}
+
 export function viewHistorico() {
+  return modos() + (S.histModo === 'presencas' ? viewPresencasHist() : viewMarcacoes());
+}
+
+function viewMarcacoes() {
   const eu = diretor(S.me);
   let h = S.data.historico.filter(x => x.evento_id === S.eventoId);
   // cliques repetidos viram uma entrada só
