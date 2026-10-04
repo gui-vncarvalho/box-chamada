@@ -5,7 +5,7 @@ import { abrirDlg } from './dialogos.js';
 import { S } from './estado.js';
 import { ICON } from './icones.js';
 import { botaoJustificar, justificativa, MOTIVOS } from './justificativas.js';
-import { byNome, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, plural, porFaixa } from './util.js';
+import { byNome, celular, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, plural, porFaixa, primeiroNome, toast } from './util.js';
 
 const CULTOS_SUMIU = 2; // faltou nos 2 últimos cultos encerrados…
 const JANELA_SUMIU = 6; // …e tinha vindo em algum dos 6 anteriores
@@ -284,5 +284,46 @@ export function dlgResumoCulto(eid) {
     <div class="hist-modos resumo-abas" role="tablist">${abas.map(([id, l, n]) => `
       <button role="tab" data-act="resumo-aba" data-id="${id}" aria-selected="${st.aba === id}">${l} <span class="c">${n}</span></button>`).join('')}</div>
     <div class="resumo-corpo">${corpo}</div>
-    <div class="dlg-foot fim"><button class="btn" data-act="fechar">Fechar</button></div>`, { tipo: 'resumo', id: eid, largo: true });
+    <div class="dlg-foot">
+      <button class="btn" data-act="compartilhar-resumo" data-id="${eid}">${ICON.copiar}Enviar pro grupo</button>
+      <button class="btn" data-act="fechar">Fechar</button>
+    </div>`, { tipo: 'resumo', id: eid, largo: true });
 }
+
+/* ---------- resumo curto pro grupo do WhatsApp ---------- */
+export async function textoResumo(ev) {
+  const r = resumoDe(ev);
+  if (!chamadasCarregadas(ev)) { try { await buscarChamadas(ev); } catch { /* sem chamadas no texto */ } }
+  const chamadas = chamadasCarregadas(ev) || [];
+  const data = dataEvento(ev);
+  const visitantes = [...new Set(presencasDoEvento(ev.id).filter(p => p.jovem_id).map(p => p.jovem_id))]
+    .map(id => S.data.jovens.find(j => j.id === id))
+    .filter(j => j && ev.data && j.criado_em && hojeISO(new Date(j.criado_em)) === ev.data)
+    .map(j => primeiroNome(j.nome));
+  const cultos = cultosDoEvento(ev).filter(([c]) => c !== 'geral' && r.cultos?.[c]);
+  return [
+    `*${ev.nome}*${data ? ` — ${data}` : ''}`,
+    `✅ ${plural(r.jovens, 'jovem', 'jovens')}${r.diretoria ? ` + ${r.diretoria} da diretoria` : ''}`,
+    cultos.length > 1 ? `⏱️ ${cultos.map(([c, rot]) => `${rot}: ${plural(r.cultos[c].jovens, 'jovem', 'jovens')}`).join(' · ')}` : '',
+    r.confirmados ? `🙌 ${r.confirmados_vieram} de ${plural(r.confirmados, 'confirmado veio', 'confirmados vieram')}` : '',
+    visitantes.length ? `✨ Primeira vez: ${visitantes.join(', ')}` : '',
+    chamadas.length ? `📞 Chamadas: ${chamadas.filter(a => a.status !== 'pendente').length} de ${chamadas.length} feitas` : '',
+  ].filter(Boolean).join('\n');
+}
+
+// Celular: abre o compartilhar do sistema (escolhe o WhatsApp e o grupo). Computador: copia.
+export async function compartilharResumo(eid) {
+  const ev = S.data.eventos.find(e => e.id === eid);
+  if (!ev) return;
+  const texto = await textoResumo(ev);
+  if (navigator.share && celular()) {
+    try { await navigator.share({ text: texto }); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  try {
+    await navigator.clipboard.writeText(texto);
+    toast('Resumo copiado, é só colar no grupo');
+  } catch {
+    toast('Não deu pra copiar automaticamente.', true);
+  }
+}
+

@@ -398,6 +398,12 @@ def t_historico_presencas_e_justificativas(s):
     primeiro = pg.locator('#dlg .ch-card').first.inner_text()
     checar(primeiro.startswith('Téo') and 'Não chamou' in primeiro, f'aba Chamadas: {primeiro[:60]!r}')
     s.print('resumo-chamadas', full=False)
+    # resumo curto pro grupo (no computador, copia)
+    s.js("(navigator.clipboard.writeText = t => (window.__copiado = t, Promise.resolve()), 0)")
+    pg.click('#dlg [data-act=compartilhar-resumo]')
+    pg.wait_for_timeout(400)
+    texto = s.js('window.__copiado || ""')
+    checar(texto.startswith('*Box Day*') and 'Chamadas: 39 de 44 feitas' in texto and 'Sprint 17h' in texto, f'texto pro grupo: {texto!r}')
     pg.click('#dlg [data-act=resumo-aba][data-id=faltas]')
     alvo = pg.locator('#dlg .just-lista li:has(.link-btn)').first
     nome = alvo.locator('.jf-nome').inner_text()

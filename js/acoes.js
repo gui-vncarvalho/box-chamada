@@ -14,7 +14,7 @@ import { atualizarListaJovens, PAG_JOVENS } from './telas/jovens.js';
 import { atualizarPresenca, formVisitante, htmlListaPresenca, presenca, togglePresenca } from './telas/presenca.js';
 import { $, esc, faixa, idade, plural, quandoEvento, toast } from './util.js';
 import { atualizarTelaVinculos, dlgNovoVinculo, pessoa, removerVinculo } from './vinculos.js';
-import { dlgResumoCulto } from './frequencia.js';
+import { compartilharResumo, dlgResumoCulto } from './frequencia.js';
 import { dlgJustificar } from './justificativas.js';
 import { encerrarEvento, encerrarPresenca, reabrirPresenca } from './telas/presenca.js';
 
@@ -159,6 +159,7 @@ export async function aoClicar(e) {
     case 'resumo-aba': S.resumo.aba = id; dlgResumoCulto(S.resumo.eid); break;
     case 'resumo-culto-filtro': S.resumo.culto = id; dlgResumoCulto(S.resumo.eid); break;
     case 'encerrar-evento': await encerrarEvento(); break;
+    case 'compartilhar-resumo': await compartilharResumo(id); break;
     case 'justificar': dlgJustificar(el.dataset.evento, id, atualizarAposJustificar); break;
     case 'presenca': await togglePresenca(id); break;
     case 'p-filtro': S.pFiltro = id; S.pFiltroManual = true; atualizarPresenca(); break;
