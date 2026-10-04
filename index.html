@@ -16,6 +16,58 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Tela de carregamento: fica aqui (e não num .css) pra aparecer antes de tudo. */
+#carregando {
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+  background: radial-gradient(70% 55% at 50% 40%, rgba(47, 95, 208, .22), transparent 70%),
+              radial-gradient(60% 50% at 50% 100%, rgba(229, 57, 46, .12), transparent 70%), #12161c;
+  color: #eef1f4; font-family: 'Inter', system-ui, sans-serif; transition: opacity .45s ease, visibility .45s;
+}
+#carregando.saindo { opacity: 0; visibility: hidden; pointer-events: none; }
+#carregando::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 12px; opacity: .22;
+  background: conic-gradient(#f3e9d2 25%, transparent 0 50%, #f3e9d2 0 75%, transparent 0) 0 0 / 12px 12px;
+  animation: ld-xadrez 1.2s linear infinite;
+}
+.ld-centro { display: flex; flex-direction: column; align-items: center; gap: 14px; width: min(340px, 82vw); text-align: center; }
+.ld-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e5392e; }
+.ld-titulo { font-family: 'Alfa Slab One', Georgia, serif; font-size: clamp(38px, 11vw, 56px); line-height: 1; letter-spacing: 1px; color: #f3e9d2; margin-top: -6px; }
+.ld-pista { position: relative; width: 100%; height: 64px; margin-top: 10px; }
+.ld-asfalto {
+  position: absolute; left: 0; right: 30px; bottom: 6px; height: 12px; border-radius: 999px; overflow: hidden;
+  background: #0b0f14; box-shadow: inset 0 0 0 1px #2c343f;
+}
+.ld-asfalto::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 5px; height: 2px;
+  background: repeating-linear-gradient(90deg, rgba(243, 233, 210, .55) 0 14px, transparent 14px 28px);
+  animation: ld-faixas .35s linear infinite;
+}
+.ld-rastro {
+  position: absolute; left: 0; bottom: 6px; height: 12px; border-radius: 999px;
+  background: linear-gradient(90deg, rgba(47, 95, 208, 0), #2f5fd0 55%, #e5392e);
+  animation: ld-volta 2.2s cubic-bezier(.55, .05, .35, 1) infinite;
+}
+.ld-capacete { position: absolute; bottom: 12px; left: 0; width: 64px; height: 44px; animation: ld-capacete 2.2s cubic-bezier(.55, .05, .35, 1) infinite; }
+.ld-capacete svg { width: 100%; height: 100%; animation: ld-tremor .18s ease-in-out infinite alternate; }
+.ld-bandeira { position: absolute; right: 0; bottom: 4px; width: 26px; height: 40px; }
+.ld-frases { position: relative; height: 20px; width: 100%; font-size: 14px; color: #8d97a3; }
+.ld-frases span { position: absolute; inset: 0; opacity: 0; animation: ld-frase 6.6s infinite; }
+.ld-frases span:nth-child(2) { animation-delay: 2.2s; }
+.ld-frases span:nth-child(3) { animation-delay: 4.4s; }
+@keyframes ld-xadrez { to { background-position: 24px 0; } }
+@keyframes ld-faixas { to { transform: translateX(-28px); } }
+@keyframes ld-volta { 0% { width: 0; opacity: 0; } 10% { opacity: 1; } 85% { width: calc(100% - 30px); opacity: 1; } 100% { width: calc(100% - 30px); opacity: 0; } }
+@keyframes ld-capacete { 0% { transform: translateX(-20px); opacity: 0; } 10% { opacity: 1; } 85% { transform: translateX(calc(min(340px, 82vw) - 100px)); opacity: 1; } 100% { transform: translateX(calc(min(340px, 82vw) - 100px)); opacity: 0; } }
+@keyframes ld-tremor { to { transform: translateY(-1.5px) rotate(-1.5deg); } }
+@keyframes ld-frase { 0% { opacity: 0; transform: translateY(6px); } 5%, 30% { opacity: 1; transform: none; } 36%, 100% { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) {
+  #carregando *, #carregando::before { animation: none !important; }
+  .ld-rastro { width: 60%; }
+  .ld-capacete { transform: translateX(calc(min(340px, 82vw) * .6 - 64px)); }
+  .ld-frases span:first-child { opacity: 1; }
+}
+</style>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/componentes.css">
 <link rel="stylesheet" href="css/entrada.css">
@@ -34,7 +86,33 @@
 <link rel="stylesheet" href="css/telas/gerenciar.css">
 </head>
 <body>
-<div id="app" class="wrap"><p class="dim">Carregando…</p></div>
+<div id="carregando" role="status" aria-live="polite" aria-label="Carregando o Chamada BOX">
+  <div class="ld-centro">
+    <span class="ld-eyebrow">Juventude Box</span>
+    <span class="ld-titulo">CHAMADA</span>
+    <div class="ld-pista" aria-hidden="true">
+      <div class="ld-asfalto"></div>
+      <div class="ld-rastro"></div>
+      <div class="ld-capacete"><svg viewBox="0 0 64 44">
+        <path d="M18 21.5C10 20 5 16.5 2.5 11.5c6 2 11 3 16 5.5z" fill="#f3e9d2"/>
+        <path d="M17.5 27C9.5 27.5 4 25 1 21c6 1 11 1.2 17 3z" fill="#f3e9d2"/>
+        <path d="M17.5 32.5c-7 1.2-12 0-15-3 6 .3 10.5 0 15.5 0z" fill="#f3e9d2"/>
+        <path d="M16 38C14.5 20.5 24.5 8 40.5 8 53.5 8 61.5 18 61.5 30v8z" fill="#2f5fd0"/>
+        <path d="M46.5 25h15v13h-10.5c-2.8 0-4.5-2-4.5-4.7z" fill="#12161c"/>
+        <path d="M44.5 23.5h15.5" stroke="#f3e9d2" stroke-width="3" stroke-linecap="round"/>
+        <path d="M23 20.5c3.5-6.5 10-10 18.5-10" stroke="#e5392e" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <rect x="14.5" y="36" width="49" height="5" rx="2.5" fill="#e5392e"/>
+      </svg></div>
+      <svg class="ld-bandeira" viewBox="0 0 26 40">
+        <path d="M3 2v37" stroke="#8d97a3" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M4 3h20v14H4z" fill="#f3e9d2"/>
+        <path d="M4 3h5v4.7H4zM14 3h5v4.7h-5zM9 7.7h5v4.6H9zM19 7.7h5v4.6h-5zM4 12.3h5V17H4zM14 12.3h5V17h-5z" fill="#12161c"/>
+      </svg>
+    </div>
+    <div class="ld-frases"><span>Ligando os motores…</span><span>Conferindo a lista…</span><span>Quase na largada…</span></div>
+  </div>
+</div>
+<div id="app" class="wrap"></div>
 <dialog id="dlg"></dialog>
 <dialog id="dlg2" class="dlg-pequeno"></dialog>
 <div id="toast" role="status" aria-live="polite"></div>

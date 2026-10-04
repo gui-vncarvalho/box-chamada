@@ -50,6 +50,8 @@ if (DEMO) {
   };
 }
 
+const LOADER_MIN_MS = 1200;
+
 (async function iniciar() {
   if (S.codigo) {
     try { await carregar(); }
@@ -60,4 +62,13 @@ if (DEMO) {
     }
   }
   render();
+  // a tela de carregamento só existe na entrada: fica no mínimo LOADER_MIN_MS
+  // (pra dar pra ver), depois some com um fade por cima da primeira tela já pronta
+  const ld = document.getElementById('carregando');
+  if (ld) {
+    setTimeout(() => {
+      ld.classList.add('saindo');
+      setTimeout(() => ld.remove(), 500);
+    }, Math.max(0, LOADER_MIN_MS - performance.now()));
+  }
 })();
