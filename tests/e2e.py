@@ -102,6 +102,7 @@ def t_minha_lista(s):
     # nota com modal próprio
     pg.locator('.pcard .link-btn').first.click()
     pg.wait_for_selector('#dlg2[open]')
+    pg.click('#dlg2 textarea')
     pg.keyboard.type('Vai levar a irmã')
     pg.keyboard.press('Enter')
     pg.wait_for_timeout(400)
@@ -214,7 +215,11 @@ def t_modais_e_cadastros(s):
     s.print('gerenciar-eventos')
     pg.click('.mg-head .btn.primary')
     pg.wait_for_selector('#form-dlg')
-    checar(s.js('document.activeElement.name') == 'nome', 'foco não foi pro nome')
+    if s.nome == 'celular':  # no toque, não abre o teclado sozinho
+        checar(s.js('document.activeElement.matches("input, textarea")') is False, 'abriu o teclado sozinho no celular')
+        checar(s.js("document.querySelector('#dlg').scrollTop") == 0, 'modal não abriu no topo')
+    else:
+        checar(s.js('document.activeElement.name') == 'nome', 'foco não foi pro nome')
     pg.click('#form-dlg button[type=submit]')
     checar(pg.locator('.field.invalido').count() == 1, 'obrigatório não marcou')
     pg.fill('#form-dlg input[name=nome]', 'Box Day')

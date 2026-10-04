@@ -10,6 +10,7 @@ import { botaoJustificar } from './justificativas.js';
 
 export const dlg = () => $('#dlg');
 
+export const telaDeToque = () => matchMedia('(pointer: coarse)').matches;
 export const semAnimacao = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function abrirDlg(html, estado, d = dlg()) {
@@ -22,8 +23,12 @@ export function abrirDlg(html, estado, d = dlg()) {
   d.innerHTML = `<div class="dlg-body ${trocou ? 'troca' : ''}" tabindex="-1">${html}</div>`;
   if (!d.open) d.showModal();
   d.scrollTop = rolagem;
-  // foco no primeiro campo marcado (ou no corpo), nunca no botão de fechar
-  (d.querySelector('[autofocus]') || d.querySelector('.dlg-body')).focus({ preventScroll: true });
+  // Foco no primeiro campo marcado (ou no corpo), nunca no botão de fechar.
+  // Em tela de toque, focar um campo abre o teclado e esconde o modal: lá o foco
+  // vai pro corpo e a pessoa toca no campo quando quiser.
+  let alvo = d.querySelector('[autofocus]');
+  if (alvo && telaDeToque() && alvo.matches('input:not([type=radio]):not([type=checkbox]), textarea, select')) alvo = null;
+  (alvo || d.querySelector('.dlg-body')).focus({ preventScroll: true });
 }
 
 export function fecharDlg(d = dlg()) {
