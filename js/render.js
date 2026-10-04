@@ -1,5 +1,6 @@
 // Esqueleto da tela: topo, card do evento e abas.
 import { renderAniver } from './aniversarios.js';
+import { cultosPassados, encerrada, resumoDe } from './frequencia.js';
 import { atribs, diretor, evento, eventosAtivos, jovem, porJovem, statusJovem } from './dados.js';
 import { demo } from './demo.js';
 import { abrirDlg, dlg } from './dialogos.js';
@@ -105,14 +106,48 @@ export function chipsEvento(ev) {
   ].filter(Boolean).map(([ic, t]) => `<li>${ic}<span>${esc(t)}</span></li>`).join('');
 }
 
-export function renderHero(ev, evs) {
-  if (!ev) {
-    return `<section class="hero hero-vazio">
-      <div><div class="eyebrow">Evento</div><h2 class="ev-nome">Nenhum evento aberto</h2>
-      <p class="dim">Crie o próximo culto pra distribuir as chamadas.</p></div>
-      <div><button class="btn primary" data-act="novo-evento">+ Criar evento</button></div>
-    </section>`;
+// Sem evento aberto: convida pro próximo e mostra o último culto (ou como funciona).
+function heroSemEvento() {
+  const ultimo = cultosPassados().find(encerrada);
+  let lado;
+  if (ultimo) {
+    const r = resumoDe(ultimo);
+    const data = dataEvento(ultimo, { weekday: 'long', day: '2-digit', month: '2-digit' });
+    lado = `
+      <div class="eyebrow">Último culto</div>
+      <div class="ultimo-culto">
+        <strong>${esc(ultimo.nome)}</strong>
+        <small>${esc(data.charAt(0).toUpperCase() + data.slice(1))}</small>
+      </div>
+      <div class="tiles">
+        <div class="tile st-confirmado"><strong>${r.jovens}</strong><span>jovens</span></div>
+        <div class="tile st-diretoria"><strong>${r.diretoria}</strong><span>diretoria</span></div>
+        <div class="tile st-pendente"><strong>${r.confirmados_vieram}<small>/${r.confirmados}</small></strong><span>confirmados</span></div>
+      </div>
+      <button class="btn small ultimo-ver" data-act="resumo-culto" data-id="${ultimo.id}">Ver resumo ${ICON.chevron}</button>`;
+  } else {
+    lado = `
+      <div class="eyebrow">Como funciona</div>
+      <ol class="passos">
+        <li><b>1</b>Crie o evento com data, horário e quem chamar.</li>
+        <li><b>2</b>A distribuição de quem chama quem sai na hora.</li>
+        <li><b>3</b>Cada um chama a sua lista e marca no site.</li>
+      </ol>`;
   }
+  return `
+    <section class="hero hero-vazio" aria-label="Sem evento marcado">
+      <div class="hero-ev">
+        <div class="hero-label"><span class="eyebrow">Próxima largada</span></div>
+        <h2 class="ev-nome">Sem evento marcado</h2>
+        <p class="hero-vazio-txt">Crie o próximo culto e a distribuição das chamadas sai na hora.</p>
+        <div class="hero-acao"><button class="btn hero-cta" data-act="novo-evento">${ICON.mais1}Criar evento</button></div>
+      </div>
+      <div class="hero-prog">${lado}</div>
+    </section>`;
+}
+
+export function renderHero(ev, evs) {
+  if (!ev) return heroSemEvento();
   const cd = contagem(ev);
   const lista = atribs();
   const feitas = lista.filter(a => a.status !== 'pendente').length;
