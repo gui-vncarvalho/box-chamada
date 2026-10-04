@@ -55,6 +55,7 @@ export function mgEventos() {
         ${acao('distribuir', 'faltantes', 'addPessoa', 'Distribuir quem falta', 'Dá responsável pra quem ainda não tem')}
         ${acao('distribuir', 'refazer', 'embaralhar', 'Refazer distribuição', 'Sorteia de novo quem chama quem')}
         ${acao('copiar-lista', '', 'copiar', 'Copiar lista pro grupo', 'Texto pronto pra colar no WhatsApp')}
+        ${contagem(ev)?.[1] === 'passado' ? acao('encerrar-evento', '', 'check', 'Encerrar evento', 'Finaliza a chamada e manda pro histórico') : ''}
         ${acao('zerar', '', 'desfazer', 'Zerar marcações', 'Volta todas as chamadas pra pendente', true)}
       </div>
     </article>` : ''}

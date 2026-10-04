@@ -290,6 +290,25 @@ export async function reabrirPresenca() {
   } catch (e) { falha(e); }
 }
 
+// Evento que já aconteceu: encerra a presença (se aberta), finaliza a chamada e manda pro histórico.
+export async function encerrarEvento() {
+  const ev = evento();
+  const presencaAberta = !encerrada(ev);
+  const ok = await confirmar({
+    titulo: `Encerrar “${esc(ev.nome)}”?`, ok: 'Encerrar evento',
+    texto: `${presencaAberta ? 'A lista de presença é encerrada com o resumo, a' : 'A'} chamada é finalizada (sai da Minha lista de todo mundo)
+      e o evento vai pro histórico. O resumo fica em Histórico › Presenças. Dá pra reabrir em Gerenciar › Eventos.`,
+  });
+  if (!ok) return;
+  try {
+    if (presencaAberta) await rpc('box_encerrar_presenca', { p_evento: ev.id, p_encerrar: true, p_quem: nomeQuem(), p_resumo: calcularResumo(ev) });
+    await rpc('box_salvar', { p_tabela: 'eventos', p_dados: { ...ev, arquivado: true } });
+    await carregar();
+    render();
+    toast(`${ev.nome} encerrado. O resumo fica em Histórico › Presenças.`);
+  } catch (e) { falha(e); }
+}
+
 export function formVisitante() {
   const ev = evento();
   if (!presencaLiberada(ev) || encerrada(ev)) return;

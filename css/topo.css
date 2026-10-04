@@ -99,7 +99,9 @@
   .trocar { padding: 4px 9px; }
 }
 
-/* botão de destaque na cor creme da marca (ex.: "Encerrar lista") */
+/* evento que já aconteceu: botão no mesmo lugar e formato do "Marcar presença" */
+.hero-acao { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-top: 16px; }
+.hero-acao small { color: var(--text-dim); font-size: 13px; }
 .btn.hero-cta {
   min-height: 44px; padding: 9px 18px; font-size: 15px;
   background: var(--cream); border-color: var(--cream); color: #1b1e24;

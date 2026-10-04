@@ -44,6 +44,8 @@ function modos() {
 }
 
 export function viewHistorico() {
+  // sem evento aberto, só faz sentido o histórico de presenças
+  if (!evento()) return viewPresencasHist();
   return modos() + (S.histModo === 'presencas' ? viewPresencasHist() : viewMarcacoes());
 }
 

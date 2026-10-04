@@ -44,7 +44,7 @@
 /* resumo do culto: abas, grade compacta e faltas */
 .resumo-cultos { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: -4px 0 0; font-size: 13px; color: var(--text-dim); }
 .resumo-cultos b { color: var(--text); font-weight: 600; }
-.resumo-abas { margin-bottom: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.resumo-abas { margin-bottom: 0; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .resumo-abas button { padding: 0 6px; white-space: nowrap; }
 .resumo-abas .c { font-size: 11.5px; padding: 0 7px; border-radius: 999px; background: var(--bg); color: var(--text-dim); margin-left: 4px; }
 .resumo-abas [aria-selected="true"] .c { background: var(--accent); color: #fff; }
@@ -66,6 +66,21 @@
 .just-lista li .avatar { width: 30px; height: 30px; font-size: 11.5px; box-shadow: inset 0 0 0 1px var(--border); }
 .just-lista .jf-nome { flex: 1; min-width: 120px; }
 
+/* resumo › chamadas: quem chamou quem */
+.just-pill.alerta { background: var(--accent-soft); color: var(--accent); }
+.nomes.alerta span { background: var(--accent-soft); color: var(--text); }
+.ch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 8px; }
+.ch-card { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0, 0, 0, .14); }
+.ch-card:not(.ok) { border-color: rgba(229, 57, 46, .35); }
+.ch-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ch-top strong { font-size: 14.5px; }
+.ch-card small { font-size: 12.5px; color: var(--text-dim); line-height: 1.45; }
+.ch-card small b { color: var(--text); font-weight: 500; }
+.ch-card small.ok { color: var(--success); font-weight: 600; }
+.sem-evento p { max-width: 46ch; line-height: 1.55; }
+.sem-evento strong { color: var(--text); font-size: 16px; }
+
 @media (max-width: 520px) {
+  .resumo-abas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .resumo-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

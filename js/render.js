@@ -78,14 +78,19 @@ export function rolarParaConteudo({ sempre = false, suave = false } = {}) {
 
 export function renderView() {
   if (S.tab === 'gerenciar') return viewGerenciar();
+  if (S.tab === 'historico') return viewHistorico();
   if (!evento()) {
-    return `<div class="vazio"><p>Nenhum evento aberto ainda.</p>
-      <button class="btn primary" data-act="novo-evento">Criar evento</button></div>`;
+    return `<div class="vazio sem-evento">
+      <p><strong>Nenhum evento aberto.</strong><br>Crie o próximo culto pra distribuir as chamadas.
+        Os cultos que já passaram, com presença e chamadas, ficam no Histórico.</p>
+      <div class="row-btns">
+        <button class="btn" data-act="tab" data-id="historico">${ICON.relogio}Ver histórico</button>
+        <button class="btn primary" data-act="novo-evento">${ICON.mais1}Criar evento</button>
+      </div></div>`;
   }
   if (S.tab === 'minha') return viewMinha();
   if (S.tab === 'equipe') return viewEquipe();
   if (S.tab === 'jovens') return viewJovens();
-  if (S.tab === 'historico') return viewHistorico();
   if (S.tab === 'presenca') return viewPresenca();
   return '';
 }
@@ -133,6 +138,9 @@ export function renderHero(ev, evs) {
         </div>
         <h2 class="ev-nome">${esc(ev.nome)}</h2>
         <ul class="ev-chips">${chipsEvento(ev)}</ul>
+        ${cd && cd[1] === 'passado' ? `<div class="hero-acao">
+          <button class="btn hero-cta" data-act="encerrar-evento">${ICON.check}Encerrar evento</button>
+          <small>Finaliza a chamada e guarda o resumo no histórico.</small></div>` : ''}
         ${cd && cd[1] === 'hoje' && S.tab !== 'presenca' ? `<button class="btn presenca-cta" data-act="tab" data-id="presenca">${ICON.entrada}Marcar presença</button>` : ''}
       </div>
       <div class="hero-prog">

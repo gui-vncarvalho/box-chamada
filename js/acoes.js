@@ -16,7 +16,7 @@ import { $, esc, faixa, idade, plural, quandoEvento, toast } from './util.js';
 import { atualizarTelaVinculos, dlgNovoVinculo, pessoa, removerVinculo } from './vinculos.js';
 import { dlgResumoCulto } from './frequencia.js';
 import { dlgJustificar } from './justificativas.js';
-import { encerrarPresenca, reabrirPresenca } from './telas/presenca.js';
+import { encerrarEvento, encerrarPresenca, reabrirPresenca } from './telas/presenca.js';
 
 export function textoGrupo() {
   const ev = evento();
@@ -158,6 +158,7 @@ export async function aoClicar(e) {
     case 'resumo-culto': S.resumo = null; dlgResumoCulto(id); break;
     case 'resumo-aba': S.resumo.aba = id; dlgResumoCulto(S.resumo.eid); break;
     case 'resumo-culto-filtro': S.resumo.culto = id; dlgResumoCulto(S.resumo.eid); break;
+    case 'encerrar-evento': await encerrarEvento(); break;
     case 'justificar': dlgJustificar(el.dataset.evento, id, atualizarAposJustificar); break;
     case 'presenca': await togglePresenca(id); break;
     case 'p-filtro': S.pFiltro = id; S.pFiltroManual = true; atualizarPresenca(); break;

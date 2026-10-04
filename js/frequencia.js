@@ -1,5 +1,6 @@
 // Presença ao longo do tempo: cultos de um evento, resumo, frequência por pessoa e "quem sumiu".
-import { porJovem, statusJovem } from './dados.js';
+import { rpc } from './api.js';
+import { diretor, porJovem, statusJovem } from './dados.js';
 import { abrirDlg } from './dialogos.js';
 import { S } from './estado.js';
 import { ICON } from './icones.js';
@@ -141,6 +142,48 @@ export function viewPresencasHist() {
     </section>`;
 }
 
+/* ---------- chamadas de um evento (quem chamou quem) ---------- */
+// Eventos abertos já vêm no carregamento; os encerrados são buscados quando a aba abre.
+const chamadasCache = {};
+export function chamadasCarregadas(ev) {
+  if (!ev.arquivado) return (S.data.atribuicoes || []).filter(a => a.evento_id === ev.id);
+  return chamadasCache[ev.id] || null;
+}
+async function buscarChamadas(ev) {
+  chamadasCache[ev.id] = await rpc('box_chamadas_evento', { p_evento: ev.id });
+}
+
+function htmlChamadas(lista) {
+  if (!lista.length) return '<div class="vazio"><p>Este evento não tem chamadas registradas.</p></div>';
+  const nomeJ = id => S.data.jovens.find(j => j.id === id)?.nome || '—';
+  const feitas = lista.filter(a => a.status !== 'pendente').length;
+  const ninguem = [...porJovem(lista)].filter(([, l]) => l.every(a => a.status === 'pendente')).map(([id]) => nomeJ(id))
+    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  const porDir = new Map();
+  for (const a of lista) {
+    if (!porDir.has(a.diretor_id)) porDir.set(a.diretor_id, []);
+    porDir.get(a.diretor_id).push(a);
+  }
+  const linhas = [...porDir].map(([did, l]) => ({
+    nome: diretor(did)?.nome || '—', total: l.length, feitas: l.filter(a => a.status !== 'pendente').length,
+    pend: l.filter(a => a.status === 'pendente').map(a => nomeJ(a.jovem_id)).sort((a, b) => a.localeCompare(b, 'pt-BR')),
+  })).sort((a, b) => b.pend.length - a.pend.length || a.nome.localeCompare(b.nome, 'pt-BR'));
+  return `
+    <div class="faltas-resumo">
+      <strong>${feitas} de ${plural(lista.length, 'chamada feita', 'chamadas feitas')}</strong>
+      ${ninguem.length ? `<span class="just-pill alerta">${plural(ninguem.length, 'jovem que ninguém chamou', 'jovens que ninguém chamou')}</span>` : '<span class="just-pill">✓ Todo jovem recebeu contato</span>'}
+    </div>
+    ${ninguem.length ? `<h4 class="grupo-titulo">Ninguém chamou <span>${ninguem.length}</span></h4>
+      <div class="nomes alerta">${ninguem.map(n => `<span>${esc(n)}</span>`).join('')}</div>` : ''}
+    <h4 class="grupo-titulo">Diretoria <span>${linhas.length}</span></h4>
+    <div class="ch-grid">${linhas.map(r => `
+      <div class="ch-card ${r.pend.length ? '' : 'ok'}">
+        <div class="ch-top"><strong>${esc(r.nome)}</strong><span class="pill ${r.pend.length ? '' : 'st-confirmado'}">${r.feitas}/${r.total}</span></div>
+        <div class="mini-track"><div class="mini-fill" style="width:${r.total ? (r.feitas / r.total) * 100 : 0}%"></div></div>
+        ${r.pend.length ? `<small>Não chamou: <b>${r.pend.map(esc).join(', ')}</b></small>` : '<small class="ok">✓ Chamou todo mundo</small>'}
+      </div>`).join('')}</div>`;
+}
+
 /* ---------- resumo de um culto ---------- */
 const MOTIVO_IC = Object.fromEntries(MOTIVOS.map(([id, ic, l]) => [id, `${ic} ${l}`]));
 
@@ -186,9 +229,19 @@ export function dlgResumoCulto(eid) {
     .sort((a, b) => b[1] - a[1]);
   const linhaFalta = id => `<li><span class="avatar" aria-hidden="true">${esc(iniciais(nome(id)))}</span><span class="jf-nome">${esc(nome(id))}</span>${botaoJustificar(ev.id, id)}</li>`;
 
-  const abas = [['presentes', 'Presentes', lista.length], ['faltas', 'Faltas', todasFaltas.length], ['visitantes', 'Visitantes', visitantes.length]];
+  const chamadas = chamadasCarregadas(ev);
+  const abas = [['presentes', 'Presentes', lista.length], ['faltas', 'Faltas', todasFaltas.length], ['visitantes', 'Visitantes', visitantes.length],
+    ['chamadas', 'Chamadas', chamadas ? `${chamadas.filter(a => a.status !== 'pendente').length}/${chamadas.length}` : '…']];
   let corpo;
-  if (st.aba === 'presentes') {
+  if (st.aba === 'chamadas') {
+    if (chamadas) corpo = htmlChamadas(chamadas);
+    else {
+      corpo = '<div class="vazio"><span class="spinner" aria-hidden="true"></span><p>Buscando as chamadas…</p></div>';
+      buscarChamadas(ev)
+        .then(() => { if (S.dlg?.tipo === 'resumo' && S.dlg.id === ev.id && S.resumo?.aba === 'chamadas') dlgResumoCulto(ev.id); })
+        .catch(() => { chamadasCache[ev.id] = []; dlgResumoCulto(ev.id); });
+    }
+  } else if (st.aba === 'presentes') {
     corpo = `
       ${cultos.length > 1 ? `<div class="chips resumo-filtro">${[['todos', 'Todos'], ...cultos].map(([c, rot]) => `
         <button class="chip" data-act="resumo-culto-filtro" data-id="${c}" aria-pressed="${st.culto === c}">${esc(rot)}</button>`).join('')}</div>` : ''}

@@ -392,6 +392,12 @@ def t_historico_presencas_e_justificativas(s):
     pg.click('#dlg [data-act=resumo-culto-filtro][data-id=todos]')
     checar(0 < culto_sprint < pg.locator('#dlg .rp').count(), 'filtro por culto no resumo')
     s.print('resumo-presentes', full=False)
+    # chamadas do culto encerrado: quem não chamou aparece primeiro
+    pg.click('#dlg [data-act=resumo-aba][data-id=chamadas]')
+    pg.wait_for_selector('#dlg .ch-card')
+    primeiro = pg.locator('#dlg .ch-card').first.inner_text()
+    checar(primeiro.startswith('Téo') and 'Não chamou' in primeiro, f'aba Chamadas: {primeiro[:60]!r}')
+    s.print('resumo-chamadas', full=False)
     pg.click('#dlg [data-act=resumo-aba][data-id=faltas]')
     alvo = pg.locator('#dlg .just-lista li:has(.link-btn)').first
     nome = alvo.locator('.jf-nome').inner_text()
@@ -424,9 +430,36 @@ def t_historico_presencas_e_justificativas(s):
     checar('Trabalho' in pg.inner_text('.pcard-just'), 'motivo na Minha lista')
 
 
+def t_encerrar_evento(s):
+    pg = s.entrar()
+    s.aba('gerenciar')
+    pg.click('.mg-head .btn.primary')
+    pg.fill('#form-dlg input[name=nome]', 'Culto de Ontem')
+    pg.fill('#form-dlg input[name=data]', '2026-09-29')
+    pg.click('#form-dlg button[type=submit]')
+    pg.wait_for_timeout(1500)
+    checar(pg.locator('.hero-acao [data-act=encerrar-evento]').count() == 1, 'botão de encerrar no evento que já aconteceu')
+    s.print('evento-passado', full=False)
+    pg.click('.hero-acao [data-act=encerrar-evento]')
+    pg.wait_for_selector('#dlg2[open]')
+    pg.click('#dlg2 [data-r="1"]')
+    pg.wait_for_timeout(900)
+    ev = s.js("B.S.data.eventos.find(e => e.nome === 'Culto de Ontem')")
+    checar(ev['arquivado'] and ev['presenca_encerrada_em'], 'evento arquivado com a presença encerrada')
+    checar(pg.locator('.ev-nome').inner_text().upper() != 'CULTO DE ONTEM', 'continuou no evento encerrado')
+    s.aba('historico')
+    pg.click('[data-act=hist-modo][data-id=presencas]')
+    checar(pg.locator('[data-act=resumo-culto]:has-text("Culto de Ontem")').count() == 1, 'evento encerrado no histórico')
+    # sem nenhum evento aberto: histórico continua funcionando e as outras abas orientam
+    s.js("(B.S.data.eventos.forEach(e => e.arquivado = true), B.S.eventoId = null, B.render(), 0)")
+    checar(pg.locator('[data-act=resumo-culto]').count() >= 3, 'histórico sem evento aberto')
+    s.aba('jovens')
+    checar(pg.locator('.sem-evento [data-act=tab][data-id=historico]').count() == 1, 'tela sem evento sem o atalho pro histórico')
+
+
 TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
           t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro,
-          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas]
+          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento]
 
 
 def rodar(prints=None):

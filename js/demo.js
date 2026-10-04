@@ -6,7 +6,7 @@ import { $, byNome, faixa, hojeISO, mensagem, uid } from './util.js';
 import { VINCULOS } from './vinculos.js';
 
 export const demo = (() => {
-  const KEY = 'box-demo-db-v4';
+  const KEY = 'box-demo-db-v5';
   function seed() {
     const dirF = ['Ana', 'Bia', 'Carol', 'Dani', 'Lu'];
     const dirM = ['Rafa', 'Téo', 'Vini', 'Zé'];
@@ -83,6 +83,11 @@ export const demo = (() => {
         cultos, jovens: new Set(presencas.filter(x => x.evento_id === e.id && x.jovem_id).map(x => x.jovem_id)).size, diretoria: 4,
         confirmados: confirmados.length, confirmados_vieram: confirmados.length - faltaram.length, faltaram, nao_vao: [], visitantes: 0,
       };
+      // chamadas desse culto: o "Téo" (diretores[6]) não chamou ninguém, pra aparecer no resumo
+      distribuir({ ...e, publico: 'todos' }, jovens, diretores, [], false).forEach((par, i) => atribuicoes.push({
+        id: uid(), evento_id: e.id, ...par, nota: null, atualizado_por: null, atualizado_em: null,
+        status: par.diretor_id === diretores[6].id ? 'pendente' : ['confirmado', 'chamado', 'confirmado', 'nao_vai'][i % 4],
+      }));
       passados.push(e);
     });
     return { diretores, jovens, eventos: [ev, ...passados], atribuicoes, presencas, justificativas, vinculos, historico: [] };
@@ -173,6 +178,9 @@ export const demo = (() => {
         ? { presenca_encerrada_em: new Date().toISOString(), presenca_encerrada_por: p_quem, presenca_resumo: p_resumo }
         : { presenca_encerrada_em: null, presenca_encerrada_por: null });
       save(db);
+    },
+    box_chamadas_evento({ p_evento }) {
+      return load().atribuicoes.filter(a => a.evento_id === p_evento);
     },
     box_justificar({ p_evento, p_jovem, p_motivo, p_texto, p_quem }) {
       const db = load();
