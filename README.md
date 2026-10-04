@@ -29,11 +29,20 @@ Site estático, sem build: módulos ES nativos do navegador, publicado direto no
 | `css/*.css`, `css/telas/*.css` | Estilos por componente e por tela (a ordem dos `<link>` importa) |
 | `manifest.webmanifest`, `sw.js`, `icons/` | App instalável (PWA) |
 | `tests/e2e.py` | Testes de ponta a ponta (modo demonstração) |
+| `dev/servidor.py` | Servidor local com recarga automática |
 | `supabase/schema.sql` | Tabelas + funções. As tabelas ficam fechadas; o acesso é só pelas funções `box_*`, que exigem o código |
 | `supabase/0NN_*.sql` | Migrações, rodadas em ordem depois do schema (ex.: `002_presenca.sql`) |
 | `supabase/*.local.sql` | Dados reais (nomes). **Não vão pro Git.** |
 
 Ao criar um arquivo novo em `js/` ou `css/`, inclua também na lista `ARQUIVOS` do `sw.js` (pra abrir sem internet).
+
+## Rodar localmente
+
+```sh
+python dev/servidor.py          # http://localhost:8080 (dados reais) ou /?demo (fictícios)
+```
+
+Serve sem cache e recarrega a página sozinho quando um `.html`, `.css` ou `.js` muda.
 
 ## Testes
 
