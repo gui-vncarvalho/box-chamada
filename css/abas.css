@@ -1,43 +1,63 @@
-/* Abas (em cima no desktop, barra fixa embaixo no celular). */
+/* Navegação: barra fixa embaixo (celular e tablet) e barra lateral (desktop, a partir de 1024px). */
 
-.tabs {
-  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
-  position: sticky; top: 8px; z-index: 5; margin-bottom: 20px; padding: 5px;
-  background: rgba(26, 32, 41, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--border); border-radius: 14px;
-}
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex: 1 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  background: transparent; border: none; padding: 9px 8px; border-radius: 10px;
-  color: var(--text-dim); font-weight: 600; font-size: 14px; transition: background .15s, color .15s;
-}
-.tab:hover { color: var(--text); }
-.tab-ic { position: relative; display: inline-flex; align-items: center; }
-.tab-ic svg { width: 17px; height: 17px; }
-.tab[aria-selected="true"] { background: var(--surface-2); color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
-.tab .n {
+.tab, .lat-item { position: relative; background: transparent; border: none; color: var(--text-2); font-weight: 600; transition: background .15s, color .15s; }
+.tab-ic { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.tab .n, .lat-item .n {
   min-width: 18px; padding: 0 5px; border-radius: 999px;
   background: var(--btn-red); color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center;
 }
 
-/* celular: barra fixa embaixo, com ícone e nome */
-@media (max-width: 700px) {
-  .wrap { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
-  .tabs {
-    position: fixed; top: auto; bottom: 0; left: 0; right: 0; z-index: 20; margin: 0;
-    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0;
-    padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); overflow: visible;
-    border-radius: 0; border: none; border-top: 1px solid var(--border);
-    background: rgba(18, 22, 28, .94); box-shadow: 0 -8px 24px rgba(0, 0, 0, .35);
+/* ---------- barra de baixo ---------- */
+.wrap { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; margin: 0;
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
+  padding: 6px 4px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border); background: rgba(18, 22, 28, .95);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 -8px 24px rgba(0, 0, 0, .35);
+}
+.tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 54px; padding: 4px 2px; font-size: 11px; }
+.tab-ic { width: 54px; height: 30px; border-radius: 999px; transition: background .2s; }
+.tab-ic svg { width: 22px; height: 22px; }
+.tab[aria-selected="true"] { color: var(--text); }
+.tab[aria-selected="true"] .tab-ic { background: rgba(229, 57, 46, .16); color: var(--accent); }
+.tab .n { position: absolute; top: 2px; left: calc(50% + 6px); box-shadow: 0 0 0 2px var(--bg); }
+.tab-lbl { white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+#toast { bottom: calc(80px + env(safe-area-inset-bottom)); }
+@media (min-width: 700px) { .tabs { padding-left: max(4px, calc((100% - 760px) / 2)); padding-right: max(4px, calc((100% - 760px) / 2)); } }
+
+/* ---------- barra lateral ---------- */
+.lateral { display: none; }
+@media (min-width: 1024px) {
+  .wrap { max-width: none; padding: 0; }
+  .casca { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+  .lateral {
+    position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 6px;
+    padding: 22px 14px; border-right: 1px solid var(--border); background: #0f1318;
   }
-  .tab { flex-direction: column; gap: 3px; padding: 4px 2px; min-height: 52px; font-size: 11px; font-weight: 600; border-radius: 0; color: #b4bdc8; }
-  .tab[aria-selected="true"] { background: transparent; box-shadow: none; color: var(--text); }
-  .tab-ic { width: 52px; height: 30px; justify-content: center; border-radius: 999px; transition: background .2s; }
-  .tab-ic svg { width: 21px; height: 21px; }
-  .tab[aria-selected="true"] .tab-ic { background: var(--accent-soft); color: var(--accent); }
-  .tab { position: relative; }
-  .tab .n { position: absolute; top: 2px; left: calc(50% + 6px); box-shadow: 0 0 0 2px var(--bg); }
-  .tab-lbl { white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-  #toast { bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .lat-marca { padding: 0 10px 18px; }
+  .lat-marca .marca-nome { font-size: 26px; }
+  .lat-nav { display: flex; flex-direction: column; gap: 6px; }
+  .lat-item {
+    display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 10px 12px;
+    border-radius: 12px; font-size: 14.5px; text-align: left;
+  }
+  .lat-item .tab-ic { width: auto; height: auto; }
+  .lat-item .tab-ic svg { width: 20px; height: 20px; }
+  .lat-item .tab-lbl { flex: 1; }
+  .lat-item:hover { background: var(--surface); color: var(--text); }
+  .lat-item[aria-current="page"] { background: var(--surface-2); color: var(--text); box-shadow: inset 3px 0 0 var(--accent); }
+  .lat-eu {
+    margin-top: auto; display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; text-align: left;
+    border-radius: 14px; border: 1px solid var(--border); background: var(--surface);
+  }
+  .lat-eu:hover { border-color: var(--text-dim); }
+  .lat-eu .eu-av { width: 34px; height: 34px; font-size: 15px; }
+  .lat-eu span:last-child { display: flex; flex-direction: column; min-width: 0; }
+  .lat-eu strong { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lat-eu small { font-size: 12px; color: var(--text-dim); }
+  .conteudo { width: 100%; max-width: 1100px; margin: 0 auto; padding: 28px 32px 64px; }
+  .topo, .tabs { display: none; }
+  #toast { bottom: 20px; left: auto; right: 20px; transform: translateY(20px); }
+  #toast.show { transform: none; }
 }

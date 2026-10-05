@@ -55,6 +55,7 @@ export const S = {
   pCulto: '',
   histModo: 'marcacoes',
   pFiltro: 'todos',
+  mFiltro: '',
   limJ: 20,
   buscaMg: '',
   data: null,

@@ -137,6 +137,13 @@ export async function aoClicar(e) {
       await fecharDlg();
       render();
       break;
+    case 'ver-pendentes':
+      S.tab = 'minha';
+      S.mFiltro = 'pendente';
+      LS.set('tab', 'minha');
+      render();
+      rolarParaConteudo({ sempre: true, suave: true });
+      break;
     case 'ver-filtro': {
       S.tab = 'jovens';
       S.filtro = id;

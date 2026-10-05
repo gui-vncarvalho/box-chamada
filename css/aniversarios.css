@@ -1,24 +1,17 @@
 /* Aniversariantes. */
 
 .aniver-faixa {
-  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
-  margin: -6px 0 20px; padding: 11px 14px; border-radius: 14px;
-  border: 1px solid var(--border); background: var(--surface); transition: border-color .15s, background .15s;
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; text-align: left;
+  margin: 0 0 16px; padding: 8px 12px; border-radius: 12px; white-space: nowrap; overflow: hidden;
+  border: 1px solid rgba(232, 165, 61, .4); font-size: 13px; color: var(--text-2);
+  background: linear-gradient(100deg, rgba(232, 165, 61, .16), transparent 70%), var(--surface);
 }
-.aniver-faixa:hover { border-color: var(--text-dim); }
-.aniver-faixa.hoje {
-  border-color: rgba(232, 165, 61, .5);
-  background: linear-gradient(100deg, rgba(232, 165, 61, .18), rgba(229, 57, 46, .08) 60%, transparent), var(--surface);
-}
-.aniver-ic { flex: none; width: 38px; height: 38px; display: grid; place-items: center; font-size: 20px; border-radius: 11px; background: var(--gold-soft); }
-.aniver-faixa.hoje .aniver-ic { animation: balanca 2.4s ease-in-out infinite; }
-@keyframes balanca { 0%, 100% { transform: rotate(0); } 8% { transform: rotate(-12deg); } 16% { transform: rotate(10deg); } 24% { transform: rotate(0); } }
-.aniver-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.aniver-txt strong { font-size: 14px; }
-.aniver-faixa.hoje .aniver-txt strong { color: var(--gold); }
-.aniver-nomes { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 13px; color: var(--text-dim); }
+.aniver-faixa:hover { border-color: var(--gold); }
+.aniver-faixa.hoje { border-color: var(--gold); background: linear-gradient(100deg, rgba(232, 165, 61, .26), transparent 75%), var(--surface); }
+.aniver-rot { flex: none; font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--gold); }
+.aniver-nomes { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .aniver-nomes b { color: var(--text); font-weight: 600; }
-.aniver-nomes .mais { color: var(--gold); font-weight: 600; }
+.aniver-faixa .chevron { flex: none; width: 16px; height: 16px; color: var(--text-2); }
 .aniver-badge {
   display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 6px; white-space: nowrap;
   font-size: 11.5px; font-weight: 700; background: var(--gold-soft); color: var(--gold);

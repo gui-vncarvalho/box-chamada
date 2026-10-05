@@ -14,7 +14,7 @@ import { viewHistorico } from './telas/historico.js';
 import { ligarScrollInfinito, viewJovens } from './telas/jovens.js';
 import { viewMinha } from './telas/minha.js';
 import { presenca, presencaLiberada, viewPresenca } from './telas/presenca.js';
-import { $, celular, contagem, dataEvento, esc, horaGeral, plural, PUBLICO_LABEL, quandoEvento } from './util.js';
+import { $, contagem, dataEvento, esc, horaGeral, iniciais, nomeCurto, plural, PUBLICO_LABEL, quandoEvento } from './util.js';
 import { pessoa } from './vinculos.js';
 
 export function render() {
@@ -35,27 +35,40 @@ export function render() {
   ].filter(([id]) => id !== 'minha' || eu);
   if (!tabs.find(t => t[0] === S.tab)) S.tab = tabs[0][0];
 
+  const botaoAba = ([id, label, n], lateral) => `
+    <button class="${lateral ? 'lat-item' : 'tab'}" ${lateral ? '' : 'role="tab"'} data-act="tab" data-id="${id}"
+      ${lateral ? `aria-current="${S.tab === id ? 'page' : 'false'}"` : `aria-selected="${S.tab === id}"`}>
+      <span class="tab-ic">${TAB_ICON[id]}</span>
+      <span class="tab-lbl">${label}</span>${n ? `<span class="n" aria-label="${n} pendentes">${n}</span>` : ''}
+    </button>`;
+  const avatarEu = `<span class="eu-av" aria-hidden="true">${esc(iniciais(eu ? nomeCurto(eu) : 'V').slice(0, 1))}</span>`;
+
   $('#app').innerHTML = `
-    ${DEMO ? '<div class="demo-banner">Modo demonstração: dados fictícios salvos só neste navegador.</div>' : ''}
-    <header class="topo">
-      <div class="marca">
-        <div>
-          <div class="marca-nome">Chamada</div>
-          <div class="marca-sub">Diretoria · Juventude Box</div>
-        </div>
+    <div class="casca">
+      <aside class="lateral" aria-label="Navegação">
+        <div class="lat-marca"><div class="marca-nome">Chamada</div><div class="marca-sub">Diretoria · Juventude Box</div></div>
+        <nav class="lat-nav">${tabs.map(t => botaoAba(t, true)).join('')}</nav>
+        <button class="lat-eu" data-act="trocar-eu" title="Trocar pessoa">${avatarEu}
+          <span><strong>${esc(eu ? nomeCurto(eu) : 'Visitante')}</strong><small>${eu ? (eu.equipe === 'F' ? 'Equipe feminina' : 'Equipe masculina') : 'Só visualizando'}</small></span>
+        </button>
+      </aside>
+      <div class="conteudo">
+        ${DEMO ? '<div class="demo-banner">Modo demonstração: dados fictícios salvos só neste navegador.</div>' : ''}
+        <header class="topo">
+          <div class="marca">
+            <div>
+              <div class="marca-nome">Chamada</div>
+              <div class="marca-sub">Diretoria · Juventude Box</div>
+            </div>
+          </div>
+          <button class="me-chip" data-act="trocar-eu" title="Trocar pessoa">${avatarEu}<span>${esc(eu ? nomeCurto(eu) : 'Visitante')}</span></button>
+        </header>
+        ${renderHero(ev, evs)}
+        ${renderAniver()}
+        <nav class="tabs" role="tablist">${tabs.map(t => botaoAba(t, false)).join('')}</nav>
+        <main id="view">${renderView()}</main>
       </div>
-      <button class="me-chip" data-act="trocar-eu" title="Trocar pessoa">${ICON.user}<span>${esc(eu ? eu.nome : 'Visitante')}</span></button>
-    </header>
-    ${renderHero(ev, evs)}
-    ${renderAniver()}
-    <nav class="tabs" role="tablist">
-      ${tabs.map(([id, label, n]) => `
-        <button class="tab" role="tab" data-act="tab" data-id="${id}" aria-selected="${S.tab === id}">
-          <span class="tab-ic">${TAB_ICON[id]}</span>
-          <span class="tab-lbl">${label}</span>${n ? `<span class="n" aria-label="${n} pendentes">${n}</span>` : ''}
-        </button>`).join('')}
-    </nav>
-    <main id="view">${renderView()}</main>`;
+    </div>`;
   ligarScrollInfinito();
 }
 
@@ -72,7 +85,7 @@ export const TAB_ICON = {
 export function rolarParaConteudo({ sempre = false, suave = false } = {}) {
   const view = $('#view');
   if (!view) return;
-  const folga = celular() ? 12 : $('.tabs').offsetHeight + 20;
+  const folga = 16;
   const alvo = view.getBoundingClientRect().top + window.scrollY - folga;
   if (sempre || window.scrollY > alvo) window.scrollTo({ top: alvo, behavior: suave ? 'smooth' : 'auto' });
 }
@@ -146,53 +159,54 @@ function heroSemEvento() {
     </section>`;
 }
 
+// Rótulo do selo do card: "Faltam 5 dias", "É amanhã", "É hoje!", "Já aconteceu".
+function seloEvento(cd) {
+  if (!cd) return null;
+  const m = cd[0].match(/^Em (\d+) dias$/);
+  return m ? `Faltam ${m[1]} dias` : cd[0] === 'Amanhã' ? 'É amanhã' : cd[0];
+}
+
 export function renderHero(ev, evs) {
   if (!ev) return heroSemEvento();
   const cd = contagem(ev);
   const lista = atribs();
   const feitas = lista.filter(a => a.status !== 'pendente').length;
-  const pct = lista.length ? Math.round((feitas / lista.length) * 100) : 0;
-  const pj = porJovem(lista);
-  const cont = { confirmado: 0, nao_vai: 0, aberto: 0 };
-  for (const l of pj.values()) {
-    const st = statusJovem(l);
-    if (st === 'confirmado' || st === 'nao_vai') cont[st]++;
-    else cont.aberto++;
-  }
-  const tile = (st, filtro, n, label) => `
-    <button class="tile st-${st}" data-act="ver-filtro" data-id="${filtro}" title="Ver na aba Jovens">
-      <strong>${n}</strong><span><span class="dot"></span>${label}</span>
-    </button>`;
+  const minhas = lista.filter(a => a.diretor_id === S.me);
+  const minhasFeitas = minhas.filter(a => a.status !== 'pendente').length;
+  // a pista mostra o meu andamento; quem não tem lista vê o da equipe
+  const [prog, total] = minhas.length ? [minhasFeitas, minhas.length] : [feitas, lista.length];
+  const frac = total ? prog / total : 0;
+  const pct = Math.round(frac * 100);
+  const faltam = minhas.length ? minhas.length - minhasFeitas : lista.length - feitas;
+  const meta = [dataEvento(ev, { weekday: 'short', day: '2-digit', month: '2-digit' }).replace('.', ''), horaGeral(ev), PUBLICO_LABEL[ev.publico],
+    plural(ev.chamadas_por_jovem, 'chamada', 'chamadas') + ' por jovem'].filter(Boolean).join(' · ');
+  const selo = seloEvento(cd);
   return `
-    <section class="hero" aria-label="Evento selecionado">
-      <div class="hero-ev">
+    <section class="hero hero-largada" aria-label="Evento selecionado">
+      <div class="faixas" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="hero-corpo">
         <div class="hero-label">
-          <span class="eyebrow">Evento</span>
-          ${cd ? `<span class="countdown cd-${cd[1]}">${cd[0]}</span>` : ''}
+          ${selo ? `<span class="selo-ev cd-${cd[1]}"><span class="dot"></span>${esc(selo)}</span>` : ''}
           ${evs.length > 1 ? `<button class="btn small trocar" data-act="trocar-evento">${ICON.trocar}Trocar evento</button>` : ''}
         </div>
         <h2 class="ev-nome">${esc(ev.nome)}</h2>
-        <ul class="ev-chips">${chipsEvento(ev)}</ul>
+        <div class="ev-meta">${esc(meta.charAt(0).toUpperCase() + meta.slice(1))}</div>
+        <div class="pista" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"
+          aria-label="${minhas.length ? 'Suas chamadas feitas' : 'Chamadas feitas pela equipe'}: ${prog} de ${total}">
+          <div class="pista-trilho"></div>
+          <div class="pista-fill" style="--f:${frac}"></div>
+          <span class="pista-capacete" style="--f:${frac}">${ICON.capacete}</span>
+          <span class="pista-bandeira"></span>
+        </div>
+        <div class="hero-chips">
+          ${minhas.length ? `<button class="hchip hchip-voce" data-act="tab" data-id="minha">Você <b>${minhasFeitas}/${minhas.length}</b></button>` : ''}
+          <button class="hchip hchip-equipe" data-act="tab" data-id="equipe">Equipe <b>${feitas}/${lista.length}</b></button>
+          <button class="hchip hchip-faltam" data-act="${minhas.length ? 'ver-pendentes' : 'ver-filtro'}" data-id="aberto">Faltam <b>${faltam}</b></button>
+        </div>
         ${cd && cd[1] === 'passado' ? `<div class="hero-acao">
           <button class="btn hero-cta" data-act="encerrar-evento">${ICON.check}Encerrar evento</button>
           <small>Finaliza a chamada e guarda o resumo no histórico.</small></div>` : ''}
         ${cd && cd[1] === 'hoje' && S.tab !== 'presenca' ? `<button class="btn presenca-cta" data-act="tab" data-id="presenca">${ICON.entrada}Marcar presença</button>` : ''}
-      </div>
-      <div class="hero-prog">
-        <div class="eyebrow">Progresso das chamadas</div>
-        <div class="prog-num">
-          <strong>${feitas}</strong><span>de ${lista.length} feitas</span>
-          <em>${pct}%</em>
-        </div>
-        <div class="pista" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Chamadas feitas">
-          <div class="pista-fill" style="width:${pct}%"></div>
-          <span class="bandeira">${ICON.bandeira}</span>
-        </div>
-        <div class="tiles">
-          ${tile('confirmado', 'confirmado', cont.confirmado, cont.confirmado === 1 ? 'Confirmado' : 'Confirmados')}
-          ${tile('nao_vai', 'nao_vai', cont.nao_vai, cont.nao_vai === 1 ? 'Não vai' : 'Não vão')}
-          ${tile('pendente', 'aberto', cont.aberto, 'Sem resposta')}
-        </div>
       </div>
     </section>`;
 }

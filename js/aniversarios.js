@@ -49,16 +49,12 @@ export function renderAniver() {
   const semana = lista.filter(x => x.dias <= 6);
   const temHoje = semana.some(x => x.dias === 0);
   const nomes = semana.length
-    ? semana.slice(0, 3).map(x => `<span><b>${quandoAniver(x)}</b> ${esc(nomeMensagem(x.p))}</span>`).join('')
-      + (semana.length > 3 ? `<span class="mais">+${semana.length - 3}</span>` : '')
-    : `<span>Próximo: <b>${esc(nomeMensagem(lista[0].p))}</b>, em ${lista[0].dias} dias (${lista[0].data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })})</span>`;
+    ? semana.map(x => `<b>${quandoAniver(x)}</b> ${esc(nomeMensagem(x.p))}`).join(' · ')
+    : `Próximo: <b>${esc(nomeMensagem(lista[0].p))}</b>, em ${lista[0].dias} dias (${lista[0].data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })})`;
   return `
-    <button class="aniver-faixa ${temHoje ? 'hoje' : ''}" data-act="aniversarios">
-      <span class="aniver-ic" aria-hidden="true">🎂</span>
-      <span class="aniver-txt">
-        <strong>${temHoje ? 'Tem aniversário hoje!' : semana.length ? 'Aniversariantes da semana' : 'Aniversariantes'}</strong>
-        <span class="aniver-nomes">${nomes}</span>
-      </span>
+    <button class="aniver-faixa ${temHoje ? 'hoje' : ''}" data-act="aniversarios" aria-label="Aniversariantes${temHoje ? ': tem aniversário hoje' : ''}">
+      <span class="aniver-rot">Aniversários</span>
+      <span class="aniver-nomes">${nomes}</span>
       <span class="chevron">${ICON.chevron}</span>
     </button>`;
 }

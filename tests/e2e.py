@@ -77,7 +77,7 @@ class Sessao:
         return self.pg.evaluate(f'(() => {{ const B = window.__box; return {expr}; }})()')
 
     def aba(self, id):
-        self.pg.click(f'.tab[data-id={id}]')
+        self.pg.click(f':is(.tab, .lat-item)[data-id={id}]:visible')
         self.pg.wait_for_timeout(120)
 
     def print(self, nome, full=True):
@@ -202,7 +202,7 @@ def t_presenca_no_dia(s):
     pg.fill('#form-dlg input[name=data]', '2026-10-03')
     pg.click('#form-dlg button[type=submit]')
     pg.wait_for_timeout(1500)
-    checar(pg.locator('.countdown').inner_text().upper().startswith('É HOJE'), 'contagem do dia errada')
+    checar(pg.locator('.selo-ev').inner_text().upper().startswith('É HOJE'), 'contagem do dia errada')
     checar(pg.locator('.presenca-cta').count() == 1, 'botão "Marcar presença" ausente no dia')
     pg.reload()
     pg.wait_for_selector('.hero')
@@ -280,7 +280,7 @@ def t_modais_e_cadastros(s):
 
 def t_aniversarios(s):
     pg = s.entrar()
-    checar('Tem aniversário hoje' in pg.inner_text('.aniver-faixa'), 'faixa de aniversário')
+    checar('hoje' in pg.get_attribute('.aniver-faixa', 'class') and 'Hoje' in pg.inner_text('.aniver-faixa'), 'faixa de aniversário')
     pg.click('.aniver-faixa')
     pg.wait_for_selector('dialog[open] .aniver-lista')
     href = pg.get_attribute('dialog .aniver-row.hoje a', 'href')
@@ -294,9 +294,11 @@ def t_abas_e_pwa(s):
     pg = s.entrar()
     fit = s.js("(n => n.scrollWidth <= n.clientWidth + 1)(document.querySelector('.tabs'))")
     checar(fit, 'abas não cabem')
+    if s.nome == 'desktop':  # desktop: barra lateral no lugar das abas
+        checar(s.js("getComputedStyle(document.querySelector('.lateral')).display") == 'flex', 'barra lateral no desktop')
     if s.nome == 'celular':
         checar(s.js("getComputedStyle(document.querySelector('.tabs')).position") == 'fixed', 'barra de abas não está fixa')
-        cortados = s.js("[...document.querySelectorAll('.tab-lbl')].filter(e => e.scrollWidth > e.clientWidth).length")
+        cortados = s.js("[...document.querySelectorAll('.tabs .tab-lbl')].filter(e => e.scrollWidth > e.clientWidth).length")
         checar(cortados == 0, 'nome de aba cortado')
     man = s.pg.evaluate("fetch('manifest.webmanifest').then(r => r.json())")
     tem = {(i['sizes'], i.get('purpose', 'any')) for i in man['icons']}
