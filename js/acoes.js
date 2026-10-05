@@ -277,6 +277,14 @@ export async function aoClicar(e) {
       else S.mgF[id] = '';
       render();
       break;
+    case 'limpar-busca': {
+      const campo = { busca: 'busca', 'busca-p': 'buscaP', 'busca-mg': 'buscaMg' }[id];
+      if (!campo) break;
+      S[campo] = '';
+      render();
+      $('#' + id)?.focus();
+      break;
+    }
     case 'mg-filtro':
       S.mgFiltro = id;
       render();

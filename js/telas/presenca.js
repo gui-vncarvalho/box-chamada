@@ -11,6 +11,7 @@ import { ICON } from '../icones.js';
 import { render } from '../render.js';
 import { $, byNome, contagem, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, nomeCurto, subNome, nomeMensagem, plural, primeiroNome, semAcento, toast, uid } from '../util.js';
 import { pessoa, textoVinculo, vinculosDe } from '../vinculos.js';
+import { buscaVazia } from '../vazio.js';
 
 export const presencasEv = () => (S.data?.presencas || []).filter(p => p.evento_id === S.eventoId);
 
@@ -127,9 +128,10 @@ export function htmlListaPresenca() {
     .sort((a, b) => byNome(a.j, b.j));
   if (!rows.length) {
     if (q && filtroP() !== 'diretoria' && !encerrada(evento())) {
-      return `<div class="vazio"><p>Ninguém com “${esc(S.buscaP.trim())}” no cadastro.</p>
-        <button class="btn primary" data-act="visitante">${ICON.addPessoa}Cadastrar “${esc(S.buscaP.trim())}” como visitante</button></div>`;
+      return buscaVazia(S.buscaP, 'busca-p',
+        `<button class="btn primary vz-acao" data-act="visitante">${ICON.addPessoa}Cadastrar “${esc(S.buscaP.trim())}” como visitante</button>`);
     }
+    if (q) return buscaVazia(S.buscaP, 'busca-p');
     const f = filtroP();
     return `<div class="vazio"><p>${f === 'faltam' ? 'Todos os confirmados vieram. 🙌' : f === 'presentes' ? 'Ninguém marcado neste culto.' : 'Ninguém aqui.'}</p></div>`;
   }

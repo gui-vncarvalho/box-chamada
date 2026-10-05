@@ -6,6 +6,7 @@ import { S, STATUS_BY_ID } from '../estado.js';
 import { ICON } from '../icones.js';
 import { presenca } from './presenca.js';
 import { $, byNome, elegivel, esc, faixa, faixaBadge, iniciais, nomeCurto, subNome, semAcento } from '../util.js';
+import { buscaVazia } from '../vazio.js';
 
 export const PAG_JOVENS = 20;
 
@@ -39,7 +40,7 @@ export function htmlListaJovens() {
     .filter(r => passaFiltro(r, S.filtro) && busca(r.j))
     .sort((a, b) => byNome(a.j, b.j));
   if (!rows.length) {
-    return `<div class="vazio"><p>${q ? `Ninguém encontrado com “${esc(S.busca.trim())}”.` : 'Ninguém nesse filtro.'}</p></div>`;
+    return q ? buscaVazia(S.busca, 'busca') : '<div class="vazio"><p>Ninguém nesse filtro.</p></div>';
   }
   const visiveis = rows.slice(0, S.limJ);
   const faltam = rows.length - visiveis.length;

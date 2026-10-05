@@ -4,6 +4,7 @@ import { S } from '../estado.js';
 import { ICON } from '../icones.js';
 import { $, esc, plural, tempoAtras } from '../util.js';
 import { viewPresencasHist } from '../frequencia.js';
+import { estadoVazio } from '../vazio.js';
 
 export const HIST_ICON = { chamado: 'tel', confirmado: 'check', nao_vai: 'xis', pendente: 'desfazer', presente: 'entrada', ausente: 'desfazer' };
 
@@ -69,7 +70,10 @@ function viewMarcacoes() {
       </div>` : ''}
     </div>`;
   if (!h.length) {
-    return topo + `<div class="vazio"><p>${total ? 'Nenhuma marcação sua ou da sua lista ainda.' : 'Nenhuma marcação ainda. O histórico aparece aqui assim que a equipe começar.'}</p></div>`;
+    return topo + estadoVazio({
+      ilustra: 'relogio', titulo: 'Nada por aqui ainda',
+      texto: total ? 'Nenhuma marcação sua ou da sua lista ainda.' : 'Nenhuma marcação ainda. O histórico aparece aqui assim que a equipe começar.',
+    });
   }
 
   const dias = [];

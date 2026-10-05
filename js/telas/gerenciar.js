@@ -11,6 +11,7 @@ import { ICON } from '../icones.js';
 import { cartaoInstalar } from '../pwa.js';
 import { $, byNome, contagem, dataEvento, digitos, embaralhar, esc, faixa, faixaBadge, fmtTel, hojeISO, horaGeral, idade, iniciais, nomeCurto, subNome, plural, PUBLICO_LABEL, quandoEvento } from '../util.js';
 import { ESTADO_CIVIL, ESTADO_LABEL, pessoa } from '../vinculos.js';
+import { buscaVazia } from '../vazio.js';
 
 export function calTile(e) {
   if (!e.data) return '<span class="cal-tile vazio"><strong>?</strong><small>sem data</small></span>';
@@ -135,6 +136,7 @@ export function htmlListaMgJovens() {
       ${ch.map(([k, t]) => `<button class="chip-filtro" data-act="mgf-limpar" data-id="${k}">${esc(t)}${ICON.xis}</button>`).join('')}
       ${ch.length > 1 ? '<button class="link-btn" data-act="mgf-limpar" data-id="tudo">Limpar tudo</button>' : ''}
     </div>`;
+  if (!js.length && S.buscaMg.trim() && !ch.length) return resumo + buscaVazia(S.buscaMg, 'busca-mg');
   if (!js.length) {
     return resumo + `<div class="vazio"><p>${S.buscaMg.trim() || ch.length ? 'Ninguém com essa combinação.' : 'Ninguém nesse filtro. 🎉'}</p></div>`;
   }

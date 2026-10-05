@@ -89,14 +89,6 @@ button.mg-stat.ativo { border-color: var(--gold); background: var(--gold-soft); 
 }
 .aparelho > div:first-child { display: flex; flex-direction: column; gap: 3px; }
 .aparelho small { color: var(--text-dim); font-size: 13px; }
-#toast {
-  position: fixed; left: 50%; bottom: 20px; transform: translate(-50%, 20px);
-  background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 10px;
-  font-weight: 600; font-size: 14px; opacity: 0; pointer-events: none;
-  transition: opacity .2s, transform .2s; max-width: calc(100vw - 32px); z-index: 50;
-}
-#toast.show { opacity: 1; transform: translate(-50%, 0); }
-#toast.erro { background: var(--btn-red); color: #fff; }
 @media (max-width: 600px) {
   .mg-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mg-atual { padding: 16px; }

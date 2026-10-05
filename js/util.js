@@ -138,15 +138,8 @@ export function embaralhar(arr) {
   return a;
 }
 
-export let toastTimer;
-
-export function toast(msg, erro = false) {
-  const t = $('#toast');
-  t.textContent = msg;
-  t.className = 'show' + (erro ? ' erro' : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.className = ''; }, erro ? 4000 : 2200);
-}
+// Avisos ficam em toast.js; reexportados aqui pra quem já importa de util.
+export { toast } from './toast.js';
 
 export const celular = () => matchMedia('(max-width: 700px)').matches;
 

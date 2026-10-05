@@ -10,6 +10,7 @@ import { presenca } from './presenca.js';
 import { $, byNome, celular, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, nomeCurto, subNome, telIntl } from '../util.js';
 import { linhaVinculos } from '../vinculos.js';
 import { conviteNotificacoes } from '../notificacoes.js';
+import { estadoVazio } from '../vazio.js';
 
 export function segStatus(a) {
   return `<div class="seg" role="group" aria-label="Status da chamada">
@@ -78,8 +79,11 @@ const faltou = (a, j) => a.status === 'nao_vai' || (a.status === 'confirmado' &&
 export function viewMinha() {
   const minhas = atribs().filter(a => a.diretor_id === S.me);
   if (!minhas.length) {
-    return `<div class="vazio"><p>Você não tem ninguém pra chamar neste evento.</p>
-      <p class="small">A distribuição é feita em Gerenciar.</p></div>`;
+    return estadoVazio({
+      ilustra: 'largada', titulo: 'Ninguém pra chamar ainda',
+      texto: 'Você não tem ninguém pra chamar neste evento. A distribuição é feita em Gerenciar.',
+      acao: { rotulo: 'Distribuir quem falta', act: 'distribuir', modo: 'faltantes', icone: 'addPessoa' },
+    });
   }
   const pj = porJovem();
   minhas.sort((a, b) => byNome(jovem(a.jovem_id), jovem(b.jovem_id)));
@@ -96,6 +100,10 @@ export function viewMinha() {
       <h2>Sua lista</h2>
       <span class="tag">${feitas} de ${minhas.length} chamados</span>
     </div>
+    ${feitas === minhas.length ? estadoVazio({
+      ilustra: 'chegada', titulo: 'Tudo chamado!', texto: 'Você chamou todo mundo da sua lista. Agora é com eles.',
+      acao: { rotulo: 'Ver a equipe', act: 'tab', id: 'equipe', secundaria: true },
+    }) : ''}
     ${grupos.map(([titulo, l]) => `
       <section class="grupo">
         <h4 class="grupo-titulo">${titulo} <span>${l.length}</span></h4>

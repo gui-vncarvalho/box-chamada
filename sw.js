@@ -48,6 +48,8 @@ const ARQUIVOS = [
   './js/telas/minha.js',
   './js/telas/presenca.js',
   './js/util.js',
+  './js/toast.js',
+  './js/vazio.js',
   './js/vinculos.js',
 ];
 
