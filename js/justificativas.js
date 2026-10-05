@@ -1,5 +1,5 @@
 // Justificativa de ausência: motivos prontos + texto livre.
-import { carregar, falha, rpc } from './api.js';
+import { carregar, falha, garantirEvento, rpc } from './api.js';
 import { nomeQuem, jovem } from './dados.js';
 import { abrirDlg, fecharDlg } from './dialogos.js';
 import { S } from './estado.js';
@@ -56,6 +56,7 @@ export function dlgJustificar(eid, jid, aoSalvar) {
       await rpc('box_justificar', { p_evento: eid, p_jovem: jid, p_motivo: m, p_texto: texto, p_quem: nomeQuem() });
       await fechar();
       await carregar();
+      await garantirEvento(eid, { recarregar: true });
       toast(m ? 'Motivo anotado' : 'Motivo apagado');
       aoSalvar?.();
     } catch (e) { falha(e); }

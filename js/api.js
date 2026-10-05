@@ -29,11 +29,33 @@ export async function rpc(fn, args = {}) {
 
 export let primeiraCarga = true;
 
+// Presenças/justificativas de cultos antigos (fora da "janela" que o carregamento
+// traz) buscadas sob demanda; ficam em memória e são mescladas a cada carregamento.
+const extras = {};
+export const naJanela = eid => !S.data?.janela || S.data.janela.includes(eid);
+
+function mesclarExtras() {
+  for (const [eid, x] of Object.entries(extras)) {
+    if (naJanela(eid)) continue;
+    S.data.presencas = S.data.presencas.filter(p => p.evento_id !== eid).concat(x.presencas || []);
+    S.data.justificativas = S.data.justificativas.filter(j => j.evento_id !== eid).concat(x.justificativas || []);
+  }
+}
+
+// Garante que as presenças de um culto estejam carregadas. Devolve true se precisou buscar.
+export async function garantirEvento(eid, { recarregar = false } = {}) {
+  if (naJanela(eid) || (extras[eid] && !recarregar)) return false;
+  extras[eid] = await rpc('box_presencas_evento', { p_evento: eid });
+  mesclarExtras();
+  return true;
+}
+
 export async function carregar() {
   S.data = await rpc('box_carregar');
   S.data.presencas ||= [];
   S.data.vinculos ||= [];
   S.data.justificativas ||= [];
+  mesclarExtras();
   const evs = eventosAtivos();
   const salvo = evs.find(e => e.id === S.eventoId);
   const hoje = hojeISO();

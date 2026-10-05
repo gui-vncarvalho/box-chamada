@@ -551,9 +551,31 @@ def t_notificacoes(s):
     checar(pg.locator('.convite-push').count() == 0, 'dispensar convite')
 
 
+def t_carregamento_leve(s):
+    pg = s.entrar()
+    # parado: a cada 12 s só pergunta a versão; a tela não é redesenhada
+    s.js("(document.querySelector('#view').dataset.marca = '1', 0)")
+    pg.clock.run_for(40000)
+    pg.wait_for_timeout(300)
+    checar(s.js("document.querySelector('#view').dataset.marca") == '1', 'recarregou sem nada mudar')
+    # outra pessoa muda algo: a versão sobe e o app recarrega
+    s.js("(() => { const k = 'box-demo-db-v6'; const db = JSON.parse(localStorage[k]); db.versao++; localStorage[k] = JSON.stringify(db); })()")
+    pg.clock.run_for(13000)
+    pg.wait_for_timeout(500)
+    checar(s.js("document.querySelector('#view').dataset.marca") is None, 'não recarregou depois da mudança')
+    # culto antigo fora da janela: o resumo busca as presenças sozinho
+    s.js("(() => { const S = B.S; const velho = S.data.eventos.find(e => e.presenca_encerrada_em); S.data.janela = [S.eventoId];"
+         " S.data.presencas = S.data.presencas.filter(p => p.evento_id !== velho.id); window.__velho = velho.id; })()")
+    s.aba('historico')
+    pg.click('[data-act=hist-modo][data-id=presencas]')
+    pg.locator(f'[data-act=resumo-culto][data-id="{s.js("window.__velho")}"]').click()
+    pg.wait_for_selector('#dlg .rp')
+    checar(pg.locator('#dlg .rp').count() > 0, 'resumo de culto antigo sem presenças')
+
+
 TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
           t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro,
-          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido, t_backup, t_notificacoes]
+          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido, t_backup, t_notificacoes, t_carregamento_leve]
 
 
 def rodar(prints=None):

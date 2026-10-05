@@ -1,7 +1,7 @@
 // Ponto de entrada: liga os eventos e carrega os dados.
 import { aoClicar, aoDigitar, aoEnviar, sair } from './acoes.js';
 import { proximoAniver } from './aniversarios.js';
-import { carregar } from './api.js';
+import { carregar, rpc } from './api.js';
 import { buscaInteligente } from './busca.js';
 import { evento } from './dados.js';
 import { dlg, fecharDlg } from './dialogos.js';
@@ -20,6 +20,9 @@ export async function poll() {
   const ativo = document.activeElement;
   if (ativo && ['INPUT', 'TEXTAREA', 'SELECT'].includes(ativo.tagName)) return;
   try {
+    // pergunta só a versão (alguns bytes) e só baixa tudo se algo mudou
+    const versao = await rpc('box_versao').catch(() => null);
+    if (versao != null && versao === S.data.versao) return;
     await carregar();
     const y = window.scrollY;
     render();

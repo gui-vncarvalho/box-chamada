@@ -1,5 +1,5 @@
 // Presença ao longo do tempo: cultos de um evento, resumo, frequência por pessoa e "quem sumiu".
-import { rpc } from './api.js';
+import { garantirEvento, naJanela, rpc } from './api.js';
 import { diretor, porJovem, statusJovem } from './dados.js';
 import { abrirDlg } from './dialogos.js';
 import { S } from './estado.js';
@@ -200,6 +200,13 @@ function linhaPessoa(x, mostrarCulto) {
 export function dlgResumoCulto(eid) {
   const ev = S.data.eventos.find(e => e.id === eid);
   if (!ev) return;
+  if (!naJanela(eid) && !S.data.presencas.some(p => p.evento_id === eid) && !S.carregandoEvento?.[eid]) {
+    // culto antigo: busca as presenças dele e abre o resumo em seguida
+    S.carregandoEvento = { ...S.carregandoEvento, [eid]: true };
+    abrirDlg(`<div class="vazio"><span class="spinner" aria-hidden="true"></span><p>Buscando o culto…</p></div>`, { tipo: 'resumo', id: eid, largo: true });
+    garantirEvento(eid).catch(() => {}).finally(() => { delete S.carregandoEvento[eid]; if (S.dlg?.id === eid) dlgResumoCulto(eid); });
+    return;
+  }
   const st = S.resumo?.eid === eid ? S.resumo : (S.resumo = { eid, aba: 'presentes', culto: 'todos' });
   const r = resumoDe(ev);
   const cultos = cultosDoEvento(ev);

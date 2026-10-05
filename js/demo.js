@@ -102,7 +102,7 @@ export const demo = (() => {
     save(db);
     return db;
   }
-  function save(db) { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {} }
+  function save(db) { db.versao = (db.versao || 0) + 1; try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {} }
   const nome = (lista, id) => (lista.find(x => x.id === id) || {}).nome;
 
   return {
@@ -110,6 +110,7 @@ export const demo = (() => {
       const db = load();
       const ativos = new Set(db.eventos.filter(e => !e.arquivado).map(e => e.id));
       return {
+        versao: db.versao || 0,
         diretores: [...db.diretores].sort(byNome),
         jovens: [...db.jovens].sort(byNome),
         eventos: [...db.eventos].sort((a, b) => (b.data || '').localeCompare(a.data || '')),
@@ -187,6 +188,11 @@ export const demo = (() => {
     box_push_remover() {},
     box_push_testar() {},
     box_push_distribuicao() {},
+    box_versao() { return load().versao || 0; },
+    box_presencas_evento({ p_evento }) {
+      const db = load();
+      return { presencas: (db.presencas || []).filter(p => p.evento_id === p_evento), justificativas: (db.justificativas || []).filter(j => j.evento_id === p_evento) };
+    },
     box_exportar() {
       return { exportado_em: new Date().toISOString(), ...load() };
     },
