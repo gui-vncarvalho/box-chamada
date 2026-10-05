@@ -3,7 +3,7 @@ import { atribs, diretor, evento, jovem, statusJovem } from './dados.js';
 import { S } from './estado.js';
 import { ICON } from './icones.js';
 import { segStatus } from './telas/minha.js';
-import { $, byNome, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, telIntl, tempoAtras } from './util.js';
+import { $, byNome, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, nomeCurto, subNome, telIntl, tempoAtras } from './util.js';
 import { chipsVinculos, ESTADO_LABEL, pessoa } from './vinculos.js';
 import { htmlFrequencia } from './frequencia.js';
 import { botaoJustificar } from './justificativas.js';
@@ -118,7 +118,7 @@ export function renderDlgJovem(jid) {
     <div class="dlg-head">
       <div class="dlg-pessoa st-${s}">
         <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
-        <div><h2>${esc(j.nome)}</h2>
+        <div><h2>${esc(nomeCurto(j))}</h2>${subNome(j)}
           <div class="pcard-meta">${[faixa(j) ? faixaBadge(j) : '<span>idade não informada</span>', digitos(j.telefone) ? `<span>${esc(fmtTel(j.telefone))}</span>` : '<span>sem telefone</span>'].join('<span class="sep" aria-hidden="true">·</span>')}</div>
         </div>
       </div>
@@ -142,14 +142,14 @@ export function renderDlgJovem(jid) {
     <h4 class="grupo-titulo">Chamadas · ${esc(ev.nome)}</h4>
     ${lista.length ? lista.map(a => `
       <div class="resp">
-        <div class="resp-head"><strong>${esc(diretor(a.diretor_id)?.nome)}${a.diretor_id === S.me ? ' <span class="voce">você</span>' : ''}</strong>
+        <div class="resp-head"><strong>${esc(nomeCurto(diretor(a.diretor_id)))}${a.diretor_id === S.me ? ' <span class="voce">você</span>' : ''}</strong>
           <span class="dim small">${a.atualizado_em ? `${esc(a.atualizado_por || '')} · ${tempoAtras(a.atualizado_em)}` : ''}</span></div>
         ${segStatus(a)}
         ${a.nota ? `<button class="nota" data-act="nota" data-id="${a.id}"><span aria-hidden="true">📝</span> ${esc(a.nota)}</button>` : `<div><button class="link-btn" data-act="nota" data-id="${a.id}">+ Nota</button></div>`}
       </div>`).join('') : '<p class="dim small" style="margin:0">Ninguém responsável ainda.</p>'}
     <details class="mudar" ${lista.length ? '' : 'open'}>
       <summary>Mudar quem chama</summary>
-      <div class="chips">${dirs.map(d => `<button class="chip" data-act="toggle-resp" data-jovem="${j.id}" data-id="${d.id}" aria-pressed="${atuais.has(d.id)}">${esc(d.nome)}</button>`).join('')}</div>
+      <div class="chips">${dirs.map(d => `<button class="chip" data-act="toggle-resp" data-jovem="${j.id}" data-id="${d.id}" aria-pressed="${atuais.has(d.id)}">${esc(nomeCurto(d))}</button>`).join('')}</div>
     </details>
     <div class="dlg-foot">
       <button class="btn ghost" data-act="editar-jovem" data-id="${j.id}">${ICON.lapis}Editar cadastro</button>

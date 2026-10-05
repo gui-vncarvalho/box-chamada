@@ -5,7 +5,7 @@ import { abrirDlg } from './dialogos.js';
 import { S } from './estado.js';
 import { ICON } from './icones.js';
 import { botaoJustificar, justificativa, MOTIVOS } from './justificativas.js';
-import { byNome, celular, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, plural, porFaixa, primeiroNome, toast } from './util.js';
+import { byNome, celular, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, nomeCurto, nomeMensagem, plural, porFaixa, primeiroNome, toast } from './util.js';
 
 const CULTOS_SUMIU = 2; // faltou nos 2 últimos cultos encerrados…
 const JANELA_SUMIU = 6; // …e tinha vindo em algum dos 6 anteriores
@@ -120,7 +120,7 @@ export function viewPresencasHist() {
         : sumiu.length ? `<div class="jgrid">${sumiu.map(({ j, ultima }) => `
           <button class="jcard sumiu" data-act="jovem" data-id="${j.id}">
             <span class="avatar" aria-hidden="true">${esc(j.nome.slice(0, 1).toUpperCase())}</span>
-            <span class="jcard-txt"><span class="jcard-nome"><strong>${esc(j.nome)}</strong></span>
+            <span class="jcard-txt"><span class="jcard-nome"><strong>${esc(nomeCurto(j))}</strong></span>
               <span class="jcard-resp"><span>Faltou nos ${CULTOS_SUMIU} últimos · veio por último em ${esc(ultima.nome)} (${esc(dataEvento(ultima, { day: '2-digit', month: '2-digit' }))})</span></span></span>
             <span class="chevron">${ICON.chevron}</span>
           </button>`).join('')}</div>`
@@ -155,7 +155,7 @@ async function buscarChamadas(ev) {
 
 function htmlChamadas(lista) {
   if (!lista.length) return '<div class="vazio"><p>Este evento não tem chamadas registradas.</p></div>';
-  const nomeJ = id => S.data.jovens.find(j => j.id === id)?.nome || '—';
+  const nomeJ = id => nomeCurto(S.data.jovens.find(j => j.id === id)) || '—';
   const feitas = lista.filter(a => a.status !== 'pendente').length;
   const ninguem = [...porJovem(lista)].filter(([, l]) => l.every(a => a.status === 'pendente')).map(([id]) => nomeJ(id))
     .sort((a, b) => a.localeCompare(b, 'pt-BR'));
@@ -165,7 +165,7 @@ function htmlChamadas(lista) {
     porDir.get(a.diretor_id).push(a);
   }
   const linhas = [...porDir].map(([did, l]) => ({
-    nome: diretor(did)?.nome || '—', total: l.length, feitas: l.filter(a => a.status !== 'pendente').length,
+    nome: nomeCurto(diretor(did)) || '—', total: l.length, feitas: l.filter(a => a.status !== 'pendente').length,
     pend: l.filter(a => a.status === 'pendente').map(a => nomeJ(a.jovem_id)).sort((a, b) => a.localeCompare(b, 'pt-BR')),
   })).sort((a, b) => b.pend.length - a.pend.length || a.nome.localeCompare(b.nome, 'pt-BR'));
   return `
@@ -205,7 +205,7 @@ export function dlgResumoCulto(eid) {
   const cultos = cultosDoEvento(ev);
   const rotCulto = Object.fromEntries(cultos.map(([c, rot]) => [c, rot.split(' ')[0]]));
   const jovemDe = id => S.data.jovens.find(j => j.id === id);
-  const nome = id => jovemDe(id)?.nome || S.data.diretores.find(d => d.id === id)?.nome || '—';
+  const nome = id => nomeCurto(jovemDe(id) || S.data.diretores.find(d => d.id === id)) || '—';
 
   // quem veio, com os cultos de cada um
   const pessoas = new Map();
@@ -299,7 +299,7 @@ export async function textoResumo(ev) {
   const visitantes = [...new Set(presencasDoEvento(ev.id).filter(p => p.jovem_id).map(p => p.jovem_id))]
     .map(id => S.data.jovens.find(j => j.id === id))
     .filter(j => j && ev.data && j.criado_em && hojeISO(new Date(j.criado_em)) === ev.data)
-    .map(j => primeiroNome(j.nome));
+    .map(j => nomeMensagem(j));
   const cultos = cultosDoEvento(ev).filter(([c]) => c !== 'geral' && r.cultos?.[c]);
   return [
     `*${ev.nome}*${data ? ` — ${data}` : ''}`,

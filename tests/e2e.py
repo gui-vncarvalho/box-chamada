@@ -468,9 +468,30 @@ def t_encerrar_evento(s):
     checar(pg.locator('.sem-evento [data-act=tab][data-id=historico]').count() == 1, 'tela sem evento sem o atalho pro histórico')
 
 
+def t_apelido(s):
+    pg = s.entrar()
+    s.aba('gerenciar')
+    pg.click('.mg-abas >> text=Jovens')
+    for termo in ['Enzinho', 'enzo gabriel']:
+        pg.fill('#busca-mg', termo)
+        pg.wait_for_timeout(80)
+        card = pg.locator('#mglista .jcard').first
+        checar(card.locator('strong').first.inner_text() == 'Enzinho' and 'Enzo Gabriel' in card.inner_text(), f'apelido na busca "{termo}"')
+    msg = s.js("B.mensagem(B.evento(), B.S.data.jovens.find(j => j.apelido === 'Enzinho'))")
+    checar(msg.startswith('Oi, Enzinho!'), f'mensagem com apelido: {msg[:30]!r}')
+    pg.fill('#busca-mg', '')
+    checar('Lalá' in pg.inner_text('.sug-apelidos'), 'sugestão de apelido')
+    s.print('sugestoes-apelido', full=False)
+    pg.click('[data-act=apelido-usar]')
+    pg.wait_for_timeout(600)
+    j = s.js("B.S.data.jovens.find(j => j.apelido === 'Lalá')")
+    checar(j and j['nome'] == 'Laís Fernandes', f'confirmar apelido: {j}')
+    checar(pg.locator('.sug-apelidos').count() == 0, 'sugestão continuou na lista')
+
+
 TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
           t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro,
-          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento]
+          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido]
 
 
 def rodar(prints=None):

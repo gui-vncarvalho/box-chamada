@@ -9,7 +9,7 @@ import { abrirForm, EQUIPES } from '../formulario.js';
 import { calcularResumo, cultosDoEvento, dlgResumoCulto, encerrada, pessoaDe, resumoDe } from '../frequencia.js';
 import { ICON } from '../icones.js';
 import { render } from '../render.js';
-import { $, byNome, contagem, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, plural, primeiroNome, semAcento, toast, uid } from '../util.js';
+import { $, byNome, contagem, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, nomeCurto, subNome, nomeMensagem, plural, primeiroNome, semAcento, toast, uid } from '../util.js';
 import { pessoa, textoVinculo, vinculosDe } from '../vinculos.js';
 
 export const presencasEv = () => (S.data?.presencas || []).filter(p => p.evento_id === S.eventoId);
@@ -101,7 +101,7 @@ export function htmlTopoPresenca() {
 export function cardPresenca({ j, l, s, p, dir, outro }) {
   const cultos = cultosDoEvento(evento());
   const nomeOutro = outro && (cultos.find(([c]) => c === culto(outro))?.[1] || '').split(' ')[0];
-  const quem = l.length ? l.map(a => esc(diretor(a.diretor_id)?.nome)).join(' e ') : '';
+  const quem = l.length ? l.map(a => esc(nomeCurto(diretor(a.diretor_id)))).join(' e ') : '';
   const sub = p
     ? `Chegou ${new Date(p.em).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}${p.marcado_por ? ` · por ${esc(p.marcado_por)}` : ''}`
     : dir ? `Diretoria · equipe ${j.equipe === 'F' ? 'feminina' : 'masculina'}`
@@ -111,7 +111,7 @@ export function cardPresenca({ j, l, s, p, dir, outro }) {
     <button class="pcheck ${p ? 'presente' : ''} st-${s} ${dir ? 'dir' : ''}" data-act="presenca" data-id="${j.id}" aria-pressed="${!!p}">
       <span class="avatar" aria-hidden="true">${p ? ICON.check : esc(iniciais(j.nome))}</span>
       <span class="jcard-txt">
-        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${dir ? '<span class="pill st-chamado">Diretoria</span>' : faixa(j) ? faixaBadge(j) : ''}${badgeAniver(j)}</span>
+        <span class="jcard-nome"><strong>${esc(nomeCurto(j))}</strong>${dir ? '<span class="pill st-chamado">Diretoria</span>' : faixa(j) ? faixaBadge(j) : ''}${badgeAniver(j)}</span>${subNome(j)}
         <span class="pcheck-sub">${!p && s === 'confirmado' ? '<span class="dot"></span>' : ''}${sub}${nomeOutro ? ` · <b class="no-outro">✓ também no ${esc(nomeOutro)}</b>` : ''}</span>
       </span>
       <span class="pcheck-box" aria-hidden="true">${ICON.check}</span>
@@ -319,7 +319,8 @@ export function formVisitante() {
     sub: `Cadastra e já marca presença em ${esc(ev.nome)}${c !== 'geral' ? ` (${c === 'box' ? 'Box' : 'Sprint'})` : ''}.`,
     textoSalvar: 'Cadastrar e marcar presença',
     campos: [
-      { nome: 'nome', label: 'Nome', obrig: true, full: true, autofocus: true, placeholder: 'Nome (apelido)' },
+      { nome: 'nome', label: 'Nome', obrig: true, full: true, autofocus: true, placeholder: 'Nome completo' },
+      { nome: 'apelido', label: 'Apelido', full: true, placeholder: 'Opcional' },
       { nome: 'genero', label: 'Equipe', tipo: 'segmentado', padrao: 'F', opcoes: EQUIPES, full: true },
       { nome: 'telefone', label: 'WhatsApp', tipo: 'tel', placeholder: '(11) 91234-5678' },
       { nome: 'nascimento', label: 'Data de nascimento', tipo: 'date', dica: 'Opcional' },
@@ -331,7 +332,7 @@ export function formVisitante() {
       await rpc('box_salvar', { p_tabela: 'jovens', p_dados: dados });
       await rpc('box_presenca', { p_evento: ev.id, p_jovem: dados.id, p_presente: true, p_quem: nomeQuem(), p_culto: c });
       S.buscaP = '';
-      toast(`${primeiroNome(dados.nome)} cadastrado(a) e presente 🎉`);
+      toast(`${nomeMensagem(dados)} cadastrado(a) e presente 🎉`);
     },
   });
 }

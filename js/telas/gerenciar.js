@@ -4,10 +4,10 @@ import { badgeAniver, proximoAniver } from '../aniversarios.js';
 import { buscaInteligente, MESES } from '../busca.js';
 import { atribs, diretor, evento, jovem } from '../dados.js';
 import { distribuir } from '../distribuir.js';
-import { S } from '../estado.js';
+import { LS, S } from '../estado.js';
 import { ICON } from '../icones.js';
 import { cartaoInstalar } from '../pwa.js';
-import { $, byNome, contagem, dataEvento, digitos, embaralhar, esc, faixa, faixaBadge, fmtTel, hojeISO, horaGeral, idade, iniciais, plural, PUBLICO_LABEL, quandoEvento } from '../util.js';
+import { $, byNome, contagem, dataEvento, digitos, embaralhar, esc, faixa, faixaBadge, fmtTel, hojeISO, horaGeral, idade, iniciais, nomeCurto, subNome, plural, PUBLICO_LABEL, quandoEvento } from '../util.js';
 import { ESTADO_CIVIL, ESTADO_LABEL, pessoa } from '../vinculos.js';
 
 export function calTile(e) {
@@ -143,7 +143,7 @@ export function htmlListaMgJovens() {
     <button class="jcard mg-jovem ${j.ativo ? '' : 'inativo'}" data-act="editar-jovem" data-id="${j.id}">
       <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
       <span class="jcard-txt">
-        <span class="jcard-nome"><strong>${esc(j.nome)}</strong>${faixa(j) ? faixaBadge(j) : ''}${badgeAniver(j)}${j.ativo ? '' : '<span class="pill">Inativo</span>'}</span>
+        <span class="jcard-nome"><strong>${esc(nomeCurto(j))}</strong>${faixa(j) ? faixaBadge(j) : ''}${badgeAniver(j)}${j.ativo ? '' : '<span class="pill">Inativo</span>'}</span>${subNome(j)}
         <span class="jcard-resp">
           <span>${j.genero === 'F' ? 'Feminina' : 'Masculina'}</span>
           ${tel ? `<span>${esc(fmtTel(j.telefone))}</span>` : '<span class="falta">sem telefone</span>'}
@@ -180,6 +180,35 @@ export function painelFiltros() {
     </div>`;
 }
 
+/* ---------- possíveis apelidos: "Nome (Apelido)" pra revisar ---------- */
+const ignorados = () => { try { return JSON.parse(LS.get('apelido-ignorados') || '[]'); } catch { return []; } };
+export function ignorarApelido(id) { LS.set('apelido-ignorados', JSON.stringify([...ignorados(), id])); }
+
+export function sugestoesApelido() {
+  const ig = new Set(ignorados());
+  return [...S.data.jovens.map(p => ({ p, tabela: 'jovens' })), ...S.data.diretores.map(p => ({ p, tabela: 'diretores' }))]
+    .filter(({ p }) => !(p.apelido || '').trim() && !ig.has(p.id) && /\(([^)]+)\)/.test(p.nome))
+    .map(x => ({ ...x, apelido: x.p.nome.match(/\(([^)]+)\)/)[1].trim(), nome: x.p.nome.replace(/\s*\([^)]*\)\s*/g, ' ').trim() }));
+}
+
+function htmlSugestoes() {
+  const lista = sugestoesApelido();
+  if (!lista.length) return '';
+  return `
+    <section class="sug-apelidos">
+      <div class="sug-head"><strong>Possíveis apelidos <span class="c">${lista.length}</span></strong>
+        <small>Nomes com algo entre parênteses. Confirme se é apelido, ou ignore se for outra coisa (ex.: de quem é próximo).</small></div>
+      <ul>${lista.map(x => `
+        <li>
+          <span class="sug-txt"><span class="dim">${esc(x.p.nome)}</span><span>→ <b>${esc(x.apelido)}</b> · ${esc(x.nome)}</span></span>
+          <span class="row-btns">
+            <button class="btn small ghost" data-act="apelido-ignorar" data-id="${x.p.id}">Ignorar</button>
+            <button class="btn small primary" data-act="apelido-usar" data-id="${x.p.id}">Usar “${esc(x.apelido)}”</button>
+          </span>
+        </li>`).join('')}</ul>
+    </section>`;
+}
+
 export function mgJovens() {
   const d = S.data;
   const ativos = d.jovens.filter(j => j.ativo);
@@ -198,6 +227,7 @@ export function mgJovens() {
         <button class="btn primary" data-act="novo-jovem">${ICON.mais1}Jovem</button>
       </div>
     </div>
+    ${htmlSugestoes()}
     <div class="mg-stats">
       ${stat(cont.box, 'no Box', 'box')}
       ${stat(cont.sprint, 'no Sprint', 'sprint')}
@@ -234,7 +264,7 @@ export function mgDiretoria() {
         <button class="dir-card ${p.ativo ? '' : 'inativo'}" data-act="editar-diretor" data-id="${p.id}">
           <span class="avatar" aria-hidden="true">${esc(iniciais(p.nome))}</span>
           <span class="dir-txt">
-            <strong>${esc(p.nome)}${p.id === S.me ? ' <span class="voce">você</span>' : ''}${badgeAniver(p)}</strong>
+            <strong>${esc(nomeCurto(p))}${p.id === S.me ? ' <span class="voce">você</span>' : ''}${badgeAniver(p)}</strong>
             <small>${p.ativo ? (evento() ? plural(n, 'chamada', 'chamadas') + ' neste evento' : 'Ativo') : 'Inativo · fora das distribuições'}${p.nascimento ? '' : ' · <span class="falta">sem nascimento</span>'}</small>
           </span>
           <span class="chevron">${ICON.lapis}</span>

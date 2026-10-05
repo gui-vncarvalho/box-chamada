@@ -8,15 +8,16 @@ import { distribuir } from './distribuir.js';
 import { IDADE_BOX, LS, S } from './estado.js';
 import { abrirForm, EQUIPES, mascaraTel, textoIdade } from './formulario.js';
 import { ICON } from './icones.js';
-import { $, digitos, esc, faixa, mensagem, plural, toast, uid } from './util.js';
+import { $, digitos, esc, faixa, mensagem, nomeCurto, plural, toast, uid } from './util.js';
 import { ESTADO_CIVIL, pessoa, secaoVinculosForm } from './vinculos.js';
 
 export function formJovem(j) {
   abrirForm({
     titulo: j ? 'Editar jovem' : 'Novo jovem',
-    sub: j ? `Dados de ${esc(j.nome)}` : 'Cadastre pra entrar nas listas de chamada.',
+    sub: j ? `Dados de ${esc(nomeCurto(j))}` : 'Cadastre pra entrar nas listas de chamada.',
     campos: [
-      { nome: 'nome', label: 'Nome', obrig: true, full: true, autofocus: !j, placeholder: 'Nome (apelido)' },
+      { nome: 'nome', label: 'Nome completo', obrig: true, full: true, autofocus: !j, placeholder: 'Ex.: Pedro Henrique' },
+      { nome: 'apelido', label: 'Apelido', full: true, placeholder: 'Como a galera chama. Ex.: Pedrinho', dica: 'Aparece em destaque e na mensagem do WhatsApp. A busca acha pelos dois.' },
       { nome: 'genero', label: 'Equipe', tipo: 'segmentado', padrao: 'F', opcoes: EQUIPES, full: true },
       { nome: 'nascimento', label: 'Data de nascimento', tipo: 'date', dica: `Define Box (${IDADE_BOX}+) ou Sprint` },
       { nome: 'telefone', label: 'WhatsApp', tipo: 'tel', placeholder: '(11) 91234-5678' },
@@ -41,9 +42,10 @@ export function formJovem(j) {
 export function formDiretor(p) {
   abrirForm({
     titulo: p ? 'Editar pessoa' : 'Nova pessoa na diretoria',
-    sub: p ? `Dados de ${esc(p.nome)}` : 'Ela passa a receber jovens pra chamar.',
+    sub: p ? `Dados de ${esc(nomeCurto(p))}` : 'Ela passa a receber jovens pra chamar.',
     campos: [
-      { nome: 'nome', label: 'Nome', obrig: true, full: true, autofocus: !p },
+      { nome: 'nome', label: 'Nome completo', obrig: true, full: true, autofocus: !p },
+      { nome: 'apelido', label: 'Apelido', full: true, placeholder: 'Opcional' },
       { nome: 'equipe', label: 'Equipe', tipo: 'segmentado', padrao: 'F', opcoes: EQUIPES, full: true },
       { nome: 'telefone', label: 'Telefone', tipo: 'tel', placeholder: '(11) 91234-5678' },
       { nome: 'nascimento', label: 'Data de nascimento', tipo: 'date', semFaixa: true, dica: 'Pra entrar nos aniversariantes' },

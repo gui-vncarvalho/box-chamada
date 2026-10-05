@@ -42,7 +42,7 @@ export function termoBusca(t) {
   if (mes >= 0) return p => !!p.nascimento && Number(p.nascimento.slice(5, 7)) === mes + 1;
   return p => {
     const vinc = vinculosDe(p.id).map(v => textoVinculo(v, p.id)?.texto || '').join(' ');
-    return semAcento(`${p.nome} ${p.obs || ''} ${vinc}`).includes(t);
+    return semAcento(`${p.nome} ${p.apelido || ''} ${p.obs || ''} ${vinc}`).includes(t);
   };
 }
 

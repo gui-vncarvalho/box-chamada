@@ -3,7 +3,7 @@ import { diretor, jovem } from './dados.js';
 import { abrirDlg, dlg } from './dialogos.js';
 import { S } from './estado.js';
 import { ICON } from './icones.js';
-import { $, byNome, esc, faixa, faixaBadge, idade, plural, primeiroNome, telIntl } from './util.js';
+import { $, byNome, esc, faixa, faixaBadge, idade, nomeCurto, nomeMensagem, plural, primeiroNome, telIntl } from './util.js';
 
 export function proximoAniver(nasc, base = new Date()) {
   if (!nasc) return null;
@@ -49,9 +49,9 @@ export function renderAniver() {
   const semana = lista.filter(x => x.dias <= 6);
   const temHoje = semana.some(x => x.dias === 0);
   const nomes = semana.length
-    ? semana.slice(0, 3).map(x => `<span><b>${quandoAniver(x)}</b> ${esc(primeiroNome(x.p.nome))}</span>`).join('')
+    ? semana.slice(0, 3).map(x => `<span><b>${quandoAniver(x)}</b> ${esc(nomeMensagem(x.p))}</span>`).join('')
       + (semana.length > 3 ? `<span class="mais">+${semana.length - 3}</span>` : '')
-    : `<span>Próximo: <b>${esc(primeiroNome(lista[0].p.nome))}</b>, em ${lista[0].dias} dias (${lista[0].data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })})</span>`;
+    : `<span>Próximo: <b>${esc(nomeMensagem(lista[0].p))}</b>, em ${lista[0].dias} dias (${lista[0].data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })})</span>`;
   return `
     <button class="aniver-faixa ${temHoje ? 'hoje' : ''}" data-act="aniversarios">
       <span class="aniver-ic" aria-hidden="true">🎂</span>
@@ -65,7 +65,7 @@ export function renderAniver() {
 
 export function mensagemParabens(p) {
   const eu = diretor(S.me);
-  return `Feliz aniversário, ${primeiroNome(p.nome)}! 🎉🎂 Que Deus te abençoe muito nesse novo ano de vida. ` +
+  return `Feliz aniversário, ${nomeMensagem(p)}! 🎉🎂 Que Deus te abençoe muito nesse novo ano de vida. ` +
     `Um abraço de toda a galera do Box!${eu ? ` — ${eu.nome}` : ''}`;
 }
 
@@ -93,7 +93,7 @@ export function dlgAniversarios() {
       <li class="aniver-row ${x.dias === 0 ? 'hoje' : ''}">
         <span class="cal-tile"><small>${mes}</small><strong>${x.data.getDate()}</strong></span>
         <span class="aniver-info">
-          <span class="aniver-nome"><strong>${esc(x.p.nome)}</strong>${tag}</span>
+          <span class="aniver-nome"><strong>${esc(nomeCurto(x.p))}</strong>${tag}</span>
           <small>Faz ${x.idade} anos · ${x.dias === 0 ? '<b>hoje 🎉</b>' : x.dias === 1 ? 'amanhã' : quandoAniver(x, true).toLowerCase()}</small>
         </span>
         ${tel ? `<a class="btn small ${x.dias === 0 ? 'wa' : ''}" href="https://api.whatsapp.com/send?phone=${tel}&text=${encodeURIComponent(mensagemParabens(x.p))}" target="_blank" rel="noopener">${ICON.wa}Parabéns</a>` : ''}

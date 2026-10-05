@@ -105,3 +105,13 @@ button.mg-stat.ativo { border-color: var(--gold); background: var(--gold-soft); 
   .mg-atual-id h3 { font-size: 22px; }
   .mg-abas button span { font-size: 14px; }
 }
+
+/* possíveis apelidos */
+.sug-apelidos { margin-bottom: 18px; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(232, 165, 61, .4); background: var(--gold-soft); }
+.sug-head { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
+.sug-head .c { font-size: 11.5px; padding: 0 7px; border-radius: 999px; background: var(--gold); color: #2b1c05; margin-left: 4px; }
+.sug-head small { color: var(--text-dim); font-size: 13px; }
+.sug-apelidos ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.sug-apelidos li { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; padding: 8px 10px; border-radius: 10px; background: var(--surface); }
+.sug-txt { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; min-width: 0; }
+.sug-txt b { color: var(--cream); }

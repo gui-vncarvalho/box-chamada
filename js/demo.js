@@ -6,7 +6,7 @@ import { $, byNome, faixa, hojeISO, mensagem, uid } from './util.js';
 import { VINCULOS } from './vinculos.js';
 
 export const demo = (() => {
-  const KEY = 'box-demo-db-v5';
+  const KEY = 'box-demo-db-v6';
   function seed() {
     const dirF = ['Ana', 'Bia', 'Carol', 'Dani', 'Lu'];
     const dirM = ['Rafa', 'Téo', 'Vini', 'Zé'];
@@ -34,6 +34,10 @@ export const demo = (() => {
     diretores.forEach((d, i) => { d.nascimento = daqui(20 + i * 37, 24 + i); d.telefone = `1197${String(1000000 + i * 7654321).slice(0, 7)}`; });
     diretores[1].nascimento = daqui(5, 26);
     jovens[1].estado_civil = jovens[14].estado_civil = 'casado';
+    // apelidos de exemplo, e um nome com parênteses pra lista de revisão
+    jovens[16].nome = 'Enzo Gabriel'; jovens[16].apelido = 'Enzinho';
+    jovens[18].nome = 'Igor Santos'; jovens[18].apelido = 'Igão';
+    jovens[8].nome = 'Laís Fernandes (Lalá)';
     const vinculos = [
       { id: uid(), a_id: jovens[1].id, b_id: jovens[14].id, tipo: 'conjuge' },
       { id: uid(), a_id: jovens[3].id, b_id: jovens[15].id, tipo: 'irmao' },

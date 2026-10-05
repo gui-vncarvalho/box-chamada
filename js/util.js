@@ -6,7 +6,12 @@ export const $ = sel => document.querySelector(sel);
 
 export const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-export const byNome = (a, b) => a.nome.localeCompare(b.nome, 'pt-BR');
+// Nome do dia a dia: o apelido, se tiver; senão o nome cadastrado.
+export const nomeCurto = p => (p ? (p.apelido || '').trim() || p.nome : '');
+// Linha pequena com o nome completo, só quando a pessoa tem apelido.
+export const subNome = p => (p && (p.apelido || '').trim() ? `<small class="nome-completo">${esc(p.nome)}</small>` : '');
+// Ordena pelo nome que aparece na tela.
+export const byNome = (a, b) => nomeCurto(a).localeCompare(nomeCurto(b), 'pt-BR');
 
 export const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'x' + Math.random().toString(16).slice(2) + Date.now());
 
@@ -87,6 +92,8 @@ export function quandoEvento(ev) {
 export const PUBLICO_LABEL = { box: 'Box (17+)', sprint: 'Sprint (até 16)', todos: 'Box + Sprint' };
 
 export function primeiroNome(nome) { return String(nome).replace(/\s*\(.*?\)\s*/g, ' ').trim(); }
+// Como chamar a pessoa numa mensagem: apelido, ou o nome sem o que estiver entre parênteses.
+export const nomeMensagem = p => (p && (p.apelido || '').trim()) || primeiroNome(p?.nome || '');
 
 export function mensagem(ev, jovem) {
   const eu = diretor(S.me);
@@ -96,8 +103,8 @@ export function mensagem(ev, jovem) {
   if (hora) quando += `, às ${hora}`;
   if (quando) quando = ',' + quando;
   return (ev.mensagem || MSG_PADRAO)
-    .replaceAll('{nome}', primeiroNome(jovem.nome))
-    .replaceAll('{eu}', eu ? eu.nome : 'a diretoria')
+    .replaceAll('{nome}', nomeMensagem(jovem))
+    .replaceAll('{eu}', eu ? nomeMensagem(eu) : 'a diretoria')
     .replaceAll('{evento}', ev.nome)
     .replaceAll('{quando}', quando)
     .replaceAll('{data}', dataEvento(ev))

@@ -6,7 +6,7 @@ import { S } from './estado.js';
 import { ICON } from './icones.js';
 import { render, renderView } from './render.js';
 import { ligarScrollInfinito } from './telas/jovens.js';
-import { $, byNome, esc, faixa, faixaBadge, iniciais, semAcento, toast } from './util.js';
+import { $, byNome, esc, faixa, faixaBadge, iniciais, nomeCurto, semAcento, toast } from './util.js';
 
 // rot: tipos simétricos; a/b: direcionais (a → b). Texto pelo gênero de quem é descrito.
 export const VINCULOS = {
@@ -44,7 +44,7 @@ export function textoVinculo(v, id) {
   const outro = pessoa(v.a_id === id ? v.b_id : v.a_id);
   if (!def || !eu || !outro) return null;
   const rot = def.rot ? def.rot[eu.g] : (v.a_id === id ? def.a : def.b)[eu.g];
-  return { ic: def.ic, rot, texto: def.verbo ? `${rot} ${outro.p.nome}` : `${rot} de ${outro.p.nome}`, outro };
+  return { ic: def.ic, rot, texto: def.verbo ? `${rot} ${nomeCurto(outro.p)}` : `${rot} de ${nomeCurto(outro.p)}`, outro };
 }
 
 export function linhaVinculos(id, max = 2) {
@@ -91,23 +91,23 @@ export function dlgNovoVinculo(pid, aoSalvar) {
   const frase = () => {
     if (!escolha) return `<span class="dim">Escolha o tipo e a pessoa.</span>`;
     const def = VINCULOS[escolha.tipo];
-    const nomeAlvo = alvo ? `<b>${esc(pessoa(alvo).p.nome)}</b>` : '<span class="dim">…</span>';
+    const nomeAlvo = alvo ? `<b>${esc(nomeCurto(pessoa(alvo).p))}</b>` : '<span class="dim">…</span>';
     const rot = escolha.label.toLowerCase();
     return def.verbo
-      ? `<b>${esc(eu.p.nome)}</b> ${rot} ${nomeAlvo}`
-      : `<b>${esc(eu.p.nome)}</b> é ${rot} de ${nomeAlvo}`;
+      ? `<b>${esc(nomeCurto(eu.p))}</b> ${rot} ${nomeAlvo}`
+      : `<b>${esc(nomeCurto(eu.p))}</b> é ${rot} de ${nomeAlvo}`;
   };
   const listaPessoas = () => {
     const q = semAcento(busca);
     const todos = [
       ...S.data.jovens.filter(j => j.ativo).map(p => ({ p, tipo: 'jovem' })),
       ...S.data.diretores.filter(x => x.ativo).map(p => ({ p, tipo: 'diretor' })),
-    ].filter(x => x.p.id !== pid && (!q || semAcento(x.p.nome).includes(q))).sort((a, b) => byNome(a.p, b.p));
+    ].filter(x => x.p.id !== pid && (!q || semAcento(`${x.p.nome} ${x.p.apelido || ''}`).includes(q))).sort((a, b) => byNome(a.p, b.p));
     if (!todos.length) return '<p class="dim small" style="padding:10px;margin:0">Ninguém encontrado.</p>';
     return todos.slice(0, 40).map(x => `
       <button type="button" class="vinc-pessoa ${alvo === x.p.id ? 'sel' : ''}" data-alvo="${x.p.id}">
         <span class="avatar" aria-hidden="true">${esc(iniciais(x.p.nome))}</span>
-        <span>${esc(x.p.nome)}</span>
+        <span>${esc(nomeCurto(x.p))}</span>
         ${x.tipo === 'diretor' ? '<span class="pill st-chamado">Diretoria</span>' : faixa(x.p) ? faixaBadge(x.p) : ''}
       </button>`).join('');
   };
@@ -119,7 +119,7 @@ export function dlgNovoVinculo(pid, aoSalvar) {
   };
 
   abrirDlg(`
-    <div class="dlg-head"><div><h2>Novo vínculo</h2><p class="dlg-sub">${esc(eu.p.nome)}</p></div></div>
+    <div class="dlg-head"><div><h2>Novo vínculo</h2><p class="dlg-sub">${esc(nomeCurto(eu.p))}</p></div></div>
     <div class="vinc-frase" data-frase></div>
     ${grupos.map(gr => `
       <div class="vinc-grupo"><span class="eyebrow">${gr}</span>

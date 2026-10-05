@@ -3,7 +3,7 @@ import { carregar, falha, rpc } from './api.js';
 import { nomeQuem, jovem } from './dados.js';
 import { abrirDlg, fecharDlg } from './dialogos.js';
 import { S } from './estado.js';
-import { $, esc, toast } from './util.js';
+import { $, esc, nomeCurto, toast } from './util.js';
 
 export const MOTIVOS = [
   ['trabalho', '💼', 'Trabalho'],
@@ -39,7 +39,7 @@ export function dlgJustificar(eid, jid, aoSalvar) {
   abrirDlg(`
     <form class="form-texto">
       <div class="dlg-head"><div><h2>Motivo da ausência</h2>
-        <p class="dlg-sub">${esc(jovem(jid)?.nome || '')}${ev ? ` · ${esc(ev.nome)}` : ''}</p></div></div>
+        <p class="dlg-sub">${esc(nomeCurto(jovem(jid)))}${ev ? ` · ${esc(ev.nome)}` : ''}</p></div></div>
       <div class="chips motivos">${MOTIVOS.map(([id, ic, l]) => `
         <button type="button" class="chip" data-motivo="${id}" aria-pressed="${motivo === id}">${ic} ${l}</button>`).join('')}</div>
       <textarea name="t" rows="2" placeholder="Detalhe (opcional): ex.: plantão no trabalho, voltou de viagem no domingo…">${esc(atual?.texto || '')}</textarea>

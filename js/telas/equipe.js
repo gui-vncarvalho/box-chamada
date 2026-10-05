@@ -1,7 +1,7 @@
 // Aba Equipe.
 import { atribs, diretor, evento, jovem } from '../dados.js';
 import { S, STATUS_BY_ID } from '../estado.js';
-import { $, byNome, esc } from '../util.js';
+import { $, byNome, esc, nomeCurto } from '../util.js';
 
 export function viewEquipe() {
   const lista = atribs();
@@ -21,13 +21,13 @@ export function viewEquipe() {
         return `
         <div class="card ${d.id === S.me ? 'card-eu' : ''}">
           <div class="card-head">
-            <h3>${esc(d.nome)}${d.id === S.me ? ' <span class="voce">você</span>' : ''}</h3>
+            <h3>${esc(nomeCurto(d))}${d.id === S.me ? ' <span class="voce">você</span>' : ''}</h3>
             <span class="pill ${total && feitas === total ? 'st-confirmado' : ''}">${feitas}/${total}</span>
           </div>
           <div class="mini-track"><div class="mini-fill" style="width:${total ? (feitas / total) * 100 : 0}%"></div></div>
           ${total ? `<ul class="lista">${minhas.map(a => `
             <li><button class="row st-${a.status} ${a.status !== 'pendente' ? 'feito' : ''}" data-act="jovem" data-id="${a.jovem_id}">
-              <span class="dot"></span><span class="nome">${esc(jovem(a.jovem_id).nome)}</span>
+              <span class="dot"></span><span class="nome">${esc(nomeCurto(jovem(a.jovem_id)))}</span>
               ${a.status === 'pendente' ? '' : `<span class="pill st-${a.status}">${STATUS_BY_ID[a.status].label}</span>`}
             </button></li>`).join('')}</ul>` : '<p class="dim small">Sem chamadas neste evento.</p>'}
         </div>`;

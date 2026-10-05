@@ -7,7 +7,7 @@ import { cartaoInstalar } from '../pwa.js';
 import { encerrada } from '../frequencia.js';
 import { botaoJustificar } from '../justificativas.js';
 import { presenca } from './presenca.js';
-import { $, byNome, celular, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, telIntl } from '../util.js';
+import { $, byNome, celular, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, nomeCurto, subNome, telIntl } from '../util.js';
 import { linhaVinculos } from '../vinculos.js';
 
 export function segStatus(a) {
@@ -51,7 +51,7 @@ export function cardMinha(a, pj) {
       <div class="pcard-top">
         <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
         <div class="pcard-id">
-          <h3>${esc(j.nome)}</h3>
+          <h3>${esc(nomeCurto(j))}</h3>${subNome(j)}
           <div class="pcard-meta">${meta}</div>
         </div>
         <button class="icon-btn" data-act="jovem" data-id="${j.id}" aria-label="Detalhes de ${esc(j.nome)}" title="Detalhes">${ICON.mais}</button>
@@ -63,7 +63,7 @@ export function cardMinha(a, pj) {
       ${a.nota ? `<button class="nota" data-act="nota" data-id="${a.id}"><span aria-hidden="true">📝</span> ${esc(a.nota)}</button>` : ''}
       <div class="pcard-foot">
         <div class="outros">${outros.length
-          ? outros.map(o => `<span class="st-${o.status}"><span class="dot"></span>Com ${esc(diretor(o.diretor_id)?.nome)} · ${STATUS_BY_ID[o.status].label}</span>`).join('')
+          ? outros.map(o => `<span class="st-${o.status}"><span class="dot"></span>Com ${esc(nomeCurto(diretor(o.diretor_id)))} · ${STATUS_BY_ID[o.status].label}</span>`).join('')
           : '<span class="dim">Só você chama</span>'}</div>
         ${a.nota ? '' : `<button class="link-btn" data-act="nota" data-id="${a.id}">+ Nota</button>`}
       </div>

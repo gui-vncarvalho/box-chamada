@@ -1,7 +1,7 @@
 // Tela de entrada: código de acesso e "quem é você".
 import { demo } from '../demo.js';
 import { DEMO, S } from '../estado.js';
-import { $, esc } from '../util.js';
+import { $, esc, nomeCurto } from '../util.js';
 
 export function renderGate() {
   $('#app').innerHTML = `
@@ -23,7 +23,7 @@ export function renderGate() {
 export function renderQuem() {
   const ds = S.data.diretores.filter(d => d.ativo);
   const grupo = eq => ds.filter(d => d.equipe === eq)
-    .map(d => `<button class="btn" data-act="sou" data-id="${d.id}">${esc(d.nome)}</button>`).join('');
+    .map(d => `<button class="btn" data-act="sou" data-id="${d.id}">${esc(nomeCurto(d))}</button>`).join('');
   $('#app').innerHTML = `
     <div class="gate">
       <h1>Quem é <span>você?</span></h1>

@@ -9,10 +9,10 @@ import { LS, S, STATUS_BY_ID } from './estado.js';
 import { ICON } from './icones.js';
 import { instalarApp } from './pwa.js';
 import { dlgEventos, render, renderView, rolarParaConteudo } from './render.js';
-import { htmlListaMgJovens, MG_F_PADRAO } from './telas/gerenciar.js';
+import { htmlListaMgJovens, ignorarApelido, MG_F_PADRAO, sugestoesApelido } from './telas/gerenciar.js';
 import { atualizarListaJovens, PAG_JOVENS } from './telas/jovens.js';
 import { atualizarPresenca, formVisitante, htmlListaPresenca, presenca, togglePresenca } from './telas/presenca.js';
-import { $, esc, faixa, idade, plural, quandoEvento, toast } from './util.js';
+import { $, esc, faixa, idade, nomeCurto, plural, quandoEvento, toast } from './util.js';
 import { atualizarTelaVinculos, dlgNovoVinculo, pessoa, removerVinculo } from './vinculos.js';
 import { compartilharResumo, dlgResumoCulto } from './frequencia.js';
 import { dlgJustificar } from './justificativas.js';
@@ -72,7 +72,7 @@ export async function toggleResp(jid, did) {
   const alvo = lista.find(a => a.jovem_id === jid && a.diretor_id === did);
   if (tem && alvo.status !== 'pendente' && !(await confirmar({
     titulo: 'Tirar essa pessoa da chamada?', perigo: true, ok: 'Remover',
-    texto: `A chamada de ${esc(diretor(did)?.nome)} já está marcada como “${STATUS_BY_ID[alvo.status].label}” e essa marcação vai se perder.`,
+    texto: `A chamada de ${esc(nomeCurto(diretor(did)))} já está marcada como “${STATUS_BY_ID[alvo.status].label}” e essa marcação vai se perder.`,
   }))) return;
   const pares = lista.map(a => ({ jovem_id: a.jovem_id, diretor_id: a.diretor_id }))
     .filter(p => !(p.jovem_id === jid && p.diretor_id === did));
@@ -194,7 +194,7 @@ export async function aoClicar(e) {
     case 'nota': {
       const a = S.data.atribuicoes.find(x => x.id === id);
       const t = await pedirTexto({
-        titulo: a.nota ? 'Editar nota' : 'Nova nota', sub: `Sobre ${esc(jovem(a.jovem_id).nome)}`,
+        titulo: a.nota ? 'Editar nota' : 'Nova nota', sub: `Sobre ${esc(nomeCurto(jovem(a.jovem_id)))}`,
         valor: a.nota || '', placeholder: 'Ex.: vai levar uma amiga, chega atrasado…',
       });
       if (t !== null) await setStatus(id, null, t);
@@ -236,6 +236,18 @@ export async function aoClicar(e) {
       LS.set('mgTab', id);
       render();
       break;
+    case 'apelido-usar': {
+      const x = sugestoesApelido().find(y => y.p.id === id);
+      if (!x) break;
+      try {
+        await rpc('box_salvar', { p_tabela: x.tabela, p_dados: { ...x.p, nome: x.nome, apelido: x.apelido } });
+        await carregar();
+        render();
+        toast(`Apelido “${x.apelido}” salvo`);
+      } catch (err) { falha(err); }
+      break;
+    }
+    case 'apelido-ignorar': ignorarApelido(id); render(); break;
     case 'mgf-painel': S.mgPainel = !S.mgPainel; render(); break;
     case 'mgf':
       if (el.dataset.k === 'ordem') S.mgOrdem = el.dataset.v;
