@@ -1,74 +1,66 @@
 # Chamada BOX
 
-Central da diretoria do Box (ministério de jovens) pra dividir e acompanhar quem chama quem para cultos e eventos.
+O app da diretoria do **Box**, o ministério de jovens, pra fazer com que **todo jovem seja chamado** pros cultos e eventos, e pra acompanhar quem veio.
 
-- Abre por link no celular, sem conta: só um **código de acesso da diretoria**.
-- Cada pessoa da diretoria escolhe quem é e vê **a própria lista**, com botão de WhatsApp (mensagem pronta) e Ligar.
-- Status por chamada: **Pendente → Chamei → Confirmou / Não vai**, com nota. Todo mundo vê em tempo quase real (atualiza a cada ~12 s).
-- **Box (17+) × Sprint**: calculado pela data de nascimento. Cada evento define o público.
-- **Distribuição automática** por equipe (feminina/masculina), equilibrando a quantidade entre as pessoas.
-- **Presença** no dia do evento: marcar quem chegou, cadastrar visitante na hora e ver quantos confirmados vieram.
-- "Copiar lista pro grupo" gera o texto de quem chama quem para colar no WhatsApp.
+## Por que existe
 
-## Estrutura
+No Box, cada jovem deve receber um contato pessoal antes de cada culto. Esse convite faz diferença na presença e em cada um se sentir parte de algo. Antes, a divisão de quem chama quem ia pro grupo do WhatsApp e se perdia: ninguém sabia quem já tinha sido chamado, quem confirmou ou quem ficou sem contato.
 
-Site estático, sem build: módulos ES nativos do navegador, publicado direto no GitHub Pages.
+O Chamada BOX organiza isso: divide os jovens entre a diretoria, mostra a cada um a sua lista, registra cada chamada e, no dia, a presença, guardando o histórico de cada culto.
 
-| Caminho | O quê |
-|---|---|
-| `index.html` | Página única; carrega os CSS e `js/main.js` |
-| `config.js` | URL e chave pública do Supabase. Vazio (ou `?demo` na URL) = modo demonstração |
-| `js/main.js` | Ponto de entrada: liga os eventos, atualização automática e carga inicial |
-| `js/estado.js`, `js/util.js`, `js/icones.js` | Estado da tela, utilidades (datas, telefone, mensagens) e ícones |
-| `js/api.js`, `js/dados.js`, `js/demo.js` | Acesso ao banco, consultas aos dados e modo demonstração |
-| `js/render.js` | Esqueleto: topo, card do evento e abas |
-| `js/telas/*.js` | Uma tela por arquivo: entrada, minha, equipe, jovens, presença, histórico, gerenciar |
-| `js/dialogos.js`, `js/formulario.js`, `js/cadastros.js` | Modais, formulário genérico, cadastros e importação |
-| `js/aniversarios.js`, `js/vinculos.js`, `js/busca.js`, `js/distribuir.js`, `js/pwa.js` | Funcionalidades transversais |
-| `js/acoes.js` | O que cada botão e campo faz |
-| `css/*.css`, `css/telas/*.css` | Estilos por componente e por tela (a ordem dos `<link>` importa) |
-| `manifest.webmanifest`, `sw.js`, `icons/` | App instalável (PWA) e recebimento das notificações |
-| `supabase/functions/notificar/` | Edge Function que envia as notificações (Web Push) |
-| `tests/e2e.py` | Testes de ponta a ponta (modo demonstração) |
-| `dev/servidor.py` | Servidor local com recarga automática |
-| `supabase/schema.sql` | Tabelas + funções. As tabelas ficam fechadas; o acesso é só pelas funções `box_*`, que exigem o código |
-| `supabase/0NN_*.sql` | Migrações, rodadas em ordem depois do schema (ex.: `002_presenca.sql`) |
-| `supabase/*.local.sql` | Dados reais (nomes). **Não vão pro Git.** |
+## Como é usado
 
-Ao criar um arquivo novo em `js/` ou `css/`, inclua também na lista `ARQUIVOS` do `sw.js` (pra abrir sem internet).
+- Abre por um link no celular ou no computador, **sem criar conta**: só um código de acesso da diretoria.
+- Pode ser **instalado como app** na tela inicial (Android e iPhone).
+- Cada pessoa da diretoria escolhe quem é e passa a ver a própria lista.
+- O que um marca, os outros veem em poucos segundos.
 
-## Rodar localmente
+## Funcionalidades
 
-```sh
-python dev/servidor.py          # http://localhost:8080 (dados reais) ou /?demo (fictícios)
-```
+### Chamadas
+- **Distribuição automática:** ao criar um evento, os jovens são divididos entre a diretoria por equipe (feminina e masculina), equilibrando a quantidade de cada um. Dá pra ajustar à mão.
+- **Minha lista:** cada um vê quem precisa chamar, com botões de **WhatsApp** (mensagem pronta, com o apelido e o horário certo) e **Ligar**.
+- **Status de cada chamada:** Pendente, Chamei, Confirmou ou Não vai, com espaço pra nota.
+- **Equipe e Jovens:** o andamento de toda a diretoria e de cada jovem, com busca por nome, apelido, idade, faixa, aniversário ou relacionamento.
+- **Copiar lista pro grupo:** o texto de quem chama quem, pronto pra colar no WhatsApp.
 
-Serve sem cache e recarrega a página sozinho quando um `.html`, `.css` ou `.js` muda.
+### Box e Sprint
+- A faixa é calculada pela data de nascimento: **Box** a partir de 17 anos e **Sprint** abaixo disso.
+- Cada evento define quem chamar: Box, Sprint ou os dois.
+- Em dias como o Box Day, cada faixa recebe na mensagem o horário do seu culto.
 
-## Testes
+### Presença
+- **No dia do evento,** marca-se quem chegou com um toque, inclusive a diretoria.
+- **Dois cultos no mesmo dia** (Sprint e Box) têm listas separadas, e a mesma pessoa pode estar nas duas.
+- **Visitantes** são cadastrados na hora e já entram como presentes.
+- **"Veio junto?"** sugere marcar a família e os amigos de quem acabou de chegar.
+- **Encerrar a lista** guarda o resumo do culto e trava as marcações (dá pra reabrir).
 
-```sh
-python -m venv .venv && .venv/bin/pip install playwright pillow && .venv/bin/playwright install chromium
-.venv/bin/python tests/e2e.py                    # roda tudo, no desktop e no celular
-.venv/bin/python tests/e2e.py --prints antes     # salva prints de todas as telas
-.venv/bin/python tests/e2e.py --comparar antes depois   # compara duas pastas de prints
-```
+### Acompanhamento
+- **Resumo de cada culto:** quantos vieram, quantos confirmados vieram, visitantes, faltas e **quem da diretoria fez ou não fez as suas chamadas**.
+- **Enviar pro grupo:** um resumo curto do culto pra compartilhar no WhatsApp.
+- **Frequência de cada jovem** nos últimos cultos.
+- **Quem sumiu:** quem vinha e faltou nos últimos cultos, pra diretoria procurar.
+- **Motivo da ausência:** trabalho, estudo, viagem, saúde, família ou outro, com detalhe.
 
-Rodam no modo demonstração (sem tocar no banco), com dados e relógio fixos.
+### Pessoas
+- **Cadastro** de jovens e diretoria, com apelido, WhatsApp, nascimento, relacionamento e observações.
+- **Vínculos:** casal, família e amizade ("esposa de", "irmão de", "convidou").
+- **Aniversariantes** da semana, com os parabéns prontos pro WhatsApp.
+- **Importar lista:** muitos jovens de uma vez, colando nome, telefone e nascimento.
 
-## Configurar o banco
+### Notificações
+- **Lembrete das chamadas pendentes:** quando a lista chega, 3 dias antes, 1 dia antes e no dia do evento.
+- **Aniversários do dia,** às 9h.
+- **Cada pessoa escolhe** se quer receber e o quê, e pode desativar quando quiser.
 
-1. Supabase > SQL Editor: rode `supabase/schema.sql` e depois as migrações numeradas, em ordem.
-2. Defina o código de acesso (última linha comentada do schema, com o código de vocês).
-3. (Opcional) rode o seed local com os nomes iniciais.
-4. Project Settings > API: copie a **Project URL** e a **publishable/anon key** para o `config.js`.
-
-## Notificações
-
-- `010_notificacoes.sql` cria as inscrições, as regras (`box_push_mensagens`) e o agendamento diário das 9h (pg_cron).
-- `010_config.local.sql` (fora do Git) grava a URL da função e o segredo em `push_config`.
-- A função `notificar` (Supabase › Edge Functions, sem verificação de JWT) precisa dos segredos `BOX_SEGREDO`, `VAPID_PUBLICA` e `VAPID_PRIVADA`. A pública também fica em `config.js`; a privada nunca vai pro Git.
+### Backup
+- Uma cópia de todos os dados, em **planilha** (pra consultar) e em **arquivo completo** (pra restaurar). O app lembra quando já faz mais de um mês do último backup.
 
 ## Privacidade
 
-O repositório é público, mas os dados não estão nele: nomes, telefones e datas de nascimento ficam no Supabase, acessíveis só com o código. Não commite nomes reais nem o código de acesso. Para trocar o código, rode de novo a linha do `insert into config ...` com o novo valor.
+Os dados dos jovens (nomes, telefones, datas de nascimento) **não ficam neste repositório**. Eles ficam num banco de dados protegido e só podem ser acessados com o código da diretoria. Quando alguém sair da diretoria, o código deve ser trocado.
+
+---
+
+Pra quem for mexer no código: veja o [DESENVOLVIMENTO.md](DESENVOLVIMENTO.md).
