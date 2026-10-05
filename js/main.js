@@ -7,6 +7,8 @@ import { evento } from './dados.js';
 import { dlg, fecharDlg } from './dialogos.js';
 import { DEMO, LS, POLL_MS, S } from './estado.js';
 import { iniciarPWA } from './pwa.js';
+import { atualizarPush } from './notificacoes.js';
+import { dlgAniversarios } from './aniversarios.js';
 import { render } from './render.js';
 import { presenca } from './telas/presenca.js';
 import { contagem, digitos, faixa, horaPara, idade, mensagem, semAcento } from './util.js';
@@ -52,6 +54,20 @@ if (DEMO) {
 
 const LOADER_MIN_MS = 1200;
 
+// Atalhos que as notificações usam: ?tab=minha abre a Minha lista, ?aniversarios abre os aniversariantes.
+function abrirAtalho(url) {
+  const q = new URL(url, location.href).searchParams;
+  if (q.get('tab')) { S.tab = q.get('tab'); LS.set('tab', S.tab); }
+  render();
+  if (q.has('aniversarios') && S.data && S.me) dlgAniversarios();
+  // tira o atalho da barra de endereço sem recarregar (mantém o ?demo)
+  const limpa = new URL(location.href);
+  ['tab', 'aniversarios'].forEach(k => limpa.searchParams.delete(k));
+  history.replaceState(null, '', limpa);
+}
+navigator.serviceWorker?.addEventListener('message', e => { if (e.data?.tipo === 'abrir') abrirAtalho(e.data.url); });
+atualizarPush().then(() => S.data && S.me && render()).catch(() => {});
+
 (async function iniciar() {
   if (S.codigo) {
     try { await carregar(); }
@@ -61,7 +77,7 @@ const LOADER_MIN_MS = 1200;
       S.data = null;
     }
   }
-  render();
+  abrirAtalho(location.href);
   // a tela de carregamento só existe na entrada: fica no mínimo LOADER_MIN_MS
   // (pra dar pra ver), depois some com um fade por cima da primeira tela já pronta
   const ld = document.getElementById('carregando');

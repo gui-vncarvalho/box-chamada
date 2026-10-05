@@ -10,6 +10,7 @@ import { abrirForm, EQUIPES, mascaraTel, textoIdade } from './formulario.js';
 import { ICON } from './icones.js';
 import { $, digitos, esc, faixa, mensagem, nomeCurto, plural, toast, uid } from './util.js';
 import { ESTADO_CIVIL, pessoa, secaoVinculosForm } from './vinculos.js';
+import { avisarDistribuicao } from './notificacoes.js';
 
 export function formJovem(j) {
   abrirForm({
@@ -97,6 +98,7 @@ export function formEvento(e) {
         await recarregar();
         const pares = distribuir(dados, S.data.jovens, S.data.diretores, [], false);
         await rpc('box_atribuir', { p_evento: dados.id, p_pares: pares });
+        avisarDistribuicao(dados.id, pares.map(p => p.diretor_id));
         toast(`Evento criado e ${pares.length} chamadas distribuídas`);
       }
     },

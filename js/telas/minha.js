@@ -9,6 +9,7 @@ import { botaoJustificar } from '../justificativas.js';
 import { presenca } from './presenca.js';
 import { $, byNome, celular, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, nomeCurto, subNome, telIntl } from '../util.js';
 import { linhaVinculos } from '../vinculos.js';
+import { conviteNotificacoes } from '../notificacoes.js';
 
 export function segStatus(a) {
   return `<div class="seg" role="group" aria-label="Status da chamada">
@@ -90,6 +91,7 @@ export function viewMinha() {
   ].filter(([, l]) => l.length);
   return `
     ${celular() ? cartaoInstalar({ dispensavel: true }) : ''}
+    ${conviteNotificacoes()}
     <div class="minha-head">
       <h2>Sua lista</h2>
       <span class="tag">${feitas} de ${minhas.length} chamados</span>

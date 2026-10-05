@@ -12,3 +12,15 @@
 .instalar-txt b { color: var(--text); }
 .ic-inline { width: 15px; height: 15px; vertical-align: -3px; color: var(--blue); }
 .instalar .x { margin: 0; }
+
+/* notificações */
+.push-ic { flex: none; width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+.push-ic svg { width: 20px; height: 20px; }
+.push-cartao { display: flex; flex-direction: column; gap: 12px; margin: 8px 0 14px; padding: 16px 18px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); }
+.push-cartao.ligada { border-color: rgba(56, 183, 135, .4); }
+.push-cartao > small { color: var(--text-dim); font-size: 13px; line-height: 1.5; }
+.push-cartao b { color: var(--text); }
+.push-head { display: flex; align-items: center; gap: 12px; }
+.push-head strong { flex: 1; font-size: 15px; }
+.push-tipos { display: flex; flex-direction: column; gap: 8px; }
+.convite-push .push-ic { width: 44px; height: 44px; }

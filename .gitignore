@@ -1,3 +1,4 @@
 supabase/*.local.sql
 __pycache__/
 .venv/
+.segredos/

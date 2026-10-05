@@ -6,6 +6,7 @@ import { atribs, diretor, evento, jovem } from '../dados.js';
 import { distribuir } from '../distribuir.js';
 import { LS, S } from '../estado.js';
 import { cartaoBackup } from '../exportar.js';
+import { cartaoNotificacoes } from '../notificacoes.js';
 import { ICON } from '../icones.js';
 import { cartaoInstalar } from '../pwa.js';
 import { $, byNome, contagem, dataEvento, digitos, embaralhar, esc, faixa, faixaBadge, fmtTel, hojeISO, horaGeral, idade, iniciais, nomeCurto, subNome, plural, PUBLICO_LABEL, quandoEvento } from '../util.js';
@@ -281,6 +282,7 @@ export function mgDiretoria() {
     </div>
     ${eu?.equipe === 'M' ? m + f : f + m}
     ${cartaoInstalar()}
+    ${cartaoNotificacoes()}
     ${cartaoBackup()}
     <div class="aparelho">
       <div><strong>Este aparelho</strong><small>Você está como <b>${esc(eu ? eu.nome : 'Visitante')}</b>.</small></div>

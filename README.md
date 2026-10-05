@@ -27,7 +27,8 @@ Site estático, sem build: módulos ES nativos do navegador, publicado direto no
 | `js/aniversarios.js`, `js/vinculos.js`, `js/busca.js`, `js/distribuir.js`, `js/pwa.js` | Funcionalidades transversais |
 | `js/acoes.js` | O que cada botão e campo faz |
 | `css/*.css`, `css/telas/*.css` | Estilos por componente e por tela (a ordem dos `<link>` importa) |
-| `manifest.webmanifest`, `sw.js`, `icons/` | App instalável (PWA) |
+| `manifest.webmanifest`, `sw.js`, `icons/` | App instalável (PWA) e recebimento das notificações |
+| `supabase/functions/notificar/` | Edge Function que envia as notificações (Web Push) |
 | `tests/e2e.py` | Testes de ponta a ponta (modo demonstração) |
 | `dev/servidor.py` | Servidor local com recarga automática |
 | `supabase/schema.sql` | Tabelas + funções. As tabelas ficam fechadas; o acesso é só pelas funções `box_*`, que exigem o código |
@@ -61,6 +62,12 @@ Rodam no modo demonstração (sem tocar no banco), com dados e relógio fixos.
 2. Defina o código de acesso (última linha comentada do schema, com o código de vocês).
 3. (Opcional) rode o seed local com os nomes iniciais.
 4. Project Settings > API: copie a **Project URL** e a **publishable/anon key** para o `config.js`.
+
+## Notificações
+
+- `010_notificacoes.sql` cria as inscrições, as regras (`box_push_mensagens`) e o agendamento diário das 9h (pg_cron).
+- `010_config.local.sql` (fora do Git) grava a URL da função e o segredo em `push_config`.
+- A função `notificar` (Supabase › Edge Functions, sem verificação de JWT) precisa dos segredos `BOX_SEGREDO`, `VAPID_PUBLICA` e `VAPID_PRIVADA`. A pública também fica em `config.js`; a privada nunca vai pro Git.
 
 ## Privacidade
 

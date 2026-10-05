@@ -17,6 +17,7 @@ import { atualizarTelaVinculos, dlgNovoVinculo, pessoa, removerVinculo } from '.
 import { compartilharResumo, dlgResumoCulto } from './frequencia.js';
 import { dlgJustificar } from './justificativas.js';
 import { exportarDados } from './exportar.js';
+import { alternarTipoPush, ativarPush, avisarDistribuicao, desativarPush, testarPush, trocouDePessoa } from './notificacoes.js';
 import { encerrarEvento, encerrarPresenca, reabrirPresenca } from './telas/presenca.js';
 
 export function textoGrupo() {
@@ -99,6 +100,8 @@ export async function acaoDistribuir(modo) {
   const novos = pares.length - (modo === 'faltantes' ? lista.length : 0);
   try {
     await rpc('box_atribuir', { p_evento: ev.id, p_pares: pares });
+    const antes = new Set(lista.map(a => `${a.jovem_id}|${a.diretor_id}`));
+    avisarDistribuicao(ev.id, pares.filter(p => !antes.has(`${p.jovem_id}|${p.diretor_id}`)).map(p => p.diretor_id));
     toast(modo === 'faltantes' ? (novos ? `${novos} chamadas adicionadas` : 'Todo mundo já tem responsável') : 'Distribuição refeita');
     await recarregar();
   } catch (e) { falha(e); }
@@ -124,6 +127,7 @@ export async function aoClicar(e) {
       LS.set('me', id);
       S.tab = id === 'visitante' ? 'equipe' : 'minha';
       render();
+      trocouDePessoa();
       break;
     case 'trocar-eu': S.me = null; LS.set('me', null); render(); break;
     case 'trocar-evento': dlgEventos(); break;
@@ -248,6 +252,10 @@ export async function aoClicar(e) {
       } catch (err) { falha(err); }
       break;
     }
+    case 'push-ativar': await ativarPush(); render(); break;
+    case 'push-desativar': await desativarPush(); render(); break;
+    case 'push-testar': await testarPush(); break;
+    case 'push-dispensar': LS.set('push-dispensado', '1'); render(); toast('Dá pra ativar depois em Gerenciar › Diretoria.'); break;
     case 'exportar': await exportarDados(id, el); render(); break;
     case 'apelido-ignorar': ignorarApelido(id); render(); break;
     case 'mgf-painel': S.mgPainel = !S.mgPainel; render(); break;
@@ -270,6 +278,10 @@ export async function aoClicar(e) {
 }
 
 export function aoDigitar(e) {
+  if (e.target.matches('[data-push-tipo]')) {
+    alternarTipoPush(e.target.dataset.pushTipo);
+    return;
+  }
   if (e.target.id === 'busca') {
     S.busca = e.target.value;
     S.limJ = PAG_JOVENS;

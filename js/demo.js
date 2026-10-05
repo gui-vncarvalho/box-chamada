@@ -183,6 +183,10 @@ export const demo = (() => {
         : { presenca_encerrada_em: null, presenca_encerrada_por: null });
       save(db);
     },
+    box_push_inscrever() {},
+    box_push_remover() {},
+    box_push_testar() {},
+    box_push_distribuicao() {},
     box_exportar() {
       return { exportado_em: new Date().toISOString(), ...load() };
     },

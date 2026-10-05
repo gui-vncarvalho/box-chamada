@@ -514,9 +514,46 @@ def t_backup(s):
     checar(pg.locator('.backup.atrasado').count() == 0, 'lembrete continuou depois do backup')
 
 
+PUSH_FALSO = """
+(() => {
+  const sub = () => ({ endpoint: 'https://push.exemplo/1', toJSON() { return { endpoint: this.endpoint, keys: { p256dh: 'p', auth: 'a' } }; },
+                       unsubscribe: async () => { window.__sub = null; return true; } });
+  const reg = { pushManager: { getSubscription: async () => window.__sub || null, subscribe: async () => (window.__sub = sub()) } };
+  Object.defineProperty(navigator, 'serviceWorker', { value: { ready: Promise.resolve(reg), register: async () => reg, addEventListener() {} } });
+  let perm = 'default';
+  Object.defineProperty(Notification, 'permission', { get: () => perm });
+  Notification.requestPermission = async () => (perm = 'granted');
+})();
+"""
+
+
+def t_notificacoes(s):
+    s.ctx.add_init_script(PUSH_FALSO)
+    pg = s.entrar()
+    pg.wait_for_selector('.convite-push')
+    s.print('convite-notificacoes', full=False)
+    s.aba('gerenciar')
+    pg.click('.mg-abas >> text=Diretoria')
+    checar('Ativar notificações' in pg.inner_text('.push-cartao'), 'cartão desligado')
+    pg.click('.push-cartao [data-act=push-ativar]')
+    pg.wait_for_selector('.push-cartao.ligada')
+    checar(pg.locator('.push-cartao [data-push-tipo]').count() == 2, 'opções de tipo')
+    s.print('notificacoes-ligadas', full=False)
+    pg.locator('.push-cartao [data-push-tipo=aniversarios]').click(force=True)
+    checar(s.js("JSON.parse(localStorage.getItem('box-demo:push-tipos'))") == ['lembretes'], 'desligar aniversários')
+    pg.click('[data-act=push-desativar]')
+    pg.wait_for_selector('#dlg2[open]')
+    pg.click('#dlg2 [data-r="1"]')
+    pg.wait_for_timeout(500)
+    checar('Ativar notificações' in pg.inner_text('.push-cartao'), 'desativar')
+    s.aba('minha')
+    pg.click('[data-act=push-dispensar]')
+    checar(pg.locator('.convite-push').count() == 0, 'dispensar convite')
+
+
 TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
           t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro,
-          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido, t_backup]
+          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido, t_backup, t_notificacoes]
 
 
 def rodar(prints=None):

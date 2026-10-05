@@ -2,7 +2,7 @@
 // Rede primeiro: sempre tenta a versão mais nova do site e só usa a cópia
 // guardada quando está sem internet. Dados do Supabase (outro domínio)
 // nunca passam por aqui nem ficam guardados no aparelho.
-const CACHE = 'chamada-box-v5';
+const CACHE = 'chamada-box-v6';
 const ARQUIVOS = [
   './', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png',
   './css/base.css',
@@ -37,6 +37,7 @@ const ARQUIVOS = [
   './js/icones.js',
   './js/justificativas.js',
   './js/main.js',
+  './js/notificacoes.js',
   './js/pwa.js',
   './js/render.js',
   './js/telas/entrada.js',
@@ -77,4 +78,33 @@ self.addEventListener('fetch', e => {
       })
       .catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || caches.match('./index.html'))),
   );
+});
+
+// ---------- notificações ----------
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch { d = { corpo: e.data && e.data.text() }; }
+  e.waitUntil(self.registration.showNotification(d.titulo || 'Chamada BOX', {
+    body: d.corpo || '',
+    icon: './icons/icon-192.png',
+    badge: './icons/badge-96.png',
+    tag: d.tag || undefined,
+    data: { url: d.url || './' },
+  }));
+});
+
+// Tocar na notificação: usa o app já aberto (indo pra tela certa) ou abre o app.
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const alvo = new URL(e.notification.data?.url || './', self.registration.scope).href;
+  e.waitUntil((async () => {
+    const abertas = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const janela = abertas.find(c => c.url.startsWith(self.registration.scope));
+    if (janela) {
+      await janela.focus();
+      janela.postMessage({ tipo: 'abrir', url: alvo });
+      return;
+    }
+    await self.clients.openWindow(alvo);
+  })());
 });

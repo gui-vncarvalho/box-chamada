@@ -51,6 +51,7 @@ export const S = {
   mgOrdem: 'nome',
   mgPainel: false,
   buscaP: '',
+  push: { situacao: 'carregando', inscricao: null },
   pCulto: '',
   histModo: 'marcacoes',
   pFiltro: 'todos',

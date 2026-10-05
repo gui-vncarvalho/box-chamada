@@ -6,4 +6,6 @@
 window.BOX_CONFIG = {
   supabaseUrl: "https://iimlzzczkxdofrkeknto.supabase.co",
   supabaseKey: "sb_publishable_tvBzRcdbPUdycqHHqQ9P2g_7dXp5q5K",
+  // Chave pública das notificações (VAPID). A privada fica só nos segredos do Supabase.
+  vapidPublica: "BH5pISbryvJcoyzMSn2I9ReQskTdFjuF09Hf4kC5pT1UzJkA_Rz5PpVUC0p4PDeblT01eCoNX2YynZ9pC-GKQfY",
 };
