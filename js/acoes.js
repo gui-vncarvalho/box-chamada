@@ -16,6 +16,7 @@ import { $, esc, faixa, idade, nomeCurto, plural, quandoEvento, toast } from './
 import { atualizarTelaVinculos, dlgNovoVinculo, pessoa, removerVinculo } from './vinculos.js';
 import { compartilharResumo, dlgResumoCulto } from './frequencia.js';
 import { dlgJustificar } from './justificativas.js';
+import { exportarDados } from './exportar.js';
 import { encerrarEvento, encerrarPresenca, reabrirPresenca } from './telas/presenca.js';
 
 export function textoGrupo() {
@@ -247,6 +248,7 @@ export async function aoClicar(e) {
       } catch (err) { falha(err); }
       break;
     }
+    case 'exportar': await exportarDados(id, el); render(); break;
     case 'apelido-ignorar': ignorarApelido(id); render(); break;
     case 'mgf-painel': S.mgPainel = !S.mgPainel; render(); break;
     case 'mgf':

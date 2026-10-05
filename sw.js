@@ -2,7 +2,7 @@
 // Rede primeiro: sempre tenta a versão mais nova do site e só usa a cópia
 // guardada quando está sem internet. Dados do Supabase (outro domínio)
 // nunca passam por aqui nem ficam guardados no aparelho.
-const CACHE = 'chamada-box-v4';
+const CACHE = 'chamada-box-v5';
 const ARQUIVOS = [
   './', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png',
   './css/base.css',
@@ -31,6 +31,7 @@ const ARQUIVOS = [
   './js/dialogos.js',
   './js/distribuir.js',
   './js/estado.js',
+  './js/exportar.js',
   './js/formulario.js',
   './js/frequencia.js',
   './js/icones.js',

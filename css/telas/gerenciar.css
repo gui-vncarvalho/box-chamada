@@ -115,3 +115,14 @@ button.mg-stat.ativo { border-color: var(--gold); background: var(--gold-soft); 
 .sug-apelidos li { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; padding: 8px 10px; border-radius: 10px; background: var(--surface); }
 .sug-txt { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; min-width: 0; }
 .sug-txt b { color: var(--cream); }
+
+/* backup dos dados */
+.backup {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  margin: 8px 0 14px; padding: 16px 18px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface);
+}
+.backup.atrasado { border-color: rgba(232, 165, 61, .45); background: linear-gradient(100deg, var(--gold-soft), transparent 60%), var(--surface); }
+.backup-txt { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 4px; }
+.backup-txt small { color: var(--text-dim); font-size: 13px; line-height: 1.45; }
+.backup.atrasado .backup-quando { color: var(--gold); font-weight: 600; }
+@media (max-width: 520px) { .backup .row-btns { width: 100%; } .backup .row-btns .btn { flex: 1; } }

@@ -183,6 +183,9 @@ export const demo = (() => {
         : { presenca_encerrada_em: null, presenca_encerrada_por: null });
       save(db);
     },
+    box_exportar() {
+      return { exportado_em: new Date().toISOString(), ...load() };
+    },
     box_chamadas_evento({ p_evento }) {
       return load().atribuicoes.filter(a => a.evento_id === p_evento);
     },

@@ -489,9 +489,34 @@ def t_apelido(s):
     checar(pg.locator('.sug-apelidos').count() == 0, 'sugestão continuou na lista')
 
 
+def t_backup(s):
+    import json, zipfile, io
+    pg = s.entrar()
+    s.aba('gerenciar')
+    pg.click('.mg-abas >> text=Diretoria')
+    checar(pg.locator('.backup.atrasado').count() == 1, 'lembrete de backup quando nunca foi feito')
+    s.print('backup', full=False)
+    with pg.expect_download() as dl:
+        pg.click('[data-act=exportar][data-id=xlsx]')
+    caminho = dl.value.path()
+    checar(dl.value.suggested_filename.endswith('.xlsx'), f'nome do arquivo: {dl.value.suggested_filename}')
+    with zipfile.ZipFile(caminho) as z:
+        wb = z.read('xl/workbook.xml').decode()
+    for aba in ['Jovens', 'Diretoria', 'Eventos', 'Chamadas', 'Presenças', 'Justificativas', 'Vínculos', 'Histórico']:
+        checar(f'name="{aba}"' in wb, f'aba {aba} na planilha')
+    s.xlsx = caminho
+    with pg.expect_download() as dl:
+        pg.click('[data-act=exportar][data-id=json]')
+    dados = json.load(open(dl.value.path()))
+    checar(len(dados['jovens']) == s.js('B.S.data.jovens.length') and len(dados['atribuicoes']) > s.js('B.S.data.atribuicoes.length'),
+           'JSON com tudo, inclusive chamadas de eventos arquivados')
+    pg.wait_for_timeout(300)
+    checar(pg.locator('.backup.atrasado').count() == 0, 'lembrete continuou depois do backup')
+
+
 TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
           t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro,
-          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido]
+          t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido, t_backup]
 
 
 def rodar(prints=None):
