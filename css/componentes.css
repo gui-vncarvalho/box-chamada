@@ -8,7 +8,7 @@
   text-decoration: none; font-size: 14px; font-weight: 600; white-space: nowrap;
 }
 .btn:hover { border-color: var(--text-dim); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary { background: var(--btn-red); border-color: var(--btn-red); color: #fff; }
 .btn.wa { background: var(--wa); border-color: var(--wa); color: #06301a; }
 .btn.wa-suave svg { color: var(--wa); }
 .btn.ghost { background: transparent; }

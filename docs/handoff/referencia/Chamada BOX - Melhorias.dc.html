@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Oswald:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>* { box-sizing: border-box; } html, body { margin: 0; background: #0b0e12; } a { color: #e8a53d; } a:hover { color: #f3e9d2; }</style>
+</helmet>
+<section id="2" style="padding:64px;display:flex;flex-direction:column;gap:64px;font-family:'Inter',sans-serif;color:#eef1f4;background:#0b0e12;min-width:max-content">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e5392e">Turno 2 · Melhorias visuais</span>
+    <h1 style="margin:0;font-family:'Alfa Slab One',serif;font-weight:400;font-size:44px;letter-spacing:1px;color:#f3e9d2;text-transform:uppercase">Telas v2</h1>
+    <p style="margin:0;color:#8d97a3;font-size:15px;max-width:72ch">Originais em <a href="Chamada BOX - Telas.dc.html#1d">Telas</a>. Novo hero: placa de número, pista com capacete e bandeira. Detalhes em HANDOFF.md.</p>
+  </header>
+  <sc-for list="{{ blocos }}" as="b" hint-placeholder-count="2">
+    <div id="{{ b.id }}" style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#e5392e;color:#fff">{{ b.id }}</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">{{ b.nome }}</h2></div>
+      <div style="display:flex;align-items:flex-start;gap:48px">
+        <sc-for list="{{ b.devs }}" as="d" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">{{ d.rot }}</span>
+            <div style="width:{{ d.w }}px;height:{{ d.h }}px;border-radius:{{ d.r }}px;overflow:hidden;border:1px solid #2c343f;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+              <sc-if value="{{ b.main }}" hint-placeholder-val="{{ false }}"><dc-import name="Chamada App v2" tela="{{ b.tela }}" device="{{ d.dev }}" hint-size="100%,100%" style="width:100%;height:100%;display:block"></dc-import></sc-if><sc-if value="{{ b.extra }}" hint-placeholder-val="{{ false }}"><dc-import name="Chamada App v2 Extras" tela="{{ b.tela }}" device="{{ d.dev }}" hint-size="100%,100%" style="width:100%;height:100%;display:block"></dc-import></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const devs = [
+      { dev: 'mobile', rot: 'Celular · 375', w: 375, h: 812, r: 28 },
+      { dev: 'tablet', rot: 'Tablet · 834', w: 834, h: 1000, r: 24 },
+      { dev: 'desktop', rot: 'Desktop · 1440', w: 1440, h: 900, r: 12 },
+    ];
+    return { blocos: [['2a','Minha lista','minha'],['2b','Presença','presenca'],['2c','Equipe','equipe'],['2d','Jovens','jovens'],['2e','Histórico · Marcações','historico'],['2f','Histórico · Presenças','historico-presencas'],['2g','Gerenciar','gerenciar'],['2h','Carregamento','carregando'],['2i','Entrada · código','gate'],['2j','Quem é você','quem'],['2k','Modal · Novo evento','novo-evento'],['2l','Modal · Novo jovem','novo-jovem']].map(([id, nome, tela]) => ({ id, nome, tela, devs, extra: ['carregando','gate','quem','novo-evento','novo-jovem'].includes(tela), main: !['carregando','gate','quem','novo-evento','novo-jovem'].includes(tela) })) };
+  }
+}
+</script>
+</body>
+</html>

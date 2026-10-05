@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Oswald:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>* { box-sizing: border-box; } html, body { margin: 0; padding: 0; background: #12161c; } a { color: #e8a53d; } a:hover { color: #f3e9d2; }</style>
+</helmet>
+<div style="position:relative;width:100%;height:100%;overflow:hidden;container-type:size;background:#12161c;color:#eef1f4;font-family:'Inter',system-ui,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased">
+
+<sc-if value="{{ is.load }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(70% 55% at 50% 40%, rgba(47,95,208,.22), transparent 70%), radial-gradient(60% 50% at 50% 100%, rgba(229,57,46,.12), transparent 70%), #12161c">
+    <div style="position:absolute;top:0;left:0;right:0;height:12px;opacity:.22;background:conic-gradient(#f3e9d2 25%, transparent 0 50%, #f3e9d2 0 75%, transparent 0) 0 0 / 12px 12px"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:min(340px, 82cqw);text-align:center">
+      <span style="font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e5392e">Juventude Box</span>
+      <span style="font-family:'Alfa Slab One',Georgia,serif;font-size:clamp(38px, 11cqw, 56px);line-height:1;letter-spacing:1px;color:#f3e9d2;margin-top:-6px">CHAMADA</span>
+      <div style="position:relative;width:100%;height:64px;margin-top:10px">
+        <div style="position:absolute;left:0;right:30px;bottom:6px;height:12px;border-radius:999px;overflow:hidden;background:#0b0f14;box-shadow:inset 0 0 0 1px #2c343f">
+          <div style="position:absolute;left:0;right:0;top:5px;height:2px;background:repeating-linear-gradient(90deg, rgba(243,233,210,.55) 0 14px, transparent 14px 28px)"></div>
+        </div>
+        <div style="position:absolute;left:0;bottom:6px;height:12px;width:22%;border-radius:999px;background:linear-gradient(90deg, rgba(47,95,208,0), #2f5fd0 55%, #e5392e)"></div>
+        <div style="position:absolute;bottom:12px;left:0;width:64px;height:44px;transform:translateX(calc(min(340px, 82cqw) * .22 - 50px))">
+          <svg viewBox="0 0 64 44" style="width:100%;height:100%">
+            <path d="M18 21.5C10 20 5 16.5 2.5 11.5c6 2 11 3 16 5.5z" fill="#f3e9d2"></path>
+            <path d="M17.5 27C9.5 27.5 4 25 1 21c6 1 11 1.2 17 3z" fill="#f3e9d2"></path>
+            <path d="M17.5 32.5c-7 1.2-12 0-15-3 6 .3 10.5 0 15.5 0z" fill="#f3e9d2"></path>
+            <path d="M16 38C14.5 20.5 24.5 8 40.5 8 53.5 8 61.5 18 61.5 30v8z" fill="#2f5fd0"></path>
+            <path d="M46.5 25h15v13h-10.5c-2.8 0-4.5-2-4.5-4.7z" fill="#12161c"></path>
+            <path d="M44.5 23.5h15.5" style="stroke:#f3e9d2;stroke-width:3;stroke-linecap:round"></path>
+            <path d="M23 20.5c3.5-6.5 10-10 18.5-10" style="stroke:#e5392e;stroke-width:4.5;fill:none;stroke-linecap:round"></path>
+            <rect x="14.5" y="36" width="49" height="5" rx="2.5" fill="#e5392e"></rect>
+          </svg>
+        </div>
+        <svg viewBox="0 0 26 40" style="position:absolute;right:0;bottom:4px;width:26px;height:40px">
+          <path d="M3 2v37" style="stroke:#8d97a3;stroke-width:2.4;stroke-linecap:round"></path>
+          <path d="M4 3h20v14H4z" fill="#f3e9d2"></path>
+          <path d="M4 3h5v4.7H4zM14 3h5v4.7h-5zM9 7.7h5v4.6H9zM19 7.7h5v4.6h-5zM4 12.3h5V17H4zM14 12.3h5V17h-5z" fill="#12161c"></path>
+        </svg>
+      </div>
+      <div style="height:20px;width:100%;font-size:14px;color:#8d97a3">Ligando os motores…</div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.gate }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;overflow:auto">
+    <div style="max-width:1180px;margin:0 auto;padding:clamp(20px, calc((100cqw - 767px) * 999), 32px) clamp(16px, 4cqw, 32px) 72px">
+      <div style="max-width:420px;margin:8cqh auto 0;display:flex;flex-direction:column;gap:16px">
+        <div>
+          <div style="font-family:'Alfa Slab One',serif;font-size:clamp(20px, calc((100cqw - 520px) * 999), 28px);line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#f3e9d2">Chamada</div>
+          <div style="font-size:clamp(11.5px, calc((100cqw - 520px) * 999), 12.5px);color:#8d97a3;margin-top:5px;white-space:nowrap">Diretoria · Juventude Box</div>
+        </div>
+        <p style="margin:0;color:#8d97a3;line-height:1.35">Central da diretoria do Box pra chamar a galera pros cultos e eventos.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500">Código de acesso da diretoria
+            <div style="width:100%;min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid #8d97a3;border-radius:9px;box-shadow:0 0 0 3px rgba(255,255,255,.06);font-size:clamp(15px, calc((520px - 100cqw) * 999), 16px);color:#8d97a3;font-weight:400;display:flex;align-items:center">O código que a liderança passou</div>
+          </div>
+          <div style="min-height:14px"></div>
+          <div style="display:flex;align-items:center;justify-content:center;min-height:38px;padding:7px 14px;border-radius:9px;border:1px solid #e5392e;background:#e5392e;color:#fff;font-size:14px;font-weight:600">Entrar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.quem }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;overflow:auto">
+    <div style="max-width:1180px;margin:0 auto;padding:clamp(20px, calc((100cqw - 767px) * 999), 32px) clamp(16px, 4cqw, 32px) 72px">
+      <div style="max-width:420px;margin:8cqh auto 0;display:flex;flex-direction:column;gap:16px">
+        <h1 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:clamp(26px, 6cqw, 36px);font-weight:700">Quem é <span style="color:#e5392e">você?</span></h1>
+        <p style="margin:0;color:#8d97a3;line-height:1.35">Assim o site mostra a sua lista e registra quem marcou cada chamada. Fica salvo neste aparelho.</p>
+        <h3 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:17px;font-weight:600">Equipe feminina</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:8px">
+          <sc-for list="{{ dirF }}" as="d" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;justify-content:center;min-height:46px;padding:7px 14px;border-radius:9px;border:1px solid #2c343f;background:#212934;font-size:14px;font-weight:600">{{ d.n }}</div>
+          </sc-for>
+        </div>
+        <h3 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:17px;font-weight:600">Equipe masculina</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:8px">
+          <sc-for list="{{ dirM }}" as="d" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;justify-content:center;min-height:46px;padding:7px 14px;border-radius:9px;border:1px solid #2c343f;background:#212934;font-size:14px;font-weight:600">{{ d.n }}</div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;min-height:38px;padding:7px 14px;border-radius:9px;border:1px solid #2c343f;background:transparent;font-size:14px;font-weight:600">Não estou na lista (só visualizar)</div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ is.app }}" hint-placeholder-val="{{ true }}">
+  <div style="position:absolute;inset:0;overflow:auto;scrollbar-width:none">
+    <div style="max-width:1180px;margin:0 auto;padding:clamp(20px, calc((100cqw - 767px) * 999), 32px) clamp(16px, 4cqw, 32px) 96px">
+
+      <div style="background:rgba(232,165,61,.14);color:#e8a53d;border:1px solid rgba(232,165,61,.3);border-radius:10px;padding:8px 12px;font-size:13px;margin-bottom:14px">Modo demonstração: dados fictícios salvos só neste navegador.</div>
+
+      <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px">
+        <div>
+          <div style="font-family:'Alfa Slab One',serif;font-size:clamp(20px, calc((100cqw - 520px) * 999), 28px);line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#f3e9d2">Chamada</div>
+          <div style="font-size:clamp(11.5px, calc((100cqw - 520px) * 999), 12.5px);color:#8d97a3;margin-top:5px;white-space:nowrap">Diretoria · Juventude Box</div>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:999px;border:1px solid #2c343f;background:#1a2029;font-size:13.5px;font-weight:600">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg><span>Rafa</span>
+        </div>
+      </header>
+
+      <section style="position:relative;overflow:hidden;display:flex;flex-wrap:wrap;gap:22px clamp(22px, calc((100cqw - 960px) * 999), 36px);padding:clamp(22px, calc((100cqw - 520px) * 999), clamp(30px, calc((100cqw - 960px) * 999), 32px)) clamp(16px, calc((100cqw - 520px) * 999), clamp(28px, calc((100cqw - 960px) * 999), 32px)) clamp(16px, calc((100cqw - 520px) * 999), clamp(26px, calc((100cqw - 960px) * 999), 28px));margin-bottom:20px;border:1px solid #2c343f;border-radius:clamp(16px, calc((100cqw - 520px) * 999), 18px);background:radial-gradient(90% 120% at 0% 0%, rgba(47,95,208,.20), transparent 60%), radial-gradient(70% 90% at 100% 100%, rgba(229,57,46,.10), transparent 60%), linear-gradient(160deg, #1a2029 0%, #212934 100%)">
+        <div style="position:absolute;top:0;left:0;right:0;height:8px;opacity:.16;background:conic-gradient(#f3e9d2 25%, transparent 0 50%, #f3e9d2 0 75%, transparent 0) 0 0 / 8px 8px"></div>
+        <div style="flex:1.15 1 clamp(40%, calc((960px - 100cqw) * 999), 100%);min-width:0;display:flex;flex-direction:column;justify-content:center">
+          <div style="display:flex;align-items:center;gap:10px;min-height:34px">
+            <span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Evento</span>
+            <span style="font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap;background:rgba(232,165,61,.14);color:#e8a53d">Em 5 dias</span>
+          </div>
+          <h2 style="font-family:'Alfa Slab One',serif;font-weight:400;font-size:clamp(30px, 7cqw, 48px);line-height:1.02;letter-spacing:.5px;text-transform:uppercase;color:#f3e9d2;margin:10px 0 16px">Culto Box</h2>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span style="display:inline-flex;align-items:center;gap:7px;padding:clamp(6px, calc((100cqw - 520px) * 999), 7px) clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:999px;background:rgba(255,255,255,.04);border:1px solid #2c343f;font-size:clamp(13px, calc((100cqw - 520px) * 999), 13.5px);font-weight:500"><svg viewBox="0 0 24 24" style="width:15px;height:15px;color:#8d97a3;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg>Sábado, 10/10</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;padding:clamp(6px, calc((100cqw - 520px) * 999), 7px) clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:999px;background:rgba(255,255,255,.04);border:1px solid #2c343f;font-size:clamp(13px, calc((100cqw - 520px) * 999), 13.5px);font-weight:500"><svg viewBox="0 0 24 24" style="width:15px;height:15px;color:#8d97a3;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>19h30</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;padding:clamp(6px, calc((100cqw - 520px) * 999), 7px) clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:999px;background:rgba(255,255,255,.04);border:1px solid #2c343f;font-size:clamp(13px, calc((100cqw - 520px) * 999), 13.5px);font-weight:500"><svg viewBox="0 0 24 24" style="width:15px;height:15px;color:#8d97a3;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.3c2 .8 3.5 2.8 3.5 5.7"></path></svg>Box (17+)</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;padding:clamp(6px, calc((100cqw - 520px) * 999), 7px) clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:999px;background:rgba(255,255,255,.04);border:1px solid #2c343f;font-size:clamp(13px, calc((100cqw - 520px) * 999), 13.5px);font-weight:500"><svg viewBox="0 0 24 24" style="width:15px;height:15px;color:#8d97a3;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"></path></svg>2 chamadas por jovem</span>
+          </div>
+        </div>
+        <div style="flex:1 1 clamp(40%, calc((960px - 100cqw) * 999), 100%);min-width:0;display:flex;flex-direction:column;justify-content:center;border:0 solid #2c343f;border-top-width:clamp(0px, calc((960px - 100cqw) * 999), 1px);padding-top:clamp(0px, calc((960px - 100cqw) * 999), 20px);border-left-width:clamp(0px, calc((100cqw - 960px) * 999), 1px);padding-left:clamp(0px, calc((100cqw - 960px) * 999), 36px)">
+          <div style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Progresso das chamadas</div>
+          <div style="display:flex;align-items:baseline;gap:10px;margin:10px 0 14px">
+            <strong style="font-family:'Oswald',sans-serif;font-size:46px;font-weight:700;line-height:1">0</strong>
+            <span style="color:#8d97a3;font-size:15px">de 34 feitas</span>
+            <em style="margin-left:auto;font-style:normal;font-family:'Oswald',sans-serif;font-size:24px;font-weight:600;color:#e5392e">0%</em>
+          </div>
+          <div style="position:relative;margin-right:30px;height:14px;border-radius:999px;background:#12161c;border:1px solid #2c343f">
+            <div style="height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg, #2f5fd0, #e5392e)"></div>
+            <span style="position:absolute;right:-30px;top:50%;transform:translateY(-62%);width:24px;height:24px;color:#8d97a3">
+              <svg viewBox="0 0 24 24" style="width:100%;height:100%"><path d="M4 3v19" style="stroke:currentColor;stroke-width:2;stroke-linecap:round"></path><path d="M5 4h15v10H5z" fill="#f3e9d2"></path><path d="M5 4h3.75v3.33H5zM12.5 4h3.75v3.33H12.5zM8.75 7.33h3.75v3.34H8.75zM16.25 7.33H20v3.34h-3.75zM5 10.67h3.75V14H5zM12.5 10.67h3.75V14H12.5z" fill="#12161c"></path></svg>
+            </span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:8px;margin-top:18px">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:clamp(10px, calc((100cqw - 520px) * 999), 11px) clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:12px;border:1px solid #2c343f;background:rgba(255,255,255,.03)">
+              <strong style="font-family:'Oswald',sans-serif;font-size:clamp(24px, calc((100cqw - 520px) * 999), 28px);font-weight:600;line-height:1;color:#38b787">0</strong>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:clamp(11.5px, calc((100cqw - 520px) * 999), 12.5px);font-weight:600;color:#8d97a3"><span style="width:9px;height:9px;border-radius:50%;background:#38b787;flex:none"></span>Confirmados</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:clamp(10px, calc((100cqw - 520px) * 999), 11px) clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:12px;border:1px solid #2c343f;background:rgba(255,255,255,.03)">
+              <strong style="font-family:'Oswald',sans-serif;font-size:clamp(24px, calc((100cqw - 520px) * 999), 28px);font-weight:600;line-height:1;color:#e5392e">0</strong>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:clamp(11.5px, calc((100cqw - 520px) * 999), 12.5px);font-weight:600;color:#8d97a3"><span style="width:9px;height:9px;border-radius:50%;background:#e5392e;flex:none"></span>Não vão</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:clamp(10px, calc((100cqw - 520px) * 999), 11px) clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:12px;border:1px solid #2c343f;background:rgba(255,255,255,.03)">
+              <strong style="font-family:'Oswald',sans-serif;font-size:clamp(24px, calc((100cqw - 520px) * 999), 28px);font-weight:600;line-height:1;color:#eef1f4">17</strong>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:clamp(11.5px, calc((100cqw - 520px) * 999), 12.5px);font-weight:600;color:#8d97a3"><span style="width:9px;height:9px;border-radius:50%;background:#8d97a3;flex:none"></span>Sem resposta</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div style="display:flex;align-items:center;gap:12px;width:100%;margin:-6px 0 20px;padding:clamp(10px, calc((100cqw - 520px) * 999), 11px) clamp(12px, calc((100cqw - 520px) * 999), 14px);border-radius:14px;border:1px solid rgba(232,165,61,.5);background:linear-gradient(100deg, rgba(232,165,61,.18), rgba(229,57,46,.08) 60%, transparent), #1a2029">
+        <span style="flex:none;width:38px;height:38px;display:grid;place-items:center;font-size:20px;border-radius:11px;background:rgba(232,165,61,.14)">🎂</span>
+        <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+          <strong style="font-size:14px;color:#e8a53d">Tem aniversário hoje!</strong>
+          <span style="display:flex;flex-wrap:wrap;gap:2px 14px;font-size:13px;color:#8d97a3"><span><b style="color:#eef1f4;font-weight:600">Hoje</b> Camila</span><span><b style="color:#eef1f4;font-weight:600">Qui</b> Bento</span><span><b style="color:#eef1f4;font-weight:600">Sáb</b> Bia</span></span>
+        </span>
+        <svg viewBox="0 0 24 24" style="flex:none;width:18px;height:18px;color:#8d97a3;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="m9 6 6 6-6 6"></path></svg>
+      </div>
+
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ false }}">
+        <nav style="display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-bottom:20px;padding:5px;background:rgba(26,32,41,.92);border:1px solid #2c343f;border-radius:14px">
+          <div style="flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 8px;border-radius:10px;font-weight:600;font-size:14px;background:{{ T.minha.bg }};color:{{ T.minha.c }};box-shadow:{{ T.minha.sh }}"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1M9 11l2 2 4-4M9 17h6"></path></svg><span>Minha</span><span style="min-width:18px;padding:0 5px;border-radius:999px;background:#e5392e;color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center">4</span></div>
+          <div style="flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 8px;border-radius:10px;font-weight:600;font-size:14px;background:{{ T.presenca.bg }};color:{{ T.presenca.c }};box-shadow:{{ T.presenca.sh }}"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg><span>Presença</span></div>
+          <div style="flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 8px;border-radius:10px;font-weight:600;font-size:14px;background:{{ T.equipe.bg }};color:{{ T.equipe.c }};box-shadow:{{ T.equipe.sh }}"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.3c2 .8 3.5 2.8 3.5 5.7"></path></svg><span>Equipe</span></div>
+          <div style="flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 8px;border-radius:10px;font-weight:600;font-size:14px;background:{{ T.jovens.bg }};color:{{ T.jovens.c }};box-shadow:{{ T.jovens.sh }}"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="7.5" r="3"></circle><circle cx="5" cy="10" r="2.2"></circle><circle cx="19" cy="10" r="2.2"></circle><path d="M6.5 20c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5M1.5 19c0-2.2 1.4-3.8 3.5-4.2M22.5 19c0-2.2-1.4-3.8-3.5-4.2"></path></svg><span>Jovens</span></div>
+          <div style="flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 8px;border-radius:10px;font-weight:600;font-size:14px;background:{{ T.historico.bg }};color:{{ T.historico.c }};box-shadow:{{ T.historico.sh }}"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg><span>Histórico</span></div>
+          <div style="flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 8px;border-radius:10px;font-weight:600;font-size:14px;background:{{ T.gerenciar.bg }};color:{{ T.gerenciar.c }};box-shadow:{{ T.gerenciar.sh }}"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"></path></svg><span>Gerenciar</span></div>
+        </nav>
+      </sc-if>
+
+      <sc-if value="{{ is.minha }}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{ mob }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px 14px;border-radius:14px;border:1px solid rgba(229,57,46,.35);background:linear-gradient(100deg, rgba(229,57,46,.14), transparent 70%), #1a2029">
+            <img src="icons/icon-192.png" alt="" width="44" height="44" style="flex:none;border-radius:11px">
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+              <strong style="font-size:14.5px">Instale o Chamada BOX</strong>
+              <small style="font-size:12.5px;color:#8d97a3;line-height:1.45">No Safari, toque em <svg viewBox="0 0 24 24" style="width:15px;height:15px;vertical-align:-3px;color:#5a86ee;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3v12M7 8l5-5 5 5"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path></svg> <b style="color:#eef1f4">Compartilhar</b> e depois em <b style="color:#eef1f4">Adicionar à Tela de Início</b>.</small>
+            </div>
+            <span style="flex:none;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>
+          </div>
+        </sc-if>
+        <div style="display:flex;align-items:baseline;gap:10px;margin:4px 0 6px">
+          <h2 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:21px;font-weight:600">Sua lista</h2>
+          <span style="font-size:13px;color:#8d97a3">0 de 4 chamados</span>
+        </div>
+        <section style="margin-top:18px">
+          <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#8d97a3">Pra chamar <span style="background:#212934;border-radius:999px;padding:1px 8px;font-size:11.5px;letter-spacing:0">4</span></h4>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(clamp(40%, calc((700px - 100cqw) * 999), 100%), 1fr));gap:14px">
+            <sc-for list="{{ minha }}" as="c" hint-placeholder-count="4">
+              <article style="position:relative;overflow:hidden;background:#1a2029;border:1px solid #2c343f;border-radius:14px;padding:clamp(16px, calc((100cqw - 520px) * 999), 18px) clamp(14px, calc((100cqw - 520px) * 999), 18px) clamp(12px, calc((100cqw - 520px) * 999), 14px);display:flex;flex-direction:column;gap:clamp(12px, calc((100cqw - 520px) * 999), 14px)">
+                <div style="position:absolute;top:0;bottom:0;left:0;width:4px;background:#2c343f"></div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span style="flex:none;width:clamp(40px, calc((100cqw - 520px) * 999), 44px);height:clamp(40px, calc((100cqw - 520px) * 999), 44px);border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:clamp(15px, calc((100cqw - 520px) * 999), 16px);letter-spacing:.5px;background:#212934;box-shadow:inset 0 0 0 1px #2c343f">{{ c.ini }}</span>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+                    <h3 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:19px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.n }}</h3>
+                    <sc-if value="{{ c.hasSub }}" hint-placeholder-val="{{ false }}"><small style="display:block;font-size:12.5px;color:#8d97a3;font-weight:500;margin-top:-2px">{{ c.full }}</small></sc-if>
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;font-size:13.5px;color:#8d97a3">
+                      <sc-if value="{{ c.hasF }}" hint-placeholder-val="{{ true }}"><span style="font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 7px;border-radius:6px;white-space:nowrap;background:{{ c.fBg }};color:{{ c.fC }}">{{ c.fTxt }}</span></sc-if>
+                      <sc-if value="{{ c.noF }}" hint-placeholder-val="{{ false }}"><span>idade não informada</span></sc-if>
+                      <span style="opacity:.5">·</span>
+                      <span>{{ c.tel }}</span>
+                    </div>
+                  </div>
+                  <span style="flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:18px;height:18px" fill="currentColor"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle></svg></span>
+                </div>
+                <sc-if value="{{ c.hasV }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:-4px;font-size:13px;color:#8d97a3"><span>👫 {{ c.vinc }}</span></div></sc-if>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:7px 14px;border-radius:9px;border:1px solid #25d366;background:#25d366;color:#06301a;font-size:15px;font-weight:600"><svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;flex:none"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2Z"></path></svg>WhatsApp</div>
+                  <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:7px 14px;border-radius:9px;border:1px solid #2c343f;background:#212934;font-size:15px;font-weight:600"><svg viewBox="0 0 24 24" style="width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"></path></svg>Ligar</div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:4px;background:#12161c;border:1px solid #2c343f;border-radius:10px;padding:3px">
+                  <span style="display:grid;place-items:center;border-radius:7px;padding:8px 2px;min-height:40px;font-size:13px;font-weight:600;white-space:nowrap;background:#212934;color:#8d97a3;box-shadow:inset 0 0 0 1px #8d97a3">Pendente</span>
+                  <span style="display:grid;place-items:center;border-radius:7px;padding:8px 2px;min-height:40px;font-size:13px;font-weight:600;white-space:nowrap;color:#8d97a3">Chamei</span>
+                  <span style="display:grid;place-items:center;border-radius:7px;padding:8px 2px;min-height:40px;font-size:13px;font-weight:600;white-space:nowrap;color:#8d97a3">Confirmou</span>
+                  <span style="display:grid;place-items:center;border-radius:7px;padding:8px 2px;min-height:40px;font-size:13px;font-weight:600;white-space:nowrap;color:#8d97a3">Não vai</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:12px;border-top:1px solid #2c343f;font-size:13px">
+                  <span style="display:inline-flex;align-items:center;gap:6px;color:#8d97a3"><span style="width:9px;height:9px;border-radius:50%;background:#8d97a3;flex:none"></span>Com {{ c.com }} · Pendente</span>
+                  <span style="padding:4px 2px;color:#e8a53d;font-weight:600;font-size:13px;white-space:nowrap">+ Nota</span>
+                </div>
+              </article>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ is.presenca }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px 16px;border-radius:14px;border:1px solid rgba(90,134,238,.35);background:rgba(90,134,238,.15);color:#5a86ee">
+          <svg viewBox="0 0 24 24" style="flex:none;width:20px;height:20px;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5h.01"></path></svg>
+          <div style="display:flex;flex-direction:column;gap:3px"><strong style="color:#eef1f4;font-size:14.5px">Liberada só no modo demonstração</strong><small style="color:#8d97a3;font-size:13px;line-height:1.45">No site real, a aba Presença só aparece no dia do evento (sábado, 10/10).</small></div>
+        </div>
+        <section style="display:flex;flex-wrap:wrap;align-items:stretch;gap:14px 24px;margin-bottom:18px;padding:clamp(16px, calc((100cqw - 520px) * 999), 20px);border-radius:18px;border:1px solid #2c343f;background:radial-gradient(80% 140% at 0% 0%, rgba(56,183,135,.14), transparent 60%), #1a2029">
+          <sc-if value="{{ wide }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:4px;min-width:120px">
+              <span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Jovens presentes</span>
+              <strong style="font-family:'Oswald',sans-serif;font-size:56px;font-weight:700;line-height:1;color:#38b787">0</strong>
+            </div>
+          </sc-if>
+          <sc-if value="{{ mob }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;width:100%">
+              <strong style="font-family:'Oswald',sans-serif;font-size:44px;font-weight:700;line-height:1;color:#38b787">0</strong>
+              <span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Jovens presentes</span>
+            </div>
+          </sc-if>
+          <div style="flex:1;min-width:clamp(0px, calc((100cqw - 520px) * 999), 260px);display:grid;grid-template-columns:repeat(auto-fit, minmax(clamp(20%, calc((520px - 100cqw) * 999), 40%), 1fr));gap:8px">
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding:clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:12px;border:1px solid #2c343f;background:rgba(0,0,0,.14)"><strong style="font-family:'Oswald',sans-serif;font-size:clamp(22px, calc((100cqw - 520px) * 999), 26px);font-weight:600;line-height:1;color:#38b787">0<span style="font-size:16px;color:#8d97a3">/0</span></strong><small style="font-size:clamp(11px, calc((100cqw - 520px) * 999), 12px);color:#8d97a3;font-weight:600">confirmados vieram</small></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding:clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:12px;border:1px solid #2c343f;background:rgba(0,0,0,.14)"><strong style="font-family:'Oswald',sans-serif;font-size:clamp(22px, calc((100cqw - 520px) * 999), 26px);font-weight:600;line-height:1;color:#e8a53d">0</strong><small style="font-size:clamp(11px, calc((100cqw - 520px) * 999), 12px);color:#8d97a3;font-weight:600">vieram sem confirmar</small></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding:clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:12px;border:1px solid #2c343f;background:rgba(0,0,0,.14)"><strong style="font-family:'Oswald',sans-serif;font-size:clamp(22px, calc((100cqw - 520px) * 999), 26px);font-weight:600;line-height:1;color:#5a86ee">0</strong><small style="font-size:clamp(11px, calc((100cqw - 520px) * 999), 12px);color:#8d97a3;font-weight:600">primeira vez</small></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding:clamp(10px, calc((100cqw - 520px) * 999), 12px);border-radius:12px;border:1px solid #2c343f;background:rgba(0,0,0,.14)"><strong style="font-family:'Oswald',sans-serif;font-size:clamp(22px, calc((100cqw - 520px) * 999), 26px);font-weight:600;line-height:1;color:#e8a53d">0</strong><small style="font-size:clamp(11px, calc((100cqw - 520px) * 999), 12px);color:#8d97a3;font-weight:600">da diretoria</small></div>
+          </div>
+        </section>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+          <div style="display:flex;gap:8px">
+            <div style="flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;min-height:48px;background:#1a2029;border:1px solid #2c343f;border-radius:12px;color:#8d97a3">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span style="font-size:15px">Quem chegou?</span>
+            </div>
+            <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:7px 14px;border-radius:12px;border:1px solid #e5392e;background:#e5392e;color:#fff;font-size:14px;font-weight:600;white-space:nowrap"><svg viewBox="0 0 24 24" style="width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3.1-7 7-7s7 3 7 7M19 8v6M16 11h6"></path></svg><span>Visitante</span></div>
+          </div>
+          <div style="display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * clamp(0px, calc((520px - 100cqw) * 999), 16px));padding:0 clamp(0px, calc((520px - 100cqw) * 999), 16px)">
+            <sc-for list="{{ pChips }}" as="ch" hint-placeholder-count="4">
+              <span style="flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.c }};font-size:13px;font-weight:600;white-space:nowrap">{{ ch.l }}<span style="font-size:11.5px;padding:0 6px;min-width:20px;line-height:18px;border-radius:999px;text-align:center;background:{{ ch.cbg }};color:{{ ch.cc }}">{{ ch.n }}</span></span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(clamp(40%, calc((900px - 100cqw) * 999), 100%), 1fr));gap:10px;align-items:start">
+          <sc-for list="{{ pres }}" as="r" hint-placeholder-count="8">
+            <div style="display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:#1a2029">
+              <span style="flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:15px;letter-spacing:.5px;background:#212934;box-shadow:{{ r.av }}">{{ r.ini }}</span>
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
+                <span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px">
+                  <strong style="font-size:15.5px;font-weight:600">{{ r.n }}</strong>
+                  <sc-if value="{{ r.dir }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap;background:rgba(232,165,61,.14);color:#e8a53d">Diretoria</span></sc-if>
+                  <sc-if value="{{ r.hasF }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 7px;border-radius:6px;white-space:nowrap;background:{{ r.fBg }};color:{{ r.fC }}">{{ r.fTxt }}</span></sc-if>
+                  <sc-if value="{{ r.hasB }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;padding:2px 7px;border-radius:6px;white-space:nowrap;font-size:11.5px;font-weight:700;background:{{ r.bBg }};color:{{ r.bC }}">🎂 {{ r.b }}</span></sc-if>
+                </span>
+                <span style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#8d97a3">{{ r.sub }}</span>
+              </span>
+              <span style="flex:none;width:30px;height:30px;border-radius:9px;border:2px solid #2c343f"></span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 20px;border-radius:18px;border:1px solid #2c343f;background:#1a2029;margin-top:22px">
+          <span style="flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#212934;color:#8d97a3;box-shadow:inset 0 0 0 1px #2c343f"><svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12.5 10 17.5 19 7"></path></svg></span>
+          <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:3px"><strong>Terminou o culto?</strong><small style="color:#8d97a3;font-size:13px;line-height:1.45">Encerrar trava as marcações e salva o resumo. Dá pra reabrir depois.</small></div>
+          <div style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 18px;font-size:15px;font-weight:600;border-radius:9px;background:#f3e9d2;border:1px solid #f3e9d2;color:#1b1e24;box-shadow:0 6px 20px rgba(243,233,210,.12);width:clamp(0px, calc((520px - 100cqw) * 999), 100%);min-width:fit-content">Encerrar lista</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ is.equipe }}" hint-placeholder-val="{{ false }}">
+        <sc-for list="{{ equipe }}" as="bl" hint-placeholder-count="2">
+          <div style="display:flex;align-items:baseline;gap:10px;margin:{{ bl.mt }} 0 12px">
+            <h2 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:21px;font-weight:600">{{ bl.t }}</h2>
+            <span style="font-size:12.5px;color:#8d97a3">{{ bl.n }} pessoas</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));gap:12px">
+            <sc-for list="{{ bl.ds }}" as="d" hint-placeholder-count="4">
+              <div style="background:#1a2029;border:1px solid {{ d.bd }};box-shadow:{{ d.sh }};border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                  <h3 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:17px;font-weight:600">{{ d.n }}<sc-if value="{{ d.eu }}" hint-placeholder-val="{{ false }}"> <span style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#e5392e;background:rgba(229,57,46,.14);padding:2px 7px;border-radius:999px;vertical-align:middle;margin-left:4px">você</span></sc-if></h3>
+                  <span style="display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap;background:#212934;color:#8d97a3">0/{{ d.total }}</span>
+                </div>
+                <div style="height:5px;border-radius:999px;background:#212934;overflow:hidden"></div>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <sc-for list="{{ d.js }}" as="j" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;font-size:14.5px"><span style="width:9px;height:9px;border-radius:50%;background:#8d97a3;flex:none"></span><span>{{ j }}</span></div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <sc-if value="{{ is.jovens }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:10px;padding:0 14px;min-height:48px;background:#1a2029;border:1px solid #2c343f;border-radius:12px;color:#8d97a3">
+            <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Nome, 18, box, casado, outubro…</span>
+          </div>
+          <div style="display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * clamp(0px, calc((520px - 100cqw) * 999), 16px));padding:0 clamp(0px, calc((520px - 100cqw) * 999), 16px)">
+            <sc-for list="{{ jChips }}" as="ch" hint-placeholder-count="4">
+              <span style="flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.c }};font-size:13px;font-weight:600;white-space:nowrap">{{ ch.l }}<span style="font-size:11.5px;padding:0 6px;min-width:20px;line-height:18px;border-radius:999px;text-align:center;background:{{ ch.cbg }};color:{{ ch.cc }}">{{ ch.n }}</span></span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(clamp(40%, calc((900px - 100cqw) * 999), 100%), 1fr));gap:10px">
+          <sc-for list="{{ jEv }}" as="r" hint-placeholder-count="8">
+            <div style="display:flex;align-items:center;gap:clamp(10px, calc((100cqw - 520px) * 999), 12px);width:100%;padding:clamp(11px, calc((100cqw - 520px) * 999), 12px) clamp(12px, calc((100cqw - 520px) * 999), 14px);border-radius:14px;border:1px solid #2c343f;background:#1a2029">
+              <span style="flex:none;width:clamp(36px, calc((100cqw - 520px) * 999), 40px);height:clamp(36px, calc((100cqw - 520px) * 999), 40px);border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:clamp(14px, calc((100cqw - 520px) * 999), 15px);letter-spacing:.5px;background:#212934;box-shadow:inset 0 0 0 1px #2c343f">{{ r.ini }}</span>
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
+                <span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px">
+                  <strong style="font-size:15.5px;font-weight:600">{{ r.n }}</strong>
+                  <sc-if value="{{ r.hasF }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 7px;border-radius:6px;white-space:nowrap;background:{{ r.fBg }};color:{{ r.fC }}">{{ r.fTxt }}</span></sc-if>
+                  <sc-if value="{{ r.hasB }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;padding:2px 7px;border-radius:6px;white-space:nowrap;font-size:11.5px;font-weight:700;background:{{ r.bBg }};color:{{ r.bC }}">🎂 {{ r.b }}</span></sc-if>
+                </span>
+                <sc-if value="{{ r.hasSub }}" hint-placeholder-val="{{ false }}"><small style="display:block;font-size:12.5px;color:#8d97a3;font-weight:500;margin-top:-4px">{{ r.full }}</small></sc-if>
+                <span style="display:flex;flex-wrap:wrap;gap:2px 12px;font-size:12.5px;color:#8d97a3">
+                  <sc-for list="{{ r.resp }}" as="p" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:#8d97a3;flex:none"></span>{{ p }}</span></sc-for>
+                </span>
+              </span>
+              <span style="flex:none;display:inline-flex;align-items:center;padding:3px clamp(8px, calc((100cqw - 520px) * 999), 9px);border-radius:999px;font-size:clamp(11.5px, calc((100cqw - 520px) * 999), 12.5px);font-weight:600;white-space:nowrap;background:#212934;color:#8d97a3">Ninguém chamou</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 0 4px"><span style="color:#8d97a3;font-size:13px">Mostrando 17 de 17</span></div>
+      </sc-if>
+
+      <sc-if value="{{ is.historico }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;margin-bottom:16px;border-radius:12px;border:1px solid #2c343f;background:#1a2029">
+          <span style="display:grid;place-items:center;min-height:40px;border-radius:9px;background:#212934;color:#eef1f4;font-weight:600;font-size:14px;box-shadow:inset 0 -2px 0 #e5392e">Marcações</span>
+          <span style="display:grid;place-items:center;min-height:40px;border-radius:9px;color:#8d97a3;font-weight:600;font-size:14px">Presenças</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px">
+          <span style="color:#8d97a3;font-size:13px">0 marcações neste evento</span>
+          <div style="display:inline-flex;gap:2px;padding:3px;border-radius:10px;background:#1a2029;border:1px solid #2c343f">
+            <span style="padding:5px 12px;border-radius:7px;font-size:13px;font-weight:600;background:#212934;color:#eef1f4">Todos</span>
+            <span style="padding:5px 12px;border-radius:7px;font-size:13px;font-weight:600;color:#8d97a3">Meus</span>
+          </div>
+        </div>
+        <div style="text-align:center;padding:32px 16px;color:#8d97a3;display:flex;flex-direction:column;gap:12px;align-items:center">
+          <p style="margin:0;line-height:1.4">Nenhuma marcação ainda. O histórico aparece aqui assim que a equipe começar.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ is.mg }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-bottom:22px">
+          <span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:12px;font-weight:600;border:1px solid {{ mgT.ev.bd }};background:{{ mgT.ev.bg }};color:{{ mgT.ev.c }};box-shadow:{{ mgT.ev.sh }}"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg><span>Eventos</span></span>
+          <span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:12px;font-weight:600;border:1px solid {{ mgT.jv.bd }};background:{{ mgT.jv.bg }};color:{{ mgT.jv.c }};box-shadow:{{ mgT.jv.sh }}"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.3c2 .8 3.5 2.8 3.5 5.7"></path></svg><span>Jovens</span></span>
+          <span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:12px;font-weight:600;border:1px solid #2c343f;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg><span>Diretoria</span></span>
+        </div>
+
+        <sc-if value="{{ is.mgEventos }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+            <div><h2 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:26px;font-weight:600">Eventos</h2><p style="margin:4px 0 0;color:#8d97a3;font-size:13.5px">Crie os cultos e defina quem chama quem.</p></div>
+            <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:7px 14px;border-radius:9px;border:1px solid #e5392e;background:#e5392e;color:#fff;font-size:14px;font-weight:600"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14M5 12h14"></path></svg>Novo evento</div>
+          </div>
+          <article style="border:1px solid #2c343f;border-radius:18px;padding:clamp(16px, calc((100cqw - 600px) * 999), 20px);margin-bottom:26px;background:radial-gradient(90% 140% at 0% 0%, rgba(47,95,208,.16), transparent 60%), #1a2029">
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+              <span style="flex:none;width:56px;display:flex;flex-direction:column;align-items:center;overflow:hidden;border-radius:12px;border:1px solid #2c343f;background:#12161c"><small style="width:100%;text-align:center;background:#e5392e;color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:3px 0">out</small><strong style="font-family:'Oswald',sans-serif;font-size:24px;line-height:1;padding:6px 0 7px">10</strong></span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Evento selecionado</span>
+                <h3 style="font-family:'Alfa Slab One',serif;font-weight:400;margin:0;line-height:1.1;font-size:clamp(22px, calc((100cqw - 600px) * 999), 26px);text-transform:uppercase;color:#f3e9d2;letter-spacing:.4px">Culto Box</h3>
+                <span style="color:#8d97a3;font-size:13px">sábado, 10/10 · 19h30 · Box (17+) · 2 chamadas por jovem</span>
+              </div>
+              <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:30px;padding:4px 10px;border-radius:9px;border:1px solid #2c343f;background:#212934;font-size:13px;font-weight:600;width:clamp(0px, calc((600px - 100cqw) * 999), 100%);min-width:fit-content"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"></path><path d="m13.5 6.5 4 4"></path></svg>Editar</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:10px;margin-top:18px">
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:rgba(0,0,0,.14)"><span style="flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(90,134,238,.15);color:#5a86ee"><svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3.1-7 7-7s7 3 7 7M19 8v6M16 11h6"></path></svg></span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><strong style="font-size:14.5px">Distribuir quem falta</strong><small style="font-size:12.5px;color:#8d97a3">Dá responsável pra quem ainda não tem</small></span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:rgba(0,0,0,.14)"><span style="flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(90,134,238,.15);color:#5a86ee"><svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg></span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><strong style="font-size:14.5px">Refazer distribuição</strong><small style="font-size:12.5px;color:#8d97a3">Sorteia de novo quem chama quem</small></span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:rgba(0,0,0,.14)"><span style="flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(90,134,238,.15);color:#5a86ee"><svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"></path></svg></span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><strong style="font-size:14.5px">Copiar lista pro grupo</strong><small style="font-size:12.5px;color:#8d97a3">Texto pronto pra colar no WhatsApp</small></span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:rgba(0,0,0,.14)"><span style="flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(229,57,46,.14);color:#e5392e"><svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M9 14 4 9l5-5"></path><path d="M4 9h10a6 6 0 0 1 0 12h-3"></path></svg></span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><strong style="font-size:14.5px">Zerar marcações</strong><small style="font-size:12.5px;color:#8d97a3">Volta todas as chamadas pra pendente</small></span></div>
+            </div>
+          </article>
+          <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#8d97a3">Todos os eventos <span style="background:#212934;border-radius:999px;padding:1px 8px;font-size:11.5px;letter-spacing:0">4</span></h4>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ eventos }}" as="e" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:14px;width:100%;padding:10px 14px 10px 10px;border-radius:14px;border:1px solid #2c343f;background:#1a2029;opacity:{{ e.op }}">
+                <span style="flex:none;width:50px;display:flex;flex-direction:column;align-items:center;overflow:hidden;border-radius:12px;border:1px solid #2c343f;background:#12161c"><small style="width:100%;text-align:center;background:#e5392e;color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:3px 0">{{ e.mes }}</small><strong style="font-family:'Oswald',sans-serif;font-size:20px;line-height:1;padding:5px 0 6px">{{ e.dia }}</strong></span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><strong style="font-size:15.5px">{{ e.n }}</strong><small style="color:#8d97a3;font-size:13px">{{ e.sub }}</small></span>
+                <span style="display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap;background:{{ e.pBg }};color:{{ e.pC }}">{{ e.st }}</span>
+                <svg viewBox="0 0 24 24" style="flex:none;width:18px;height:18px;color:#8d97a3;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="m9 6 6 6-6 6"></path></svg>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.mgJovens }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+            <div><h2 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:26px;font-weight:600">Jovens</h2><p style="margin:4px 0 0;color:#8d97a3;font-size:13.5px">22 jovens ativos no cadastro.</p></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:7px 14px;border-radius:9px;border:1px solid #2c343f;background:#212934;font-size:14px;font-weight:600"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"></path></svg>Importar lista</div>
+              <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:7px 14px;border-radius:9px;border:1px solid #e5392e;background:#e5392e;color:#fff;font-size:14px;font-weight:600"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14M5 12h14"></path></svg>Jovem</div>
+            </div>
+          </div>
+          <section style="margin-bottom:18px;padding:14px 16px;border-radius:14px;border:1px solid rgba(232,165,61,.4);background:rgba(232,165,61,.14)">
+            <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:10px"><strong>Possíveis apelidos <span style="font-size:11.5px;padding:0 7px;border-radius:999px;background:#e8a53d;color:#2b1c05;margin-left:4px">1</span></strong><small style="color:#8d97a3;font-size:13px">Nomes com algo entre parênteses. Confirme se é apelido, ou ignore se for outra coisa (ex.: de quem é próximo).</small></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;padding:8px 10px;border-radius:10px;background:#1a2029">
+              <span style="display:flex;flex-direction:column;gap:2px;font-size:13.5px;min-width:0"><span style="color:#8d97a3">Laís Fernandes (Lalá)</span><span>→ <b style="color:#f3e9d2">Lalá</b> · Laís Fernandes</span></span>
+              <span style="display:flex;flex-wrap:wrap;gap:8px">
+                <span style="display:inline-flex;align-items:center;min-height:30px;padding:4px 10px;border-radius:9px;border:1px solid #2c343f;font-size:13px;font-weight:600">Ignorar</span>
+                <span style="display:inline-flex;align-items:center;min-height:30px;padding:4px 10px;border-radius:9px;border:1px solid #e5392e;background:#e5392e;color:#fff;font-size:13px;font-weight:600">Usar “Lalá”</span>
+              </span>
+            </div>
+          </section>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(clamp(20%, calc((600px - 100cqw) * 999), 40%), 1fr));gap:10px;margin-bottom:18px">
+            <div style="display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:#1a2029"><strong style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:600;line-height:1;color:#e5392e">14</strong><span style="font-size:12.5px;color:#8d97a3;font-weight:600">no Box</span></div>
+            <div style="display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:#1a2029"><strong style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:600;line-height:1;color:#5a86ee">5</strong><span style="font-size:12.5px;color:#8d97a3;font-weight:600">no Sprint</span></div>
+            <div style="display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:#1a2029"><strong style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:600;line-height:1;color:#e8a53d">4</strong><span style="font-size:12.5px;color:#8d97a3;font-weight:600">sem telefone</span></div>
+            <div style="display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:14px;border:1px solid #2c343f;background:#1a2029"><strong style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:600;line-height:1;color:#e8a53d">3</strong><span style="font-size:12.5px;color:#8d97a3;font-weight:600">sem nascimento</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+            <div style="display:flex;gap:8px">
+              <div style="flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;min-height:48px;background:#1a2029;border:1px solid #2c343f;border-radius:12px;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Nome, 18, box, casado, outubro…</span></div>
+              <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:7px 14px;border-radius:12px;border:1px solid #2c343f;background:#212934;font-size:14px;font-weight:600"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M4 6h16M7 12h10M10 18h4"></path></svg><span>Filtros</span></div>
+            </div>
+            <p style="margin:-4px 0 0;font-size:12px;color:#8d97a3;line-height:1.6">Combine termos: <code style="font-size:11.5px;padding:1px 6px;border-radius:6px;background:#1a2029;border:1px solid #2c343f;color:#e8a53d;white-space:nowrap">sprint outubro</code> · <code style="font-size:11.5px;padding:1px 6px;border-radius:6px;background:#1a2029;border:1px solid #2c343f;color:#e8a53d;white-space:nowrap">casado 25-30</code> · <code style="font-size:11.5px;padding:1px 6px;border-radius:6px;background:#1a2029;border:1px solid #2c343f;color:#e8a53d;white-space:nowrap">17+</code> · <code style="font-size:11.5px;padding:1px 6px;border-radius:6px;background:#1a2029;border:1px solid #2c343f;color:#e8a53d;white-space:nowrap">12/10</code> · <code style="font-size:11.5px;padding:1px 6px;border-radius:6px;background:#1a2029;border:1px solid #2c343f;color:#e8a53d;white-space:nowrap">semana</code> · pedaço do telefone</p>
+            <div style="display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * clamp(0px, calc((520px - 100cqw) * 999), 16px));padding:0 clamp(0px, calc((520px - 100cqw) * 999), 16px)">
+              <sc-for list="{{ mgChips }}" as="ch" hint-placeholder-count="4">
+                <span style="flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.c }};font-size:13px;font-weight:600;white-space:nowrap">{{ ch.l }}<span style="font-size:11.5px;padding:0 6px;min-width:20px;line-height:18px;border-radius:999px;text-align:center;background:{{ ch.cbg }};color:{{ ch.cc }}">{{ ch.n }}</span></span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;color:#8d97a3;font-size:13px">22 jovens</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(clamp(40%, calc((900px - 100cqw) * 999), 100%), 1fr));gap:10px">
+            <sc-for list="{{ jMg }}" as="r" hint-placeholder-count="8">
+              <div style="display:flex;align-items:center;gap:clamp(10px, calc((100cqw - 520px) * 999), 12px);width:100%;padding:clamp(11px, calc((100cqw - 520px) * 999), 12px) clamp(12px, calc((100cqw - 520px) * 999), 14px);border-radius:14px;border:1px solid #2c343f;background:#1a2029">
+                <span style="flex:none;width:clamp(36px, calc((100cqw - 520px) * 999), 40px);height:clamp(36px, calc((100cqw - 520px) * 999), 40px);border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:clamp(14px, calc((100cqw - 520px) * 999), 15px);letter-spacing:.5px;background:#212934;box-shadow:inset 0 0 0 1px #2c343f">{{ r.ini }}</span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
+                  <span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px">
+                    <strong style="font-size:15.5px;font-weight:600">{{ r.n }}</strong>
+                    <sc-if value="{{ r.hasF }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 7px;border-radius:6px;white-space:nowrap;background:{{ r.fBg }};color:{{ r.fC }}">{{ r.fTxt }}</span></sc-if>
+                    <sc-if value="{{ r.hasB }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;padding:2px 7px;border-radius:6px;white-space:nowrap;font-size:11.5px;font-weight:700;background:{{ r.bBg }};color:{{ r.bC }}">🎂 {{ r.b }}</span></sc-if>
+                  </span>
+                  <sc-if value="{{ r.hasSub }}" hint-placeholder-val="{{ false }}"><small style="display:block;font-size:12.5px;color:#8d97a3;font-weight:500;margin-top:-4px">{{ r.full }}</small></sc-if>
+                  <span style="display:flex;flex-wrap:wrap;gap:2px 12px;font-size:12.5px;color:#8d97a3">
+                    <sc-for list="{{ r.info }}" as="i" hint-placeholder-count="3"><span style="color:{{ i.c }}">{{ i.t }}</span></sc-for>
+                  </span>
+                </span>
+                <svg viewBox="0 0 24 24" style="flex:none;width:18px;height:18px;color:#8d97a3;opacity:.6;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"></path><path d="m13.5 6.5 4 4"></path></svg>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </sc-if>
+
+    </div>
+  </div>
+
+  <sc-if value="{{ mob }}" hint-placeholder-val="{{ true }}">
+    <nav style="position:absolute;left:0;right:0;bottom:0;z-index:20;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0, 1fr);padding:6px 4px 6px;border-top:1px solid #2c343f;background:rgba(18,22,28,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 -8px 24px rgba(0,0,0,.35)">
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;min-height:52px;font-size:11px;font-weight:600;color:{{ T.minha.lc }}"><span style="width:52px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:{{ T.minha.ibg }};color:{{ T.minha.ic }}"><svg viewBox="0 0 24 24" style="width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1M9 11l2 2 4-4M9 17h6"></path></svg></span><span style="white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis">Minha</span><span style="position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;padding:0 5px;border-radius:999px;background:#e5392e;color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center;box-shadow:0 0 0 2px #12161c">4</span></div>
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;min-height:52px;font-size:11px;font-weight:600;color:{{ T.presenca.lc }}"><span style="width:52px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:{{ T.presenca.ibg }};color:{{ T.presenca.ic }}"><svg viewBox="0 0 24 24" style="width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg></span><span style="white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis">Presença</span></div>
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;min-height:52px;font-size:11px;font-weight:600;color:{{ T.equipe.lc }}"><span style="width:52px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:{{ T.equipe.ibg }};color:{{ T.equipe.ic }}"><svg viewBox="0 0 24 24" style="width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.3c2 .8 3.5 2.8 3.5 5.7"></path></svg></span><span style="white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis">Equipe</span></div>
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;min-height:52px;font-size:11px;font-weight:600;color:{{ T.jovens.lc }}"><span style="width:52px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:{{ T.jovens.ibg }};color:{{ T.jovens.ic }}"><svg viewBox="0 0 24 24" style="width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="7.5" r="3"></circle><circle cx="5" cy="10" r="2.2"></circle><circle cx="19" cy="10" r="2.2"></circle><path d="M6.5 20c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5M1.5 19c0-2.2 1.4-3.8 3.5-4.2M22.5 19c0-2.2-1.4-3.8-3.5-4.2"></path></svg></span><span style="white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis">Jovens</span></div>
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;min-height:52px;font-size:11px;font-weight:600;color:{{ T.historico.lc }}"><span style="width:52px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:{{ T.historico.ibg }};color:{{ T.historico.ic }}"><svg viewBox="0 0 24 24" style="width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span><span style="white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis">Histórico</span></div>
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;min-height:52px;font-size:11px;font-weight:600;color:{{ T.gerenciar.lc }}"><span style="width:52px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:{{ T.gerenciar.ibg }};color:{{ T.gerenciar.ic }}"><svg viewBox="0 0 24 24" style="width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"></path></svg></span><span style="white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis">Gerenciar</span></div>
+    </nav>
+  </sc-if>
+
+  <sc-if value="{{ is.modal }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:40;background:rgba(6,9,14,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)">
+      <div style="position:absolute;left:50%;bottom:clamp(0px, calc((100cqw - 600px) * 999), 50%);transform:translate(-50%, clamp(0%, calc((100cqw - 600px) * 999), 50%));width:clamp(min(580px, calc(100% - 32px)), calc((600px - 100cqw) * 999), 100%);max-height:calc(100% - 48px);display:flex;flex-direction:column;overflow:hidden;border:1px solid #2c343f;border-bottom-width:clamp(0px, calc((100cqw - 600px) * 999), 1px);border-radius:clamp(20px, calc((600px - 100cqw) * 999), 22px) clamp(20px, calc((600px - 100cqw) * 999), 22px) clamp(0px, calc((100cqw - 600px) * 999), 20px) clamp(0px, calc((100cqw - 600px) * 999), 20px);background:linear-gradient(180deg, #212934 0%, #1a2029 140px);box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.03) inset">
+        <sc-if value="{{ mob }}" hint-placeholder-val="{{ false }}"><div style="flex:none;width:40px;height:4px;margin:10px auto -8px;border-radius:999px;background:#2c343f"></div></sc-if>
+        <div style="flex:1 1 auto;min-height:0;overflow:auto;scrollbar-width:none;padding:clamp(20px, calc((100cqw - 600px) * 999), 22px) clamp(18px, calc((100cqw - 600px) * 999), 22px);display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+            <div><h2 style="font-family:'Oswald',sans-serif;margin:0;line-height:1.1;font-size:24px;font-weight:600">{{ dlg.t }}</h2><p style="margin:5px 0 0;color:#8d97a3;font-size:13.5px">{{ dlg.sub }}</p></div>
+            <span style="flex:none;width:36px;height:36px;display:grid;place-items:center;margin:-4px -6px 0 0;border-radius:10px;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span>
+          </div>
+          <div style="display:grid;gap:16px 14px;grid-template-columns:repeat(auto-fit, minmax(clamp(40%, calc((520px - 100cqw) * 999), 100%), 1fr))">
+
+            <sc-if value="{{ is.modalEvento }}" hint-placeholder-val="{{ false }}">
+              <label style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Nome<div style="min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid {{ dlg.fbd }};box-shadow:{{ dlg.fsh }};border-radius:9px;font-size:15px;font-weight:400;color:#8d97a3;display:flex;align-items:center">Ex.: Box Day, Vigília, Retiro</div></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Data<div style="min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid #2c343f;border-radius:9px;font-size:15px;font-weight:500;color:#eef1f4;display:flex;align-items:center;justify-content:space-between">dd/mm/aaaa<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg></div></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Horário<div style="min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid #2c343f;border-radius:9px;font-size:15px;font-weight:400;color:#8d97a3;display:flex;align-items:center">Ex.: 19h30</div></label>
+              <div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Quem chamar
+                <div style="display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px">
+                  <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;min-height:58px;padding:9px 10px;border-radius:11px;border:1px solid #e5392e;background:rgba(229,57,46,.14);color:#eef1f4;box-shadow:inset 0 0 0 1px #e5392e"><strong style="font-size:14px;font-weight:600">Box</strong><small style="font-size:11.5px;font-weight:500;opacity:.85">17 anos ou mais</small></span>
+                  <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;min-height:58px;padding:9px 10px;border-radius:11px;border:1px solid #2c343f;background:#12161c;color:#8d97a3"><strong style="font-size:14px;font-weight:600">Sprint</strong><small style="font-size:11.5px;font-weight:500;opacity:.85">até 16 anos</small></span>
+                  <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;min-height:58px;padding:9px 10px;border-radius:11px;border:1px solid #2c343f;background:#12161c;color:#8d97a3"><strong style="font-size:14px;font-weight:600">Box + Sprint</strong><small style="font-size:11.5px;font-weight:500;opacity:.85">todo mundo</small></span>
+                </div>
+              </div>
+              <div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Diretores por jovem
+                <div style="display:inline-flex;align-items:center;align-self:flex-start;border:1px solid #2c343f;border-radius:11px;background:#12161c;overflow:hidden">
+                  <span style="width:44px;height:44px;display:grid;place-items:center;font-size:20px;color:#8d97a3">−</span>
+                  <span style="width:52px;min-height:44px;display:grid;place-items:center;border-left:1px solid #2c343f;border-right:1px solid #2c343f;font-family:'Oswald',sans-serif;font-size:20px;color:#eef1f4">2</span>
+                  <span style="width:44px;height:44px;display:grid;place-items:center;font-size:20px;color:#8d97a3">+</span>
+                </div>
+                <span style="font-size:12px;font-weight:400">Quantas pessoas da diretoria chamam cada jovem</span>
+              </div>
+              <div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Mensagem do WhatsApp
+                <div style="min-height:96px;padding:9px 12px;background:#1a2029;border:1px solid #2c343f;border-radius:9px;font-size:15px;font-weight:400;color:#8d97a3;line-height:1.3">Oi, {nome}! Tudo bem? 😊 Aqui é {eu}, do Box. Passando pra te chamar pro {evento}{quando}. Bora? Vai ser muito bom ter você com a gente! 🔥</div>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px"><span style="font-size:12px;font-weight:400">Inserir:</span><span style="border:1px dashed #2c343f;border-radius:7px;padding:3px 8px;font-family:ui-monospace,monospace;font-size:12px;color:#e8a53d">{nome}</span><span style="border:1px dashed #2c343f;border-radius:7px;padding:3px 8px;font-family:ui-monospace,monospace;font-size:12px;color:#e8a53d">{eu}</span><span style="border:1px dashed #2c343f;border-radius:7px;padding:3px 8px;font-family:ui-monospace,monospace;font-size:12px;color:#e8a53d">{evento}</span><span style="border:1px dashed #2c343f;border-radius:7px;padding:3px 8px;font-family:ui-monospace,monospace;font-size:12px;color:#e8a53d">{quando}</span></div>
+                <div style="display:flex;flex-direction:column;gap:8px;padding:12px;margin-top:4px;border-radius:12px;background:#0b141a;border:1px solid #1f2c33">
+                  <span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Prévia no WhatsApp</span>
+                  <div style="align-self:flex-end;max-width:92%;padding:8px 11px;border-radius:10px 2px 10px 10px;background:#005c4b;color:#e9edef;font-size:13.5px;line-height:1.4;font-weight:400">Oi, Ana! Tudo bem? 😊 Aqui é Rafa, do Box. Passando pra te chamar pro Evento. Bora? Vai ser muito bom ter você com a gente! 🔥</div>
+                </div>
+                <span style="font-size:12px;font-weight:400">Deixe vazio pra usar a mensagem padrão.</span>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ is.modalJovem }}" hint-placeholder-val="{{ false }}">
+              <label style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Nome completo<div style="min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid {{ dlg.fbd }};box-shadow:{{ dlg.fsh }};border-radius:9px;font-size:15px;font-weight:400;color:#8d97a3;display:flex;align-items:center">Ex.: Pedro Henrique</div></label>
+              <label style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Apelido<div style="min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid #2c343f;border-radius:9px;font-size:15px;font-weight:400;color:#8d97a3;display:flex;align-items:center">Como a galera chama. Ex.: Pedrinho</div><span style="font-size:12px;font-weight:400">Aparece em destaque e na mensagem do WhatsApp. A busca acha pelos dois.</span></label>
+              <div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Equipe
+                <div style="display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px">
+                  <span style="display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 10px;border-radius:11px;border:1px solid #e5392e;background:rgba(229,57,46,.14);color:#eef1f4;box-shadow:inset 0 0 0 1px #e5392e;font-size:14px;font-weight:600">Feminina</span>
+                  <span style="display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 10px;border-radius:11px;border:1px solid #2c343f;background:#12161c;color:#8d97a3;font-size:14px;font-weight:600">Masculina</span>
+                </div>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Data de nascimento<div style="min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid #2c343f;border-radius:9px;font-size:15px;font-weight:500;color:#eef1f4;display:flex;align-items:center;justify-content:space-between">dd/mm/aaaa<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg></div><span style="font-size:12px;font-weight:400">Define Box (17+) ou Sprint</span></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">WhatsApp<div style="min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid #2c343f;border-radius:9px;font-size:15px;font-weight:400;color:#8d97a3;display:flex;align-items:center">(11) 91234-5678</div></label>
+              <label style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Observação<div style="min-height:42px;padding:9px 12px;background:#1a2029;border:1px solid #2c343f;border-radius:9px;font-size:15px;font-weight:400;color:#8d97a3;display:flex;align-items:center">Ex.: veio pela primeira vez na vigília</div></label>
+              <div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#8d97a3;font-weight:500;min-width:0">Relacionamento
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(104px, 1fr));gap:8px">
+                  <span style="display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 10px;border-radius:11px;border:1px solid #e5392e;background:rgba(229,57,46,.14);color:#eef1f4;box-shadow:inset 0 0 0 1px #e5392e;font-size:14px;font-weight:600;text-align:center">Não informado</span>
+                  <span style="display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 10px;border-radius:11px;border:1px solid #2c343f;background:#12161c;color:#8d97a3;font-size:14px;font-weight:600">Solteiro(a)</span>
+                  <span style="display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 10px;border-radius:11px;border:1px solid #2c343f;background:#12161c;color:#8d97a3;font-size:14px;font-weight:600">Namorando</span>
+                  <span style="display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 10px;border-radius:11px;border:1px solid #2c343f;background:#12161c;color:#8d97a3;font-size:14px;font-weight:600">Noivo(a)</span>
+                  <span style="display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 10px;border-radius:11px;border:1px solid #2c343f;background:#12161c;color:#8d97a3;font-size:14px;font-weight:600">Casado(a)</span>
+                </div>
+              </div>
+              <div style="grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px;border-radius:12px;border:1px solid #2c343f;background:#12161c">
+                <span style="display:flex;flex-direction:column;gap:2px"><strong style="font-size:14px">Ativo</strong><small style="font-size:12.5px;color:#8d97a3">Entra nas distribuições de chamada</small></span>
+                <span style="position:relative;flex:none;width:44px;height:26px;border-radius:999px;background:#38b787"><span style="position:absolute;top:3px;left:21px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4)"></span></span>
+              </div>
+              <div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:12px;border:1px dashed #2c343f">
+                <span style="font-size:13px;color:#8d97a3;font-weight:500">Vínculos</span>
+                <span style="font-size:13px;color:#8d97a3">Salve o cadastro primeiro pra adicionar vínculos.</span>
+              </div>
+            </sc-if>
+
+          </div>
+        </div>
+        <div style="flex:none;display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:clamp(12px, calc((100cqw - 600px) * 999), 14px) clamp(18px, calc((100cqw - 600px) * 999), 22px);background:#1a2029;border-top:1px solid #2c343f">
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 18px;border-radius:9px;border:1px solid #2c343f;background:#212934;font-size:14px;font-weight:600">Cancelar</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 18px;border-radius:9px;border:1px solid #e5392e;background:#e5392e;color:#fff;font-size:14px;font-weight:600">{{ dlg.ok }}</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:375,&quot;height&quot;:812},&quot;tela&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;carregando&quot;,&quot;gate&quot;,&quot;quem&quot;,&quot;minha&quot;,&quot;presenca&quot;,&quot;equipe&quot;,&quot;jovens&quot;,&quot;historico&quot;,&quot;mg-eventos&quot;,&quot;mg-jovens&quot;,&quot;novo-evento&quot;,&quot;novo-jovem&quot;],&quot;default&quot;:&quot;minha&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;mobile&quot;,&quot;tablet&quot;,&quot;desktop&quot;],&quot;default&quot;:&quot;mobile&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const tela = this.props.tela ?? 'minha';
+    const dev = this.props.device ?? 'mobile';
+    const mob = dev === 'mobile';
+    const modalEvento = tela === 'novo-evento', modalJovem = tela === 'novo-jovem';
+    const base = modalEvento ? 'mg-eventos' : modalJovem ? 'mg-jovens' : tela;
+    const app = !['carregando', 'gate', 'quem'].includes(tela);
+    const tabOf = { minha: 'minha', presenca: 'presenca', equipe: 'equipe', jovens: 'jovens', historico: 'historico', 'mg-eventos': 'gerenciar', 'mg-jovens': 'gerenciar' }[base];
+    const T = {};
+    ['minha', 'presenca', 'equipe', 'jovens', 'historico', 'gerenciar'].forEach(id => {
+      const s = id === tabOf;
+      T[id] = { bg: s ? '#212934' : 'transparent', c: s ? '#eef1f4' : '#8d97a3', sh: s ? 'inset 0 -2px 0 #e5392e' : 'none',
+        lc: s ? '#eef1f4' : '#b4bdc8', ibg: s ? 'rgba(229,57,46,.14)' : 'transparent', ic: s ? '#e5392e' : 'currentColor' };
+    });
+    const mgSel = s => ({ bd: s ? '#e5392e' : '#2c343f', bg: s ? '#1a2029' : 'transparent', c: s ? '#eef1f4' : '#8d97a3', sh: s ? 'inset 0 0 0 1px #e5392e' : 'none' });
+
+    const FX = { box: ['rgba(229,57,46,.14)', '#e5392e', 'Box'], sprint: ['rgba(90,134,238,.15)', '#5a86ee', 'Sprint'] };
+    const BD = { Hoje: ['#e8a53d', '#2b1c05'] };
+    const J = [
+      { n: 'Alice', f: 'sprint', i: 14, g: 'F', tel: '(11) 98000-0000', an: '10/01', r: [] },
+      { n: 'Arthur', f: 'box', i: 21, g: 'M', tel: '(11) 99481-4804', an: '13/04', r: ['Rafa', 'Vini'] },
+      { n: 'Bento', f: 'box', i: 18, g: 'M', tel: null, an: '08/10', b: 'Qui', r: ['Vini', 'Zé'] },
+      { n: 'Bruna', f: 'box', i: 21, g: 'F', tel: '(11) 98123-4567', an: '11/02', civ: 'Casada', r: ['Ana', 'Bia'] },
+      { n: 'Caio', f: 'box', i: 24, g: 'M', tel: '(11) 99728-3938', an: '15/06', civ: 'Casado', r: ['Téo', 'Zé'] },
+      { n: 'Camila', f: 'box', i: 17, g: 'F', tel: '(11) 98246-9134', an: '05/10', b: 'Hoje', r: ['Lu', 'Ana'] },
+      { n: 'Davi', f: 'box', i: 20, g: 'M', tel: '(11) 99851-8505', an: '22/03', r: ['Rafa', 'Vini'], vinc: 'Irmão de Duda' },
+      { n: 'Duda', f: 'box', i: 24, g: 'F', tel: '(11) 98551-2290', an: '30/08', r: ['Bia', 'Dani'] },
+      { n: 'Elisa', f: 'box', i: 20, g: 'F', tel: '(11) 98710-4432', an: '17/11', r: ['Lu', 'Carol'] },
+      { n: 'Gabi', f: 'sprint', i: 15, g: 'F', tel: '(11) 98301-7765', an: '09/05', r: [] },
+      { n: 'Heitor', g: 'M', tel: '(11) 99312-7710', r: ['Rafa', 'Téo'] },
+      { n: 'Helena', g: 'F', tel: null, r: ['Lu', 'Carol'] },
+      { n: 'Igão', full: 'Igor Santos', ini: 'IS', f: 'box', i: 19, g: 'M', tel: '(11) 98877-2140', an: '02/12', r: ['Rafa', 'Vini'] },
+      { n: 'Isa', f: 'box', i: 23, g: 'F', tel: '(11) 98620-1187', an: '19/07', r: ['Carol', 'Ana'] },
+      { n: 'Júlia', f: 'sprint', i: 13, g: 'F', tel: null, an: '25/02', r: [] },
+      { n: 'Laís Fernandes (Lalá)', ini: 'LF', f: 'sprint', i: 14, g: 'F', tel: '(11) 98455-6620', an: '14/09', r: [] },
+      { n: 'Lara', f: 'box', i: 22, g: 'F', tel: '(11) 98190-3354', an: '03/06', r: ['Ana', 'Dani'] },
+      { n: 'Manu', f: 'box', i: 18, g: 'F', tel: '(11) 98734-0091', an: '28/01', r: ['Bia', 'Dani'] },
+      { n: 'Miguel', f: 'box', i: 22, g: 'M', tel: '(11) 99640-2218', an: '21/12', r: ['Téo', 'Zé'] },
+      { n: 'Nina', g: 'F', tel: '(11) 98012-5547', r: ['Lu', 'Dani'] },
+      { n: 'Pedro', f: 'box', i: 19, g: 'M', tel: null, an: '07/04', r: ['Téo', 'Zé'] },
+      { n: 'Theo', f: 'sprint', i: 16, g: 'M', tel: '(11) 99105-8823', an: '16/03', r: [] },
+    ];
+    const D = [
+      { n: 'Ana', g: 'F' }, { n: 'Bia', g: 'F', b: 'Sáb' }, { n: 'Carol', g: 'F' }, { n: 'Dani', g: 'F' }, { n: 'Lu', g: 'F' },
+      { n: 'Rafa', g: 'M' }, { n: 'Téo', g: 'M' }, { n: 'Vini', g: 'M' }, { n: 'Zé', g: 'M' },
+    ];
+    const deco = p => {
+      const bd = BD[p.b] || ['rgba(232,165,61,.14)', '#e8a53d'];
+      return { ...p, ini: p.ini || p.n[0], hasF: !!p.f, noF: !p.f, fTxt: p.f ? `${FX[p.f][2]} · ${p.i}` : '', fBg: p.f ? FX[p.f][0] : '', fC: p.f ? FX[p.f][1] : '',
+        hasB: !!p.b, bBg: bd[0], bC: bd[1], hasSub: !!p.full, hasV: !!p.vinc };
+    };
+    const byN = (a, b) => a.n.localeCompare(b.n, 'pt');
+
+    const minha = J.filter(j => j.r.includes('Rafa')).map(j => ({ ...deco(j), com: j.r.find(x => x !== 'Rafa') }));
+    const pres = [...J.map(j => ({ ...j, dir: false })), ...D.map(d => ({ ...d, dir: true }))].sort(byN).map(p => ({
+      ...deco(p), hasF: !p.dir && !!p.f,
+      n: p.n.replace(' Fernandes (Lalá)', ''),
+      av: p.dir ? 'inset 0 0 0 1px rgba(232,165,61,.5)' : 'inset 0 0 0 1px #2c343f',
+      sub: p.dir ? `Diretoria · equipe ${p.g === 'F' ? 'feminina' : 'masculina'}` : p.r.length ? `Ninguém chamou ainda · ${p.r.join(' e ')}` : 'Não estava na lista de chamada',
+    }));
+    const jEv = J.filter(j => j.r.length).map(j => ({ ...deco(j), resp: j.r }));
+    const jMg = J.map(j => ({ ...deco(j), info: [
+      { t: j.g === 'F' ? 'Feminina' : 'Masculina', c: '#8d97a3' },
+      j.tel ? { t: j.tel, c: '#8d97a3' } : { t: 'sem telefone', c: '#e8a53d' },
+      j.an ? { t: '🎂 ' + j.an, c: '#8d97a3' } : { t: 'sem nascimento', c: '#e8a53d' },
+      ...(j.civ ? [{ t: j.civ, c: '#8d97a3' }] : []),
+    ] }));
+    const bloco = (g, t, mt) => {
+      const ds = D.filter(d => d.g === g).sort((a, b) => (a.n === 'Rafa' ? -1 : b.n === 'Rafa' ? 1 : byN(a, b))).map(d => {
+        const js = J.filter(j => j.r.includes(d.n)).map(j => j.n).sort((a, b) => a.localeCompare(b, 'pt'));
+        const eu = d.n === 'Rafa';
+        return { n: d.n, eu, js, total: js.length, bd: eu ? 'rgba(229,57,46,.45)' : '#2c343f', sh: eu ? '0 0 0 1px rgba(229,57,46,.15)' : 'none' };
+      });
+      return { t, n: ds.length, ds, mt };
+    };
+    const chip = (l, n, on) => ({ l, n, bd: on ? '#eef1f4' : '#2c343f', bg: on ? '#eef1f4' : 'transparent', c: on ? '#12161c' : '#8d97a3', cbg: on ? 'rgba(0,0,0,.15)' : '#212934', cc: on ? '#12161c' : '#8d97a3' });
+    const arq = { op: .6, st: 'Arquivado', pBg: '#212934', pC: '#8d97a3' };
+
+    return {
+      mob, wide: !mob, T,
+      is: { load: tela === 'carregando', gate: tela === 'gate', quem: tela === 'quem', app,
+        minha: base === 'minha', presenca: base === 'presenca', equipe: base === 'equipe', jovens: base === 'jovens', historico: base === 'historico',
+        mg: base.startsWith('mg-'), mgEventos: base === 'mg-eventos', mgJovens: base === 'mg-jovens',
+        modal: modalEvento || modalJovem, modalEvento, modalJovem },
+      mgT: { ev: mgSel(base === 'mg-eventos'), jv: mgSel(base === 'mg-jovens') },
+      dirF: D.filter(d => d.g === 'F'), dirM: D.filter(d => d.g === 'M'),
+      minha, pres, jEv, jMg,
+      equipe: [bloco('M', 'Equipe masculina', '4px'), bloco('F', 'Equipe feminina', '26px')],
+      pChips: [chip('Todos', 31, true), chip('Presentes', 0), chip('Confirmados que faltam', 0), chip('Diretoria', 9)],
+      jChips: [chip('Todos', 17, true), chip('Sem resposta', 17), chip('Confirmados', 0), chip('Não vão', 0)],
+      mgChips: [chip('Todos', 22, true), chip('Sem telefone', 4), chip('Sem nascimento', 3), chip('Inativos', 0)],
+      eventos: [
+        { mes: 'out', dia: 10, n: 'Culto Box', sub: 'Sábado · 19h30 · Box (17+)', op: 1, st: 'Selecionado', pBg: 'rgba(56,183,135,.14)', pC: '#38b787' },
+        { mes: 'set', dia: 26, n: 'Box Day', sub: 'Sábado · 17h (Sprint) e 20h (Box) · Box + Sprint', ...arq },
+        { mes: 'set', dia: 19, n: 'Culto Box', sub: 'Sábado · 19h30 · Box (17+)', ...arq },
+        { mes: 'set', dia: 12, n: 'Culto Box', sub: 'Sábado · 19h30 · Box (17+)', ...arq },
+      ],
+      dlg: modalJovem
+        ? { t: 'Novo jovem', sub: 'Cadastre pra entrar nas listas de chamada.', ok: 'Salvar', fbd: mob ? '#2c343f' : '#8d97a3', fsh: mob ? 'none' : '0 0 0 3px rgba(255,255,255,.06)' }
+        : { t: 'Novo evento', sub: 'Ao salvar, as chamadas já são distribuídas automaticamente.', ok: 'Criar e distribuir', fbd: mob ? '#2c343f' : '#8d97a3', fsh: mob ? 'none' : '0 0 0 3px rgba(255,255,255,.06)' },
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -47,7 +47,7 @@
 .resumo-abas { margin-bottom: 0; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .resumo-abas button { padding: 0 6px; white-space: nowrap; }
 .resumo-abas .c { font-size: 11.5px; padding: 0 7px; border-radius: 999px; background: var(--bg); color: var(--text-dim); margin-left: 4px; }
-.resumo-abas [aria-selected="true"] .c { background: var(--accent); color: #fff; }
+.resumo-abas [aria-selected="true"] .c { background: var(--btn-red); color: #fff; }
 .resumo-corpo { display: flex; flex-direction: column; gap: 12px; min-height: 200px; }
 .resumo-corpo .grupo-titulo { margin: 4px 0 -2px; }
 .resumo-filtro { gap: 6px; }

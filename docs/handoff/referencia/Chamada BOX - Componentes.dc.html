@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Oswald:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; } html, body { margin: 0; background: #0b0e12; } a { color: #e8a53d; } a:hover { color: #f3e9d2; }
+@keyframes bx-run { 0% { left: 0%; } 100% { left: calc(100% - 52px); } }
+@keyframes bx-spin { to { transform: rotate(360deg); } }
+@keyframes bx-shim { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
+@keyframes bx-timer { 0% { width: 100%; } 100% { width: 0%; } }
+@keyframes bx-bar { 0% { left: -40%; } 100% { left: 100%; } }
+</style>
+</helmet>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="hX" viewBox="0 0 64 44"><path d="M18 21.5C10 20 5 16.5 2.5 11.5c6 2 11 3 16 5.5z" fill="#f3e9d2"></path><path d="M17.5 27C9.5 27.5 4 25 1 21c6 1 11 1.2 17 3z" fill="#f3e9d2"></path><path d="M17.5 32.5c-7 1.2-12 0-15-3 6 .3 10.5 0 15.5 0z" fill="#f3e9d2"></path><path d="M16 38C14.5 20.5 24.5 8 40.5 8 53.5 8 61.5 18 61.5 30v8z" fill="#2f5fd0"></path><path d="M46.5 25h15v13h-10.5c-2.8 0-4.5-2-4.5-4.7z" fill="#12161c"></path><path d="M44.5 23.5h15.5" style="stroke:#f3e9d2;stroke-width:3;stroke-linecap:round"></path><path d="M23 20.5c3.5-6.5 10-10 18.5-10" style="stroke:#e5392e;stroke-width:4.5;fill:none;stroke-linecap:round"></path><rect x="14.5" y="36" width="49" height="5" rx="2.5" fill="#e5392e"></rect></symbol>
+  <symbol id="hL" viewBox="0 0 64 44"><path d="M18 21.5C10 20 5 16.5 2.5 11.5c6 2 11 3 16 5.5z" fill="#f3e9d2" opacity=".75"></path><path d="M17.5 27C9.5 27.5 4 25 1 21c6 1 11 1.2 17 3z" fill="#f3e9d2" opacity=".75"></path><path d="M17.5 32.5c-7 1.2-12 0-15-3 6 .3 10.5 0 15.5 0z" fill="#f3e9d2" opacity=".75"></path><path d="M16 38C14.5 20.5 24.5 8 40.5 8 53.5 8 61.5 18 61.5 30v8z" fill="#f3e9d2"></path><path d="M46.5 25h15v13h-10.5c-2.8 0-4.5-2-4.5-4.7z" fill="#12161c"></path><path d="M44.5 23.5h15.5" style="stroke:#12161c;stroke-width:3;stroke-linecap:round"></path><path d="M23 20.5c3.5-6.5 10-10 18.5-10" style="stroke:#e5392e;stroke-width:4.5;fill:none;stroke-linecap:round"></path><rect x="14.5" y="36" width="49" height="5" rx="2.5" fill="#e5392e"></rect></symbol>
+</svg>
+
+<svg width="0" height="0" style="position:absolute">
+<symbol id="iG" viewBox="0 0 180 180"><defs><clipPath id="cG"><rect width="180" height="180" rx="40"/></clipPath><pattern id="pG" width="80" height="80" patternUnits="userSpaceOnUse" patternTransform="translate(30 30)"><rect width="80" height="80" fill="#fbf8f0"/><rect width="40" height="40" fill="#12161c"/><rect x="40" y="40" width="40" height="40" fill="#12161c"/></pattern></defs><g clip-path="url(#cG)"><rect width="180" height="180" fill="#f3e9d2"/><g transform="rotate(-8 90 90)"><rect x="30" y="30" width="120" height="120" rx="14" fill="url(#pG)" stroke="#12161c" stroke-width="7"/><g transform="rotate(8 90 90)"><path d="M56 94 82 120 126 64" fill="none" stroke="#12161c" stroke-width="42" stroke-linecap="round" stroke-linejoin="round" opacity=".28" transform="translate(0 6)"/><path d="M56 94 82 120 126 64" fill="none" stroke="#f3e9d2" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/><path d="M56 94 82 120 126 64" fill="none" stroke="#e5392e" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/></g></g></g></symbol>
+  <symbol id="iH" viewBox="0 0 180 180"><defs><clipPath id="cH"><rect width="180" height="180" rx="40"/></clipPath><pattern id="pH" width="68" height="68" patternUnits="userSpaceOnUse" patternTransform="translate(22 22)"><rect width="68" height="68" fill="#12161c"/><rect width="34" height="34" fill="#f3e9d2"/><rect x="34" y="34" width="34" height="34" fill="#f3e9d2"/></pattern></defs><g clip-path="url(#cH)"><rect width="180" height="180" fill="#12161c"/><rect x="22" y="22" width="136" height="136" rx="18" fill="url(#pH)" stroke="#f3e9d2" stroke-width="6"/><rect x="5" y="5" width="170" height="170" rx="35" fill="none" stroke="#e5392e" stroke-width="5"/><path d="M56 94 82 120 126 64" fill="none" stroke="#12161c" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/><path d="M56 94 82 120 126 64" fill="none" stroke="#e5392e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/></g></symbol>
+  <symbol id="iI" viewBox="0 0 180 180"><defs><clipPath id="cI"><rect width="180" height="180" rx="40"/></clipPath><clipPath id="cI2"><rect x="22" y="22" width="136" height="136" rx="18"/></clipPath></defs><g clip-path="url(#cI)"><rect width="180" height="180" fill="#f3e9d2"/><g clip-path="url(#cI2)"><rect x="22" y="14" width="136" height="152" fill="#fbf8f0"/><g transform="translate(0 8)"><rect x="22" y="22" width="34" height="34" fill="#12161c"/><rect x="22" y="56" width="34" height="34" fill="#fbf8f0"/><rect x="22" y="90" width="34" height="34" fill="#12161c"/><rect x="22" y="124" width="34" height="34" fill="#fbf8f0"/></g><g transform="translate(0 0)"><rect x="56" y="22" width="34" height="34" fill="#fbf8f0"/><rect x="56" y="56" width="34" height="34" fill="#12161c"/><rect x="56" y="90" width="34" height="34" fill="#fbf8f0"/><rect x="56" y="124" width="34" height="34" fill="#12161c"/></g><g transform="translate(0 -8)"><rect x="90" y="22" width="34" height="34" fill="#12161c"/><rect x="90" y="56" width="34" height="34" fill="#fbf8f0"/><rect x="90" y="90" width="34" height="34" fill="#12161c"/><rect x="90" y="124" width="34" height="34" fill="#fbf8f0"/></g><g transform="translate(0 0)"><rect x="124" y="22" width="34" height="34" fill="#fbf8f0"/><rect x="124" y="56" width="34" height="34" fill="#12161c"/><rect x="124" y="90" width="34" height="34" fill="#fbf8f0"/><rect x="124" y="124" width="34" height="34" fill="#12161c"/></g></g><rect x="22" y="22" width="136" height="136" rx="18" fill="none" stroke="#12161c" stroke-width="7"/><path d="M56 94 82 120 126 64" fill="none" stroke="#12161c" stroke-width="38" stroke-linecap="round" stroke-linejoin="round" opacity=".28" transform="translate(0 6)"/><path d="M56 94 82 120 126 64" fill="none" stroke="#f3e9d2" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/><path d="M56 94 82 120 126 64" fill="none" stroke="#e5392e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/></g></symbol>
+  <symbol id="iD" viewBox="0 0 180 180"><defs><clipPath id="cpD"><rect width="180" height="180" rx="40"></rect></clipPath><pattern id="pkD" width="32" height="32" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#f3e9d2"></rect><rect x="16" y="16" width="16" height="16" fill="#f3e9d2"></rect></pattern></defs><rect width="180" height="180" rx="40" fill="#2f5fd0"></rect><g clip-path="url(#cpD)"><rect y="148" width="180" height="32" fill="url(#pkD)" opacity=".9"></rect></g><path d="M108 16 48 94h38l-14 48 64-76H98z" fill="#12161c" transform="translate(7 7)"></path><path d="M108 16 48 94h38l-14 48 64-76H98z" fill="#f3e9d2"></path><path d="M108 16 48 94h38l-5 17 24-45H98z" fill="#e5392e" opacity="0"></path></symbol>
+  <symbol id="iE" viewBox="0 0 180 180"><rect width="180" height="180" rx="40" fill="#12161c"></rect><circle cx="90" cy="82" r="70" fill="#e5392e"></circle><circle cx="90" cy="82" r="62" fill="#f3e9d2"></circle><circle cx="90" cy="82" r="54" fill="#2f5fd0"></circle><use href="#hL" x="30" y="46" width="110" height="76"></use><path d="M30 132h120l-9 17 9 17H30l9-17z" fill="#e5392e"></path><text x="90" y="157" text-anchor="middle" font-family="Alfa Slab One, serif" font-size="21" fill="#f3e9d2" letter-spacing="1">BOX</text></symbol>
+  <symbol id="iF" viewBox="0 0 180 180"><defs><pattern id="pkF" width="68" height="68" patternUnits="userSpaceOnUse" patternTransform="translate(22 22)"><rect width="68" height="68" fill="#fbf8f0"></rect><rect width="34" height="34" fill="#12161c"></rect><rect x="34" y="34" width="34" height="34" fill="#12161c"></rect></pattern></defs><rect width="180" height="180" rx="40" fill="#f3e9d2"></rect><rect x="22" y="22" width="136" height="136" rx="18" fill="url(#pkF)" stroke="#12161c" stroke-width="7"></rect><path d="M54 94 80 120 128 62" fill="none" stroke="#f3e9d2" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"></path><path d="M54 94 80 120 128 62" fill="none" stroke="#e5392e" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+</svg>
+<section id="4" style="padding:64px;display:flex;flex-direction:column;gap:80px;font-family:'Inter',sans-serif;color:#eef1f4;background:#0b0e12;min-width:max-content">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e5392e">Turno 4 · Componentes de marca</span>
+    <h1 style="margin:0;font-family:'Alfa Slab One',serif;font-weight:400;font-size:44px;letter-spacing:1px;color:#f3e9d2;text-transform:uppercase">Entrada, logo, loaders e toasts</h1>
+  </header>
+
+  <div id="4a" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">4a</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Entrada v2</h2></div>
+    <div style="display:flex;align-items:flex-start;gap:48px">
+      <sc-for list="{{ gdevs }}" as="d" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">{{ d.rot }}</span>
+          <div style="width:{{ d.w }}px;height:{{ d.h }}px;border-radius:{{ d.r }}px;overflow:hidden;border:1px solid #2c343f;box-shadow:0 30px 80px rgba(0,0,0,.5)"><dc-import name="Chamada App v2 Extras" tela="gate" device="{{ d.dev }}" hint-size="100%,100%" style="width:100%;height:100%;display:block"></dc-import></div></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div id="4b" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">4b</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Ícone do app</h2><span style="color:#8d97a3;font-size:14px">Variações refinadas da bandeira com check.</span></div>
+    <div style="display:flex;gap:40px;align-items:flex-start">
+      <sc-for list="{{ logos }}" as="o" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:22px;width:300px"><div style="min-height:84px"><span style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:600">{{ o.name }}</span><div style="font-size:13px;color:#8d97a3;margin-top:4px;line-height:1.4">{{ o.desc }}</div></div>
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 16px">
+            <svg viewBox="0 0 180 180" style="flex:none;width:180px;height:180px;filter:drop-shadow(0 20px 30px rgba(0,0,0,.5))"><use href="#{{ o.id }}"></use></svg>
+            <svg viewBox="0 0 180 180" style="flex:none;width:64px;height:64px"><use href="#{{ o.id }}"></use></svg>
+            <svg viewBox="0 0 180 180" style="flex:none;width:32px;height:32px"><use href="#{{ o.id }}"></use></svg>
+            <div style="position:relative;flex:none;width:64px;height:64px;border-radius:50%;overflow:hidden;background:{{ o.bg }}"><svg viewBox="0 0 180 180" style="position:absolute;left:-10px;top:-10px;width:84px;height:84px"><use href="#{{ o.id }}"></use></svg></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:18px;background:#1a2029;border:1px solid #2c343f"><svg viewBox="0 0 180 180" style="flex:none;width:56px;height:56px"><use href="#{{ o.id }}"></use></svg><div><div style="font-family:'Alfa Slab One',serif;font-size:28px;line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#f3e9d2">Chamada</div><div style="font-size:12px;color:#8d97a3;margin-top:5px">Diretoria · Juventude Box</div></div></div>
+        </div>
+      </sc-for>
+          </div>
+  </div>
+
+  <div id="4c" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">4c</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Carregamento pequeno</h2><span style="color:#8d97a3;font-size:14px">Para uso dentro das telas, enquanto os dados chegam.</span></div>
+    <div style="display:flex;gap:20px;align-items:stretch">
+
+      <div style="width:300px;padding:20px;border-radius:20px;background:#12161c;border:1px solid #2c343f;display:flex;flex-direction:column;gap:16px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Capacete na pista · bloco</span>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:26px 0"><div style="position:relative;width:200px;height:44px"><div style="position:absolute;left:0;right:0;bottom:4px;height:10px;border-radius:999px;background:#0b0f14;box-shadow:inset 0 0 0 1px #2c343f;overflow:hidden"><div style="position:absolute;left:0;right:0;top:4px;height:2px;background:repeating-linear-gradient(90deg, rgba(243,233,210,.4) 0 10px, transparent 10px 20px)"></div></div><svg viewBox="0 0 64 44" style="position:absolute;bottom:6px;left:0;width:52px;height:36px;animation:bx-run 1.4s ease-in-out infinite alternate"><use href="#hX"></use></svg></div><span style="font-size:13.5px;color:#b4bdc8">Carregando a lista…</span></div>
+      </div>
+
+      <div style="width:300px;padding:20px;border-radius:20px;background:#12161c;border:1px solid #2c343f;display:flex;flex-direction:column;gap:16px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Roda · botões e linhas</span>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:20px;height:20px;border-radius:50%;background:conic-gradient(#e5392e 0 25%, #f3e9d2 0 50%, #2f5fd0 0 75%, #f3e9d2 0);-webkit-mask:radial-gradient(circle, transparent 5px, #000 6px);mask:radial-gradient(circle, transparent 5px, #000 6px);animation:bx-spin .8s linear infinite"></div><span style="font-size:13.5px;color:#b4bdc8">Carregando…</span></div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:48px;border-radius:12px;background:#d6342a;color:#fff;font-weight:600;font-size:15px;opacity:.9"><div style="width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;animation:bx-spin .7s linear infinite"></div>Entrando…</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;border-radius:12px;border:1px solid #2c343f;background:#212934;font-weight:600;font-size:14px;color:#b4bdc8"><div style="width:16px;height:16px;border-radius:50%;border:2.5px solid #3a4452;border-top-color:#e8a53d;animation:bx-spin .7s linear infinite"></div>Salvando…</div>
+          <div style="display:flex;align-items:center;gap:12px;padding-top:6px"><div style="width:44px;height:44px;border-radius:50%;background:conic-gradient(#e5392e 0 25%, #f3e9d2 0 50%, #2f5fd0 0 75%, #f3e9d2 0);-webkit-mask:radial-gradient(circle, transparent 13px, #000 14px);mask:radial-gradient(circle, transparent 13px, #000 14px);animation:bx-spin 1s linear infinite"></div><span style="font-size:12px;color:#8d97a3">44 px · telas vazias</span></div>
+        </div>
+      </div>
+
+      <div style="width:340px;padding:20px;border-radius:20px;background:#12161c;border:1px solid #2c343f;display:flex;flex-direction:column;gap:14px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Esqueleto · cards da lista</span>
+        <sc-for list="{{ skel }}" as="k" hint-placeholder-count="2">
+          <div style="display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:18px;background:#1a2029;border:1px solid #2c343f">
+            <div style="display:flex;align-items:center;gap:12px"><div style="flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(90deg,#212934 0,#2a3441 50%,#212934 100%) 0 0 / 200px 100%;animation:bx-shim 1.4s linear infinite"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="height:16px;width:{{ k.w }};border-radius:6px;background:linear-gradient(90deg,#212934 0,#2a3441 50%,#212934 100%) 0 0 / 200px 100%;animation:bx-shim 1.4s linear infinite"></div><div style="height:12px;width:70%;border-radius:6px;background:linear-gradient(90deg,#212934 0,#2a3441 50%,#212934 100%) 0 0 / 200px 100%;animation:bx-shim 1.4s linear infinite"></div></div><div style="flex:none;width:48px;height:48px;border-radius:50%;background:#212934"></div><div style="flex:none;width:48px;height:48px;border-radius:50%;background:#212934"></div></div>
+            <div style="height:52px;border-radius:13px;background:linear-gradient(90deg,#212934 0,#2a3441 50%,#212934 100%) 0 0 / 200px 100%;animation:bx-shim 1.4s linear infinite"></div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="width:320px;padding:20px;border-radius:20px;background:#12161c;border:1px solid #2c343f;display:flex;flex-direction:column;gap:18px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Barra no topo · troca de aba</span>
+        <div style="position:relative;height:4px;border-radius:999px;background:#212934;overflow:hidden"><div style="position:absolute;top:0;bottom:0;width:40%;border-radius:999px;background:linear-gradient(90deg, #2f5fd0, #e5392e);animation:bx-bar 1.1s ease-in-out infinite"></div></div>
+        <span style="font-size:12.5px;color:#8d97a3;line-height:1.5">Fica fixa no topo da tela por baixo da barra do navegador. Some quando o conteúdo chega.</span>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#1a2029;border:1px solid #2c343f"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:#8d97a3;stroke-width:2.4;stroke-linecap:round;animation:bx-spin .9s linear infinite"><path d="M21 12a9 9 0 1 1-6.2-8.55"></path></svg><span style="font-size:13px;color:#b4bdc8">Atualizando… puxe pra recarregar</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="4d" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">4d</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Toasts</h2><span style="color:#8d97a3;font-size:14px">Sucesso, aviso, erro e informação; com ação e barra de tempo.</span></div>
+    <div style="display:flex;gap:48px;align-items:flex-start">
+      <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Celular · acima da barra de abas</span>
+        <div style="position:relative;width:375px;height:520px;border-radius:28px;overflow:hidden;border:1px solid #2c343f;background:#12161c;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+          <div style="position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:10px;opacity:.5"><div style="height:24px;width:110px;border-radius:8px;background:#1a2029"></div><div style="height:130px;border-radius:22px;background:#1a2029"></div><div style="height:120px;border-radius:18px;background:#1a2029"></div><div style="height:120px;border-radius:18px;background:#1a2029"></div></div>
+          <div style="position:absolute;left:12px;right:12px;bottom:84px;display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="4">
+              <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;padding:12px 12px 14px 12px;border-radius:16px;background:#212934;border:1px solid {{ t.bd }};box-shadow:0 12px 32px rgba(0,0,0,.5)">
+                <span style="flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:{{ t.bg }};color:{{ t.col }}"><svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><path d="{{ t.ic }}"></path></svg></span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><strong style="font-size:14.5px;font-weight:600">{{ t.t }}</strong><span style="font-size:13px;color:#b4bdc8;line-height:1.35">{{ t.s }}</span></span>
+                <span style="flex:none;padding:8px 6px;font-size:13.5px;font-weight:700;color:{{ t.col }}">{{ t.a }}</span>
+                <div style="position:absolute;left:0;bottom:0;height:3px;background:{{ t.col }};opacity:.8;animation:bx-timer 5s linear infinite"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:70px;border-top:1px solid #2c343f;background:rgba(18,22,28,.96)"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Desktop · canto inferior direito</span>
+        <div style="position:relative;width:760px;height:520px;border-radius:12px;overflow:hidden;border:1px solid #2c343f;background:#12161c;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+          <div style="position:absolute;inset:0;display:flex"><div style="width:140px;background:#0f1318;border-right:1px solid #2c343f"></div><div style="flex:1;padding:24px;display:flex;flex-direction:column;gap:12px;opacity:.5"><div style="height:140px;border-radius:22px;background:#1a2029"></div><div style="height:100px;border-radius:18px;background:#1a2029"></div></div></div>
+          <div style="position:absolute;right:20px;bottom:20px;width:380px;display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ toasts2 }}" as="t" hint-placeholder-count="2">
+              <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;padding:12px 12px 14px 12px;border-radius:16px;background:#212934;border:1px solid {{ t.bd }};box-shadow:0 12px 32px rgba(0,0,0,.5)">
+                <span style="flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:{{ t.bg }};color:{{ t.col }}"><svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><path d="{{ t.ic }}"></path></svg></span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><strong style="font-size:14.5px;font-weight:600">{{ t.t }}</strong><span style="font-size:13px;color:#b4bdc8;line-height:1.35">{{ t.s }}</span></span>
+                <span style="flex:none;padding:8px 6px;font-size:13.5px;font-weight:700;color:{{ t.col }}">{{ t.a }}</span>
+                <div style="position:absolute;left:0;bottom:0;height:3px;background:{{ t.col }};opacity:.8;animation:bx-timer 5s linear infinite"></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const P = { ok: 'M5 12.5 10 17.5 19 7', info: 'M12 8h.01M11 12h1v5h1', warn: 'M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z', err: 'M6 6l12 12M18 6 6 18' };
+    const T = (k, t, s, a, col, bg, bd) => ({ ic: P[k], t, s, a, col, bg, bd });
+    const ok = T('ok', 'Arthur: Confirmou', 'Marcado na sua lista', 'Desfazer', '#38b787', 'rgba(56,183,135,.16)', 'rgba(56,183,135,.45)');
+    const info = T('info', 'Lista copiada', 'Cole no grupo do WhatsApp', '', '#5a86ee', 'rgba(90,134,238,.16)', '#2c343f');
+    const warn = T('warn', 'Sem conexão', 'Suas marcações serão enviadas quando voltar', '', '#e8a53d', 'rgba(232,165,61,.16)', 'rgba(232,165,61,.4)');
+    const err = T('err', 'Não foi possível salvar', 'Confira a conexão e tente de novo', 'Tentar', '#e5392e', 'rgba(229,57,46,.16)', 'rgba(229,57,46,.45)');
+    return {
+      gdevs: [{ dev: 'mobile', rot: 'Celular · 375', w: 375, h: 812, r: 28 }, { dev: 'tablet', rot: 'Tablet · 834', w: 834, h: 1000, r: 24 }, { dev: 'desktop', rot: 'Desktop · 1440', w: 1440, h: 860, r: 12 }],
+      logos: [{ id: 'iF', name: 'F · atual', desc: 'A que você escolheu: grade 4×4 reta.', bg: '#f3e9d2' }, { id: 'iG', name: 'G · Inclinada', desc: 'Grade 3×3 maior, girada 8°, check mais grosso com sombra. Lê melhor em 32 px.', bg: '#f3e9d2' }, { id: 'iH', name: 'H · Escura', desc: 'Fundo #12161c com moldura vermelha; quadriculado preto e branco. Combina com o tema do app.', bg: '#12161c' }, { id: 'iI', name: 'I · Ondulada', desc: 'Bandeira ao vento: colunas deslocadas em onda, check por cima.', bg: '#f3e9d2' }],
+      skel: [{ w: '45%' }, { w: '60%' }],
+      toasts: [ok, info, warn, err],
+      toasts2: [ok, err],
+    };
+  }
+}
+</script>
+</body>
+</html>

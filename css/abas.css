@@ -18,7 +18,7 @@
 .tab[aria-selected="true"] { background: var(--surface-2); color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
 .tab .n {
   min-width: 18px; padding: 0 5px; border-radius: 999px;
-  background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center;
+  background: var(--btn-red); color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center;
 }
 
 /* celular: barra fixa embaixo, com ícone e nome */

@@ -18,6 +18,12 @@
   --blue-soft: rgba(90, 134, 238, 0.15);
   --royal: #2f5fd0;
   --wa: #25d366;
+  /* contraste (handoff v2): vermelho de fundo com texto branco (4,8:1) e
+     variações claras pra texto pequeno; #e5392e fica pra detalhes, barras e ícones */
+  --btn-red: #d6342a;
+  --text-2: #b4bdc8;
+  --accent-txt: #ff9a93;
+  --blue-txt: #9db9ff;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }

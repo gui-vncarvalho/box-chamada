@@ -299,7 +299,8 @@ def t_abas_e_pwa(s):
         cortados = s.js("[...document.querySelectorAll('.tab-lbl')].filter(e => e.scrollWidth > e.clientWidth).length")
         checar(cortados == 0, 'nome de aba cortado')
     man = s.pg.evaluate("fetch('manifest.webmanifest').then(r => r.json())")
-    checar(man['display'] == 'standalone' and len(man['icons']) == 3, 'manifesto')
+    tem = {(i['sizes'], i.get('purpose', 'any')) for i in man['icons']}
+    checar(man['display'] == 'standalone' and ('512x512', 'maskable') in tem and ('512x512', 'any') in tem, 'manifesto')
 
 
 def t_campos_sem_zoom_e_sem_estouro(s):

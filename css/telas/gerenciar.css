@@ -24,7 +24,7 @@
   flex: none; width: 56px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
   border-radius: 12px; border: 1px solid var(--border); background: var(--bg);
 }
-.cal-tile small { width: 100%; text-align: center; background: var(--accent); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; padding: 3px 0; }
+.cal-tile small { width: 100%; text-align: center; background: var(--btn-red); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; padding: 3px 0; }
 .cal-tile strong { font-family: 'Oswald', sans-serif; font-size: 24px; line-height: 1; padding: 6px 0 7px; }
 .cal-tile.vazio small { order: 2; background: transparent; color: var(--text-dim); letter-spacing: 0; text-transform: none; font-weight: 500; }
 .cal-tile.vazio strong { color: var(--text-dim); padding-bottom: 0; }
@@ -96,7 +96,7 @@ button.mg-stat.ativo { border-color: var(--gold); background: var(--gold-soft); 
   transition: opacity .2s, transform .2s; max-width: calc(100vw - 32px); z-index: 50;
 }
 #toast.show { opacity: 1; transform: translate(-50%, 0); }
-#toast.erro { background: var(--accent); color: #fff; }
+#toast.erro { background: var(--btn-red); color: #fff; }
 @media (max-width: 600px) {
   .mg-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mg-atual { padding: 16px; }

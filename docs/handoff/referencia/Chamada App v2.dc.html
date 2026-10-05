@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Oswald:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>* { box-sizing: border-box; } html, body { margin: 0; background: #12161c; } a { color: #e8a53d; } a:hover { color: #f3e9d2; }</style>
+</helmet>
+<svg width="0" height="0" style="position:absolute"><symbol id="helmB" viewBox="0 0 64 44"><path d="M18 21.5C10 20 5 16.5 2.5 11.5c6 2 11 3 16 5.5z" fill="#f3e9d2"></path><path d="M17.5 27C9.5 27.5 4 25 1 21c6 1 11 1.2 17 3z" fill="#f3e9d2"></path><path d="M17.5 32.5c-7 1.2-12 0-15-3 6 .3 10.5 0 15.5 0z" fill="#f3e9d2"></path><path d="M16 38C14.5 20.5 24.5 8 40.5 8 53.5 8 61.5 18 61.5 30v8z" fill="#2f5fd0"></path><path d="M46.5 25h15v13h-10.5c-2.8 0-4.5-2-4.5-4.7z" fill="#12161c"></path><path d="M44.5 23.5h15.5" style="stroke:#f3e9d2;stroke-width:3;stroke-linecap:round"></path><path d="M23 20.5c3.5-6.5 10-10 18.5-10" style="stroke:#e5392e;stroke-width:4.5;fill:none;stroke-linecap:round"></path><rect x="14.5" y="36" width="49" height="5" rx="2.5" fill="#e5392e"></rect></symbol></svg>
+<div style="position:relative;width:100%;height:100%;overflow:hidden;container-type:size;background:#12161c;color:#eef1f4;font-family:'Inter',system-ui,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased;display:flex">
+
+<sc-if value="{{ side }}" hint-placeholder-val="{{ false }}">
+  <aside style="flex:none;width:248px;display:flex;flex-direction:column;gap:6px;padding:22px 14px;border-right:1px solid #2c343f;background:#0f1318">
+    <div style="padding:0 10px 18px">
+      <div style="font-family:'Alfa Slab One',serif;font-size:26px;line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#f3e9d2">Chamada</div>
+      <div style="font-size:12px;color:#8d97a3;margin-top:5px">Diretoria · Juventude Box</div>
+    </div>
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;font-weight:600;font-size:14.5px;background:{{ t.sbg }};color:{{ t.sc }};box-shadow:{{ t.ssh }}">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="{{ t.ic2 }}"></path></svg>
+        <span style="flex:1">{{ t.l }}</span>
+        <sc-if value="{{ t.badge }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;padding:0 6px;border-radius:999px;background:#d6342a;color:#fff;font-size:11.5px;font-weight:700;line-height:20px;text-align:center">{{ t.badge }}</span></sc-if>
+      </div>
+    </sc-for>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid #2c343f;background:#1a2029">
+      <span style="width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#212934;font-family:'Oswald',sans-serif;font-weight:600;box-shadow:inset 0 0 0 1px #e5392e">R</span>
+      <span style="display:flex;flex-direction:column"><strong style="font-size:14px">Rafa</strong><small style="font-size:12px;color:#8d97a3">Equipe masculina</small></span>
+    </div>
+  </aside>
+</sc-if>
+
+<div style="flex:1;min-width:0;position:relative">
+<div style="position:absolute;inset:0;overflow:auto;scrollbar-width:none">
+<div style="max-width:1100px;margin:0 auto;padding:{{ pad }}">
+
+  <sc-if value="{{ mob }}" hint-placeholder-val="{{ true }}">
+    <header style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-family:'Alfa Slab One',serif;font-size:20px;line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#f3e9d2">Chamada</div>
+      <div style="display:inline-flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:999px;border:1px solid #2c343f;background:#1a2029;font-size:13.5px;font-weight:600"><span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#212934;font-family:'Oswald',sans-serif;font-size:13px;box-shadow:inset 0 0 0 1px #e5392e">R</span>Rafa</div>
+    </header>
+  </sc-if>
+
+  <section style="margin-bottom:10px;position:relative;overflow:hidden;border-radius:22px;border:1px solid #2c343f;background:radial-gradient(80% 120% at 0% 0%, rgba(47,95,208,.2), transparent 60%), #1a2029;padding:22px 20px 20px">
+                  <div style="position:absolute;top:0;right:0;width:110px;height:72%;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom, #000 55%, transparent 100%);mask-image:linear-gradient(to bottom, #000 55%, transparent 100%)"><div style="position:absolute;top:-20px;bottom:-20px;right:18px;width:22px;background:#e5392e;transform:skewX(-20deg)"></div>
+                  <div style="position:absolute;top:-20px;bottom:-20px;right:50px;width:10px;background:#2f5fd0;transform:skewX(-20deg)"></div>
+                  <div style="position:absolute;top:-20px;bottom:-20px;right:68px;width:4px;background:#f3e9d2;transform:skewX(-20deg)"></div>
+                  </div>
+                  <div style="position:relative;display:flex;flex-direction:column;gap:14px;padding-right:clamp(0px, calc((100cqw - 600px) * 999), 120px)">
+                    <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:#f3e9d2;color:#12161c;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase"><span style="width:7px;height:7px;border-radius:50%;background:#e5392e"></span>Faltam {{ evDias }} dias</span>
+                    <h2 style="margin:0;font-family:'Alfa Slab One',serif;font-weight:400;font-size:clamp(38px, 11cqw, 60px);line-height:.95;letter-spacing:.5px;text-transform:uppercase;color:#f3e9d2;text-shadow:3px 3px 0 rgba(229,57,46,.55)">Culto<br>Box</h2>
+                    <div style="font-size:14px;color:#b4bdc8;font-weight:500">Sáb, 10/10 · 19h30 · Box (17+)</div>
+                    <div style="position:relative;height:44px;margin-top:6px;margin-right:clamp(0px, calc((600px - 100cqw) * 999), 70px)">
+                      <div style="position:absolute;left:0;right:34px;top:20px;height:22px;border-radius:999px;background:#0b0f14;box-shadow:inset 0 0 0 1px #2c343f;overflow:hidden"><div style="position:absolute;left:0;right:0;top:10px;height:2px;background:repeating-linear-gradient(90deg, rgba(243,233,210,.35) 0 12px, transparent 12px 24px)"></div></div>
+                      <div style="position:absolute;left:0;top:20px;height:22px;width:calc((100% - 34px) * {{ mine.f }});border-radius:999px;background:linear-gradient(90deg, rgba(47,95,208,.2), #2f5fd0 50%, #e5392e)"></div>
+                      <svg viewBox="0 0 64 44" style="position:absolute;top:0;left:calc((100% - 34px) * {{ mine.f }} - 52px);width:64px;height:44px"><use href="#helmB"></use></svg>
+                      <div style="position:absolute;right:0;top:12px;width:30px;height:30px;border-radius:7px;background:conic-gradient(#f3e9d2 25%, #12161c 0 50%, #f3e9d2 0 75%, #12161c 0) 0 0 / 15px 15px;box-shadow:0 0 0 2px #f3e9d2"></div>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px">
+                      <span style="padding:7px 13px;border-radius:999px;background:#1d2b4f;color:#9db9ff;font-size:13.5px;font-weight:600">Você <b style="font-family:'Oswald',sans-serif;font-size:15px;color:#eef1f4">{{ mine.done }}/{{ mine.total }}</b></span>
+                      <span style="padding:7px 13px;border-radius:999px;background:#212934;color:#b4bdc8;font-size:13.5px;font-weight:600">Equipe <b style="font-family:'Oswald',sans-serif;font-size:15px;color:#eef1f4">{{ team }}</b></span>
+                      <span style="padding:7px 13px;border-radius:999px;background:#3b2022;color:#ff9a93;font-size:13.5px;font-weight:600">Faltam <b style="font-family:'Oswald',sans-serif;font-size:15px;color:#eef1f4">{{ mine.left }}</b></span>
+                    </div>
+                  </div>
+                </section>
+
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:8px 12px;border-radius:12px;border:1px solid rgba(232,165,61,.4);background:linear-gradient(100deg, rgba(232,165,61,.16), transparent 70%), #1a2029;font-size:13px;color:#8d97a3;overflow:hidden;white-space:nowrap">
+    <span style="flex:none;font-weight:700;color:#e8a53d;font-size:12px;letter-spacing:.5px;text-transform:uppercase">Aniversários</span>
+    <span style="flex:1;min-width:0;overflow-x:auto;scrollbar-width:none"><b style="color:#eef1f4;font-weight:600">Hoje</b> Camila · <b style="color:#eef1f4;font-weight:600">Qui</b> Bento · <b style="color:#eef1f4;font-weight:600">Sáb</b> Bia</span>
+    <svg viewBox="0 0 24 24" style="flex:none;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="m9 6 6 6-6 6"></path></svg>
+  </div>
+
+  <sc-if value="{{ is.minha }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -2px 16px;padding:0 2px">
+      <sc-for list="{{ fchips }}" as="ch" hint-placeholder-count="4">
+        <span style="flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.c }};font-size:13.5px;font-weight:600;white-space:nowrap">
+          <span style="width:8px;height:8px;border-radius:50%;background:{{ ch.dot }}"></span>{{ ch.l }}<span style="font-family:'Oswald',sans-serif;font-size:13px;opacity:.8">{{ ch.n }}</span>
+        </span>
+      </sc-for>
+    </div>
+
+    <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#eef1f4">Pra chamar <span style="background:#d6342a;color:#fff;border-radius:999px;padding:0 8px;font-size:12.5px;line-height:20px">{{ todoN }}</span></h4>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(min(100%, 340px), 1fr));gap:12px;margin-bottom:24px">
+      <sc-for list="{{ todo }}" as="c" hint-placeholder-count="2">
+        <article style="position:relative;overflow:hidden;background:#1a2029;border:1px solid #2c343f;border-radius:18px;padding:14px 14px 12px 18px;display:flex;flex-direction:column;gap:12px">
+          <div style="position:absolute;top:0;bottom:0;left:0;width:5px;background:{{ c.col }}"></div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:16px;background:#212934;box-shadow:inset 0 0 0 1px #2c343f">{{ c.ini }}</span>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px"><h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:21px;font-weight:600;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.n }}</h3></div>
+              <div style="display:flex;align-items:center;gap:7px;margin-top:4px;font-size:13px;color:#8d97a3;min-width:0"><span style="flex:none;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:{{ c.fBg }};color:{{ c.fC }}">{{ c.fTxt }}</span><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.sub }}</span></div>
+            </div>
+            <span style="flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#25d366;color:#06301a"><svg viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2Z"></path></svg></span>
+            <span style="flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#212934;border:1px solid #2c343f"><svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"></path></svg></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:4px;background:#12161c;border:1px solid #2c343f;border-radius:13px;padding:4px">
+            <sc-for list="{{ c.segs }}" as="s" hint-placeholder-count="4">
+              <span style="display:flex;align-items:center;justify-content:center;gap:5px;min-height:44px;border-radius:10px;font-size:13px;font-weight:600;white-space:nowrap;background:{{ s.bg }};color:{{ s.c }};box-shadow:{{ s.sh }}">{{ s.l }}</span>
+            </sc-for>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+
+    <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#8d97a3">Já respondeu <span style="background:#212934;border-radius:999px;padding:0 8px;font-size:12.5px;line-height:20px">{{ doneN }}</span></h4>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(min(100%, 340px), 1fr));gap:8px">
+      <sc-for list="{{ done }}" as="c" hint-placeholder-count="2">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;border:1px solid #2c343f;background:#1a2029">
+          <span style="flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:14px;background:#212934;box-shadow:inset 0 0 0 1.5px {{ c.col }}">{{ c.ini }}</span>
+          <div style="flex:1;min-width:0"><strong style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600">{{ c.n }}</strong><div style="font-size:12.5px;color:#8d97a3">{{ c.sub }}</div></div>
+          <span style="flex:none;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ c.pBg }};color:{{ c.col }}">{{ c.st }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ is.presenca }}" hint-placeholder-val="{{ false }}">
+    <section style="display:flex;align-items:center;gap:14px;padding:14px 16px;margin-bottom:12px;border-radius:18px;border:1px solid #2c343f;background:radial-gradient(80% 160% at 0% 0%, rgba(56,183,135,.16), transparent 60%), #1a2029">
+      <strong style="font-family:'Oswald',sans-serif;font-size:52px;font-weight:700;line-height:1;color:#38b787">{{ pres.n }}</strong>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px">
+        <span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Presentes agora</span>
+        <div style="display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:#b4bdc8"><span><b style="color:#38b787">{{ pres.conf }}</b> confirmados vieram</span><span><b style="color:#e8a53d">{{ pres.sem }}</b> sem confirmar</span><span><b style="color:#5a86ee">{{ pres.novo }}</b> 1ª vez</span></div>
+      </div>
+    </section>
+    <div style="position:sticky;top:0;z-index:5;display:flex;gap:8px;padding:6px 0 10px;background:linear-gradient(#12161c 80%, transparent)">
+      <div style="flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:0 14px;min-height:50px;background:#1a2029;border:1px solid #2c343f;border-radius:14px;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>Quem chegou?</div>
+      <div style="flex:none;display:inline-flex;align-items:center;gap:7px;min-height:50px;padding:0 16px;border-radius:14px;background:#d6342a;color:#fff;font-size:14px;font-weight:600"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3.1-7 7-7s7 3 7 7M19 8v6M16 11h6"></path></svg>Visitante</div>
+    </div>
+    <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px">
+      <sc-for list="{{ pchips }}" as="ch" hint-placeholder-count="4">
+        <span style="flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.c }};font-size:13.5px;font-weight:600;white-space:nowrap">{{ ch.l }}<span style="font-family:'Oswald',sans-serif;font-size:13px;opacity:.8">{{ ch.n }}</span></span>
+      </sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(min(100%, 340px), 1fr));gap:8px">
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+        <div style="display:flex;align-items:center;gap:12px;min-height:68px;padding:10px 14px;border-radius:16px;border:1px solid {{ r.bd }};background:{{ r.bg }}">
+          <span style="flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:16px;background:#212934;box-shadow:inset 0 0 0 {{ r.ring }}">{{ r.ini }}</span>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap"><strong style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;line-height:1.1">{{ r.n }}</strong><span style="font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:{{ r.tBg }};color:{{ r.tC }}">{{ r.tag }}</span></div>
+            <div style="margin-top:3px;font-size:12.5px;color:#8d97a3">{{ r.sub }}</div>
+          </div>
+          <span style="flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;border:2px solid {{ r.cb }};background:{{ r.cbg }};color:#06241a"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:{{ r.ck }}"><path d="M5 12.5 10 17.5 19 7"></path></svg></span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ is.equipe }}" hint-placeholder-val="{{ false }}">
+    <sc-for list="{{ equipe }}" as="bl" hint-placeholder-count="2">
+      <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#eef1f4">{{ bl.t }}<span style="background:#212934;color:#8d97a3;border-radius:999px;padding:0 8px;font-size:12.5px;line-height:20px">{{ bl.n }}</span></h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(min(100%, 320px), 1fr));gap:12px;margin-bottom:24px">
+        <sc-for list="{{ bl.ds }}" as="d" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:18px;background:#1a2029;border:1px solid {{ d.bd }};box-shadow:{{ d.sh }}">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:16px;background:#212934;box-shadow:inset 0 0 0 {{ d.ring }}">{{ d.ini }}</span>
+              <div style="flex:1;min-width:0;display:flex;align-items:center;gap:8px"><h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;line-height:1.1">{{ d.n }}</h3><sc-if value="{{ d.eu }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#ff9a93;background:rgba(229,57,46,.14);padding:2px 8px;border-radius:999px">você</span></sc-if></div>
+              <strong style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:600">{{ d.done }}<span style="color:#8d97a3;font-size:15px">/{{ d.total }}</span></strong>
+            </div>
+            <div style="display:flex;gap:3px;height:8px"><sc-for list="{{ d.segs }}" as="s" hint-placeholder-count="4"><span style="flex:{{ s.w }} 1 0;border-radius:999px;background:{{ s.col }}"></span></sc-for></div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ d.js }}" as="y" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;background:#212934;font-size:13px;font-weight:500"><span style="width:8px;height:8px;border-radius:50%;background:{{ y.col }}"></span>{{ y.n }}</span></sc-for></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </sc-if>
+
+  <sc-if value="{{ is.jovens }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:10px;padding:0 14px;min-height:50px;margin-bottom:10px;background:#1a2029;border:1px solid #2c343f;border-radius:14px;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Nome, 18, box, casado, outubro…</span></div>
+    <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px"><sc-for list="{{ jchips }}" as="ch" hint-placeholder-count="4"><span style="flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.c }};font-size:13.5px;font-weight:600;white-space:nowrap">{{ ch.l }}<span style="font-family:'Oswald',sans-serif;font-size:13px;opacity:.8">{{ ch.n }}</span></span></sc-for></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(min(100%, 340px), 1fr));gap:8px">
+      <sc-for list="{{ jrows }}" as="r" hint-placeholder-count="8">
+        <div style="display:flex;align-items:center;gap:12px;min-height:68px;padding:10px 14px;border-radius:16px;border:1px solid #2c343f;background:#1a2029">
+          <span style="flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:16px;background:#212934;box-shadow:inset 0 0 0 1.5px {{ r.col }}">{{ r.ini }}</span>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:7px"><strong style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;line-height:1.1">{{ r.n }}</strong><span style="font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:{{ r.fBg }};color:{{ r.fC }}">{{ r.fTxt }}</span></div>
+            <div style="margin-top:3px;font-size:12.5px;color:#8d97a3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</div>
+          </div>
+          <span style="flex:none;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ r.pBg }};color:{{ r.col }}">{{ r.st }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ is.historico }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:16px;border-radius:14px;border:1px solid #2c343f;background:#1a2029">
+      <span style="display:grid;place-items:center;min-height:42px;border-radius:10px;font-weight:600;font-size:14px;background:{{ hs.m.bg }};color:{{ hs.m.c }};box-shadow:{{ hs.m.sh }}">Marcações</span>
+      <span style="display:grid;place-items:center;min-height:42px;border-radius:10px;font-weight:600;font-size:14px;background:{{ hs.p.bg }};color:{{ hs.p.c }};box-shadow:{{ hs.p.sh }}">Presenças</span>
+    </div>
+    <sc-if value="{{ is.hMarc }}" hint-placeholder-val="{{ true }}">
+      <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#eef1f4">Hoje</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ feed }}" as="f" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;border:1px solid #2c343f;background:#1a2029">
+            <span style="flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;background:#212934;box-shadow:inset 0 0 0 1px #2c343f">{{ f.by }}</span>
+            <div style="flex:1;min-width:0;font-size:14px;line-height:1.35"><b style="font-weight:600">{{ f.who }}</b> <span style="color:#8d97a3">marcou</span> <b style="font-weight:600">{{ f.n }}</b></div>
+            <span style="flex:none;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ f.bg }};color:{{ f.col }}">{{ f.st }}</span>
+            <span style="flex:none;width:40px;text-align:right;font-size:12px;color:#8d97a3">{{ f.t }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.hPres }}" hint-placeholder-val="{{ false }}">
+      <section style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;padding:16px 18px;margin-bottom:22px;border-radius:18px;border:1px solid #2c343f;background:radial-gradient(80% 160% at 0% 0%, rgba(56,183,135,.16), transparent 60%), #1a2029">
+        <div><div style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">Resumo · Culto Box 03/10</div><strong style="font-family:'Oswald',sans-serif;font-size:52px;font-weight:700;line-height:1.1;color:#38b787">28</strong><span style="color:#b4bdc8;margin-left:8px">presentes</span></div>
+        <div style="flex:1 1 220px;display:grid;grid-template-columns:repeat(3, 1fr);gap:8px">
+          <div style="padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.16);border:1px solid #2c343f"><strong style="font-family:'Oswald',sans-serif;font-size:24px;color:#38b787">21<span style="font-size:15px;color:#8d97a3">/26</span></strong><div style="font-size:12px;color:#8d97a3;font-weight:600">confirmados vieram</div></div>
+          <div style="padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.16);border:1px solid #2c343f"><strong style="font-family:'Oswald',sans-serif;font-size:24px;color:#e8a53d">4</strong><div style="font-size:12px;color:#8d97a3;font-weight:600">sem confirmar</div></div>
+          <div style="padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.16);border:1px solid #2c343f"><strong style="font-family:'Oswald',sans-serif;font-size:24px;color:#5a86ee">3</strong><div style="font-size:12px;color:#8d97a3;font-weight:600">visitantes</div></div>
+        </div>
+      </section>
+      <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#eef1f4">Quem sumiu<span style="background:#d6342a;color:#fff;border-radius:999px;padding:0 8px;font-size:12.5px;line-height:20px">3</span></h4>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">
+        <sc-for list="{{ sumiu }}" as="s" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:14px;border:1px solid rgba(229,57,46,.4);background:rgba(229,57,46,.08)"><strong style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600">{{ s.n }}</strong><span style="font-size:12.5px;color:#8d97a3">{{ s.t }}</span></span></sc-for>
+      </div>
+      <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#eef1f4">Cultos passados</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(min(100%, 300px), 1fr));gap:8px">
+        <sc-for list="{{ cultos }}" as="c" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:16px;border:1px solid #2c343f;background:#1a2029">
+            <span style="flex:none;width:50px;display:flex;flex-direction:column;align-items:center;overflow:hidden;border-radius:12px;border:1px solid #2c343f;background:#12161c"><small style="width:100%;text-align:center;background:#d6342a;color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:3px 0">{{ c.mes }}</small><strong style="font-family:'Oswald',sans-serif;font-size:20px;line-height:1;padding:5px 0 6px">{{ c.dia }}</strong></span>
+            <div style="flex:1;min-width:0"><strong style="font-size:15px">{{ c.n }}</strong><div style="margin-top:7px;height:6px;border-radius:999px;background:#212934;overflow:hidden"><div style="height:100%;width:{{ c.pct }};background:linear-gradient(90deg,#2f5fd0,#38b787)"></div></div></div>
+            <strong style="flex:none;font-family:'Oswald',sans-serif;font-size:26px;font-weight:600;color:#38b787">{{ c.p }}</strong>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{ is.gerenciar }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:18px">
+      <sc-for list="{{ gchips }}" as="ch" hint-placeholder-count="5"><span style="flex:none;display:inline-flex;align-items:center;padding:9px 15px;border-radius:12px;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.c }};font-size:14px;font-weight:600;white-space:nowrap;box-shadow:{{ ch.sh }}">{{ ch.l }}</span></sc-for>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+      <h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:26px;font-weight:600">Eventos</h2>
+      <span style="display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:12px;background:#d6342a;color:#fff;font-size:14px;font-weight:600"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round"><path d="M12 5v14M5 12h14"></path></svg>Novo evento</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 150px), 1fr));gap:10px;margin-bottom:24px">
+      <sc-for list="{{ acoes }}" as="a" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;border:1px solid #2c343f;background:#1a2029">
+          <span style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:{{ a.bg }};color:{{ a.col }}"><svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="{{ a.ic }}"></path></svg></span>
+          <span><strong style="font-size:14.5px;display:block">{{ a.t }}</strong><small style="font-size:12.5px;color:#8d97a3;line-height:1.4">{{ a.s }}</small></span>
+        </div>
+      </sc-for>
+    </div>
+    <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#eef1f4">Todos os eventos<span style="background:#212934;color:#8d97a3;border-radius:999px;padding:0 8px;font-size:12.5px;line-height:20px">4</span></h4>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+      <sc-for list="{{ eventos }}" as="e" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;gap:14px;padding:10px 14px 10px 10px;border-radius:16px;border:1px solid #2c343f;background:#1a2029;opacity:{{ e.op }}">
+          <span style="flex:none;width:50px;display:flex;flex-direction:column;align-items:center;overflow:hidden;border-radius:12px;border:1px solid #2c343f;background:#12161c"><small style="width:100%;text-align:center;background:#d6342a;color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:3px 0">{{ e.mes }}</small><strong style="font-family:'Oswald',sans-serif;font-size:20px;line-height:1;padding:5px 0 6px">{{ e.dia }}</strong></span>
+          <span style="flex:1;min-width:0"><strong style="font-size:15.5px">{{ e.n }}</strong><small style="display:block;color:#8d97a3;font-size:13px;margin-top:2px">{{ e.sub }}</small></span>
+          <span style="flex:none;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ e.pBg }};color:{{ e.pC }}">{{ e.st }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <h4 style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#eef1f4">Notificações</h4>
+    <div style="display:flex;flex-direction:column;border-radius:16px;border:1px solid #2c343f;background:#1a2029;overflow:hidden">
+      <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-top:{{ n.bt }}">
+          <span><strong style="font-size:14.5px;display:block">{{ n.t }}</strong><small style="font-size:12.5px;color:#8d97a3">{{ n.s }}</small></span>
+          <span style="position:relative;flex:none;width:48px;height:28px;border-radius:999px;background:{{ n.bg }}"><span style="position:absolute;top:3px;left:{{ n.x }};width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4)"></span></span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+</div>
+</div>
+
+<sc-if value="{{ mob }}" hint-placeholder-val="{{ true }}">
+  <nav style="position:absolute;left:0;right:0;bottom:0;z-index:20;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0, 1fr);padding:6px 4px 10px;border-top:1px solid #2c343f;background:rgba(18,22,28,.94);backdrop-filter:blur(10px);box-shadow:0 -8px 24px rgba(0,0,0,.35)">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:54px;font-size:11px;font-weight:600;color:{{ t.lc }}">
+        <span style="width:54px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:{{ t.ibg }};color:{{ t.ic }}"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="{{ t.ic2 }}"></path></svg></span>
+        <span>{{ t.l }}</span>
+        <sc-if value="{{ t.badge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:1px;left:calc(50% + 8px);min-width:18px;padding:0 5px;border-radius:999px;background:#d6342a;color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center;box-shadow:0 0 0 2px #12161c">{{ t.badge }}</span></sc-if>
+      </div>
+    </sc-for>
+  </nav>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:375,&quot;height&quot;:812},&quot;tela&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;minha&quot;,&quot;presenca&quot;,&quot;equipe&quot;,&quot;jovens&quot;,&quot;historico&quot;,&quot;historico-presencas&quot;,&quot;gerenciar&quot;],&quot;default&quot;:&quot;minha&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;mobile&quot;,&quot;tablet&quot;,&quot;desktop&quot;],&quot;default&quot;:&quot;mobile&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const tela = this.props.tela ?? 'minha';
+    const dev = this.props.device ?? 'mobile';
+    const side = dev === 'desktop', mob = !side;
+    const ST = {
+      pend: { l: 'Pendente', col: '#8d97a3', bg: '#212934', sel: '#eef1f4' },
+      cham: { l: 'Chamei', col: '#e8a53d', bg: 'rgba(232,165,61,.18)' },
+      conf: { l: 'Confirmou', col: '#38b787', bg: 'rgba(56,183,135,.18)' },
+      nao: { l: 'Não vai', col: '#e5392e', bg: 'rgba(229,57,46,.18)' },
+    };
+    const FX = { box: ['rgba(229,57,46,.14)', '#e5392e', 'Box'], sprint: ['rgba(90,134,238,.15)', '#5a86ee', 'Sprint'] };
+    const segsOf = k => Object.keys(ST).map(id => {
+      const on = id === k;
+      return { l: ST[id].l, bg: on ? ST[id].bg : 'transparent', c: on ? ST[id].col : '#8d97a3', sh: on ? `inset 0 0 0 1.5px ${ST[id].col}` : 'none' };
+    });
+    const L = [
+      { n: 'Heitor', ini: 'H', k: 'pend', sub: 'com Téo' },
+      { n: 'Igão', ini: 'IS', f: 'box', i: 19, k: 'pend', sub: 'Igor Santos · com Vini' },
+      { n: 'Arthur', ini: 'A', f: 'box', i: 21, k: 'conf', sub: 'com Vini' },
+      { n: 'Davi', ini: 'D', f: 'box', i: 20, k: 'nao', sub: 'Irmão de Duda · com Vini' },
+    ];
+    const deco = c => ({ ...c, col: ST[c.k].col, st: ST[c.k].l, pBg: ST[c.k].bg,
+      fTxt: c.f ? `${FX[c.f][2]} · ${c.i}` : 'sem idade', fBg: c.f ? FX[c.f][0] : '#212934', fC: c.f ? FX[c.f][1] : '#8d97a3', segs: segsOf(c.k) });
+    const todo = L.filter(c => c.k === 'pend').map(deco);
+    const done = L.filter(c => c.k === 'conf' || c.k === 'nao').map(deco);
+    const chip = (l, n, on, dot) => ({ l, n, dot, bd: on ? '#eef1f4' : '#2c343f', bg: on ? '#eef1f4' : 'transparent', c: on ? '#12161c' : '#8d97a3' });
+
+    const P = [
+      ['Alice', 'A', 'sprint', 1, 'Ninguém chamou'], ['Ana', 'A', 'dir', 1, 'Diretoria'], ['Arthur', 'A', 'box', 2, 'Confirmou · Rafa e Vini'],
+      ['Bento', 'B', 'box', 0, 'Confirmou · Vini'], ['Bia', 'B', 'dir', 1, 'Diretoria'], ['Bruna', 'B', 'box', 0, 'Sem resposta · Ana e Bia'],
+      ['Camila', 'C', 'box', 1, 'Chamou: Lu · 🎂 hoje'], ['Davi', 'D', 'box', 0, 'Confirmou · Rafa'], ['Duda', 'D', 'box', 2, 'Sem resposta · Bia e Dani'],
+      ['Rafa', 'R', 'dir', 1, 'Diretoria'],
+    ].map(([n, ini, t, p, sub]) => {
+      const on = !!p;
+      const tg = { box: ['Box', 'rgba(229,57,46,.14)', '#e5392e'], sprint: ['Sprint', 'rgba(90,134,238,.15)', '#5a86ee'], dir: ['Diretoria', 'rgba(232,165,61,.14)', '#e8a53d'] }[t];
+      const warn = p === 2;
+      return { n, ini, sub: warn ? sub + ' · não veio ainda' : sub, tag: tg[0], tBg: tg[1], tC: tg[2], bg: on ? 'rgba(56,183,135,.10)' : '#1a2029', bd: on ? 'rgba(56,183,135,.5)' : '#2c343f',
+        ring: on ? '2px #38b787' : '1px #2c343f', cb: on ? '#38b787' : '#3a4452', cbg: on ? '#38b787' : 'transparent', ck: on ? 1 : 0 };
+    });
+    const tab = tela.startsWith('historico') ? 'historico' : tela;
+    const tabs = [
+      ['minha', 'Minha', 'M9 4V3h6v1M7 4h10a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2ZM9 11l2 2 4-4M9 17h6', 2],
+      ['presenca', 'Presença', 'M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3', 0],
+      ['equipe', 'Equipe', 'M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M12.5 8a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM16 4.5a3.5 3.5 0 0 1 0 7M18 14.3c2 .8 3.5 2.8 3.5 5.7', 0],
+      ['jovens', 'Jovens', 'M15 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.5 20c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5', 0],
+      ['historico', 'Histórico', 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM12 7v5l3 2', 0],
+      ['gerenciar', 'Gerenciar', 'M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1', 0],
+    ].map(([id, l, ic, b]) => { const s = id === tab; return { l, ic, ic2: ic, badge: b && tela === 'minha' ? String(b) : '',
+      sbg: s ? '#212934' : 'transparent', sc: s ? '#eef1f4' : '#8d97a3', ssh: s ? 'inset 3px 0 0 #e5392e' : 'none',
+      lc: s ? '#eef1f4' : '#b4bdc8', ibg: s ? 'rgba(229,57,46,.16)' : 'transparent', ic_: '', ic: s ? '#e5392e' : 'currentColor' }; });
+
+    const dot = k => ST[k].col;
+    const mkD = (n, eu, arr) => { const cnt = { pend: 0, cham: 0, conf: 0, nao: 0 }; arr.forEach(([, k]) => cnt[k]++);
+      return { n, ini: n[0], eu, total: arr.length, done: cnt.conf + cnt.nao, bd: eu ? 'rgba(229,57,46,.45)' : '#2c343f', sh: eu ? '0 0 0 1px rgba(229,57,46,.15)' : 'none', ring: eu ? '2px #e5392e' : '1px #2c343f',
+        segs: Object.keys(cnt).filter(k => cnt[k]).map(k => ({ w: cnt[k], col: ST[k].col })).concat(cnt.pend + cnt.cham + cnt.conf + cnt.nao ? [] : []),
+        js: arr.map(([x, k]) => ({ n: x, col: dot(k) })) }; };
+    const equipe = [
+      { t: 'Equipe masculina', n: 4, ds: [mkD('Rafa', true, [['Heitor','pend'],['Igão','pend'],['Arthur','conf'],['Davi','nao']]), mkD('Téo', false, [['Caio','conf'],['Pedro','cham'],['Miguel','pend']]), mkD('Vini', false, [['Arthur','conf'],['Bento','cham'],['Igão','pend'],['Davi','nao']]), mkD('Zé', false, [['Bento','cham'],['Caio','conf'],['Miguel','pend'],['Pedro','pend']])] },
+      { t: 'Equipe feminina', n: 5, ds: [mkD('Ana', false, [['Bruna','conf'],['Camila','pend'],['Isa','pend']]), mkD('Bia', false, [['Bruna','conf'],['Duda','cham'],['Manu','pend']]), mkD('Carol', false, [['Elisa','pend'],['Helena','pend'],['Isa','conf']]), mkD('Dani', false, [['Duda','nao'],['Lara','conf'],['Manu','pend']]), mkD('Lu', false, [['Camila','conf'],['Elisa','pend'],['Helena','cham']])] },
+    ];
+    const jr = [['Arthur','A','box',21,'conf','Rafa e Vini'],['Bento','B','box',18,'cham','Vini e Zé'],['Bruna','B','box',21,'pend','Ana e Bia'],['Camila','C','box',17,'conf','Lu e Ana · 🎂 hoje'],['Davi','D','box',20,'nao','Rafa e Vini'],['Duda','D','box',24,'cham','Bia e Dani'],['Heitor','H',null,0,'pend','Rafa e Téo'],['Igão','IS','box',19,'pend','Igor Santos · Rafa e Vini']];
+    const jrows = jr.map(([n, ini, f, i, k, sub]) => ({ n, ini, sub, col: ST[k].col, st: ST[k].l, pBg: ST[k].bg, fTxt: f ? FX[f][2] + ' · ' + i : 'sem idade', fBg: f ? FX[f][0] : '#212934', fC: f ? FX[f][1] : '#8d97a3' }));
+    const feed = [['R','Rafa','Arthur','conf','14:02'],['V','Vini','Davi','nao','13:48'],['L','Lu','Camila','conf','13:31'],['B','Bia','Duda','cham','12:57'],['R','Rafa','Davi','cham','12:40']].map(([by, who, n, k, t]) => ({ by, who, n, t, st: ST[k].l, col: ST[k].col, bg: ST[k].bg }));
+    const hs = { m: tela === 'historico' ? { bg: '#212934', c: '#eef1f4', sh: 'inset 0 -2px 0 #e5392e' } : { bg: 'transparent', c: '#8d97a3', sh: 'none' }, p: tela === 'historico-presencas' ? { bg: '#212934', c: '#eef1f4', sh: 'inset 0 -2px 0 #e5392e' } : { bg: 'transparent', c: '#8d97a3', sh: 'none' } };
+    const sel = (l, on) => ({ l, bd: on ? '#e5392e' : '#2c343f', bg: on ? '#212934' : 'transparent', c: on ? '#eef1f4' : '#8d97a3', sh: on ? 'inset 0 0 0 1px #e5392e' : 'none' });
+    const arq = { op: .6, st: 'Arquivado', pBg: '#212934', pC: '#8d97a3' };
+    const ic = { dist: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM19 8v6M16 11h6', re: 'M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5', cp: 'M9 9h11v11H9zM5 15H4V4h11v1', zr: 'M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3' };
+    const more = {
+      equipe, jrows, feed, hs,
+      jchips: [chip('Todos', 17, true), chip('Sem resposta', 11, false), chip('Confirmados', 3, false), chip('Não vão', 3, false)],
+      sumiu: [{ n: 'Helena', t: '3 cultos' }, { n: 'Pedro', t: '3 cultos' }, { n: 'Nina', t: '4 cultos' }],
+      cultos: [{ mes: 'out', dia: '03', n: 'Culto Box', p: 28, pct: '82%' }, { mes: 'set', dia: '26', n: 'Box Day', p: 41, pct: '95%' }, { mes: 'set', dia: '19', n: 'Culto Box', p: 25, pct: '74%' }, { mes: 'set', dia: '12', n: 'Culto Box', p: 27, pct: '79%' }],
+      gchips: [sel('Eventos', true), sel('Jovens', false), sel('Diretoria', false), sel('Notificações', false), sel('Backup', false)],
+      acoes: [{ t: 'Distribuir quem falta', s: 'Dá responsável a quem não tem', ic: ic.dist, bg: 'rgba(90,134,238,.15)', col: '#5a86ee' }, { t: 'Refazer distribuição', s: 'Sorteia de novo', ic: ic.re, bg: 'rgba(90,134,238,.15)', col: '#5a86ee' }, { t: 'Copiar lista', s: 'Texto pro grupo do WhatsApp', ic: ic.cp, bg: 'rgba(90,134,238,.15)', col: '#5a86ee' }, { t: 'Zerar marcações', s: 'Volta tudo pra pendente', ic: ic.zr, bg: 'rgba(229,57,46,.14)', col: '#e5392e' }],
+      eventos: [{ mes: 'out', dia: 10, n: 'Culto Box', sub: 'Sáb · 19h30 · Box (17+)', op: 1, st: 'Selecionado', pBg: 'rgba(56,183,135,.14)', pC: '#38b787' }, { mes: 'set', dia: 26, n: 'Box Day', sub: 'Sáb · 17h e 20h · Box + Sprint', ...arq }, { mes: 'set', dia: 19, n: 'Culto Box', sub: 'Sáb · 19h30 · Box (17+)', ...arq }, { mes: 'set', dia: 12, n: 'Culto Box', sub: 'Sáb · 19h30 · Box (17+)', ...arq }],
+      notifs: [{ t: 'Lembrete um dia antes', s: 'Avisa quem ainda tem chamadas pendentes', bg: '#38b787', x: '23px', bt: 'none' }, { t: 'Aviso de aniversário', s: 'No dia, para toda a diretoria', bg: '#38b787', x: '23px', bt: '1px solid #2c343f' }, { t: 'Quando alguém marcar', s: 'Receber a cada marcação da equipe', bg: '#3a4452', x: '3px', bt: '1px solid #2c343f' }],
+    };
+    return {
+      ...more,
+      side, mob, tabs,
+      is: { minha: tela === 'minha', presenca: tela === 'presenca', equipe: tela === 'equipe', jovens: tela === 'jovens', historico: tela.startsWith('historico'), gerenciar: tela === 'gerenciar', hMarc: tela === 'historico', hPres: tela === 'historico-presencas' },
+      pad: side ? '28px 32px 40px' : '16px 16px 96px',
+      evPad: side ? '26px 30px 24px' : '18px 18px 16px',
+      evTitle: side ? '44px' : '30px',
+      evBadge: 'Em 5 dias',
+      mine: { done: 2, total: 4, pct: '50%', f: 0.5, left: 2 }, team: '8/34', evDias: '5', evUn: 'DIAS',
+      fchips: [chip('Pendentes', 2, true, '#8d97a3'), chip('Chamei', 0, false, '#e8a53d'), chip('Confirmou', 1, false, '#38b787'), chip('Não vai', 1, false, '#e5392e')],
+      todo, done, todoN: todo.length, doneN: done.length,
+      pres: { n: 7, conf: 3, sem: 3, novo: 1 },
+      pchips: [chip('Todos', 31, true), chip('Presentes', 7), chip('Confirmados que faltam', 2), chip('Diretoria', 9)],
+      rows: P,
+    };
+  }
+}
+</script>
+</body>
+</html>

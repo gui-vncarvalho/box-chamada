@@ -42,7 +42,7 @@
 }
 .ev-chips svg { width: 15px; height: 15px; color: var(--text-dim); flex: none; }
 .countdown { font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
-.cd-hoje { background: var(--accent); color: #fff; }
+.cd-hoje { background: var(--btn-red); color: #fff; }
 .cd-breve { background: var(--gold-soft); color: var(--gold); }
 .cd-futuro { background: var(--blue-soft); color: var(--blue); }
 .cd-passado { background: var(--surface-2); color: var(--text-dim); }

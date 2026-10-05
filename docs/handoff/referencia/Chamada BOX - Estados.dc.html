@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Oswald:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>* { box-sizing: border-box; } html, body { margin: 0; background: #0b0e12; } a { color: #e8a53d; } a:hover { color: #f3e9d2; }
+@keyframes es-spin { to { transform: rotate(360deg); } }</style>
+</helmet>
+<svg width="0" height="0" style="position:absolute"><symbol id="hE" viewBox="0 0 64 44"><path d="M18 21.5C10 20 5 16.5 2.5 11.5c6 2 11 3 16 5.5z" fill="#f3e9d2"></path><path d="M17.5 27C9.5 27.5 4 25 1 21c6 1 11 1.2 17 3z" fill="#f3e9d2"></path><path d="M17.5 32.5c-7 1.2-12 0-15-3 6 .3 10.5 0 15.5 0z" fill="#f3e9d2"></path><path d="M16 38C14.5 20.5 24.5 8 40.5 8 53.5 8 61.5 18 61.5 30v8z" fill="#2f5fd0"></path><path d="M46.5 25h15v13h-10.5c-2.8 0-4.5-2-4.5-4.7z" fill="#12161c"></path><path d="M44.5 23.5h15.5" style="stroke:#f3e9d2;stroke-width:3;stroke-linecap:round"></path><path d="M23 20.5c3.5-6.5 10-10 18.5-10" style="stroke:#e5392e;stroke-width:4.5;fill:none;stroke-linecap:round"></path><rect x="14.5" y="36" width="49" height="5" rx="2.5" fill="#e5392e"></rect></symbol></svg>
+
+<section id="5" style="padding:64px;display:flex;flex-direction:column;gap:88px;font-family:'Inter',sans-serif;color:#eef1f4;background:#0b0e12;min-width:max-content;font-size:15px">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e5392e">Turno 5 · Estados e acessibilidade</span>
+    <h1 style="margin:0;font-family:'Alfa Slab One',serif;font-weight:400;font-size:44px;letter-spacing:1px;color:#f3e9d2;text-transform:uppercase">O que falta no uso real</h1>
+  </header>
+
+  <div id="5a" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">5a</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Visitante e confirmações</h2></div>
+    <div style="display:flex;gap:40px;align-items:flex-start">
+      <sc-for list="{{ modals }}" as="m" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <span style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;color:#b4bdc8">{{ m.nome }}</span>
+          <sc-for list="{{ widths }}" as="w" hint-placeholder-count="2">
+            <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">{{ w.rot }}</span>
+              <div style="position:relative;width:{{ w.w }}px;height:{{ m.h }}px;border-radius:{{ w.fr }}px;overflow:hidden;border:1px solid #2c343f;background:#12161c;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+                <div style="position:absolute;inset:0;padding:20px;display:flex;flex-direction:column;gap:12px;filter:blur(2px);opacity:.6"><div style="height:30px;width:120px;border-radius:8px;background:#1a2029"></div><div style="height:130px;border-radius:22px;background:#1a2029"></div><div style="height:70px;border-radius:16px;background:#1a2029"></div></div>
+                <div style="position:absolute;inset:0;background:rgba(6,9,14,.74);display:flex;align-items:{{ w.al }};justify-content:center;padding:{{ w.pad }}">
+                  <div style="width:100%;max-width:{{ w.mx }};max-height:100%;display:flex;flex-direction:column;overflow:hidden;border:1px solid #2c343f;border-radius:{{ w.rad }};background:linear-gradient(180deg,#212934 0%,#1a2029 140px)">
+                    <sc-if value="{{ w.sheet }}" hint-placeholder-val="{{ false }}"><div style="flex:none;width:44px;height:5px;margin:10px auto 0;border-radius:999px;background:#3a4452"></div></sc-if>
+                    <div style="flex:1 1 auto;min-height:0;overflow:hidden;padding:18px 20px 12px;display:flex;flex-direction:column;gap:16px">
+                      <sc-if value="{{ m.form }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;justify-content:space-between;gap:12px"><div><h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:26px;font-weight:600;line-height:1.1">Visitante</h3><p style="margin:5px 0 0;color:#8d97a3;font-size:13.5px;line-height:1.4">Quem veio hoje pela primeira vez? Já entra marcado como presente.</p></div><span style="flex:none;width:44px;height:44px;margin:-6px -8px 0 0;display:grid;place-items:center;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round"><path d="M6 6l12 12M18 6 6 18"></path></svg></span></div>
+                        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#b4bdc8;font-weight:500">Nome<div style="display:flex;align-items:center;min-height:52px;padding:0 14px;border-radius:12px;background:#12161c;border:1.5px solid #8d97a3;box-shadow:0 0 0 4px rgba(255,255,255,.06);font-size:16px;color:#eef1f4">Lucas<span style="width:2px;height:20px;margin-left:2px;background:#e5392e"></span></div></label>
+                        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#b4bdc8;font-weight:500">WhatsApp <span style="color:#8d97a3;font-weight:400">(opcional)</span><div style="display:flex;align-items:center;min-height:52px;padding:0 14px;border-radius:12px;background:#12161c;border:1.5px solid #2c343f;font-size:16px;color:#8d97a3">(11) 91234-5678</div></label>
+                        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#b4bdc8;font-weight:500">Quem convidou
+                          <div style="display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 14px;border-radius:12px;background:#12161c;border:1.5px solid #2c343f;font-size:16px;color:#eef1f4">Bia<svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:#8d97a3;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="m6 9 6 6 6-6"></path></svg></div></div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><span style="display:grid;place-items:center;min-height:50px;border-radius:14px;border:1.5px solid #e5392e;background:rgba(229,57,46,.14);font-weight:600">Box · 17+</span><span style="display:grid;place-items:center;min-height:50px;border-radius:14px;border:1.5px solid #2c343f;background:#12161c;color:#b4bdc8;font-weight:600">Sprint</span></div>
+                      </sc-if>
+                      <sc-if value="{{ m.confirm }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding-top:6px">
+                          <span style="width:60px;height:60px;border-radius:50%;display:grid;place-items:center;background:{{ m.bg }};color:{{ m.col }}"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="{{ m.ic }}"></path></svg></span>
+                          <h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:26px;font-weight:600;line-height:1.1">{{ m.t }}</h3>
+                          <p style="margin:0;color:#b4bdc8;font-size:14.5px;line-height:1.5;max-width:34ch">{{ m.s }}</p>
+                          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px"><sc-for list="{{ m.chips }}" as="c" hint-placeholder-count="2"><span style="padding:6px 12px;border-radius:999px;background:#212934;font-size:13px;font-weight:600;color:#eef1f4">{{ c }}</span></sc-for></div>
+                        </div>
+                        <sc-if value="{{ m.check }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(229,57,46,.4);background:rgba(229,57,46,.08)"><span style="flex:none;width:26px;height:26px;border-radius:8px;border:2px solid #e5392e"></span><span style="font-size:13.5px;color:#eef1f4;line-height:1.4">Entendi que não dá pra desfazer</span></div></sc-if>
+                      </sc-if>
+                    </div>
+                    <div style="flex:none;display:flex;flex-direction:{{ w.btnDir }};gap:10px;padding:12px 20px 18px;background:#1a2029;border-top:1px solid #2c343f">
+                      <span style="flex:1;display:flex;align-items:center;justify-content:center;min-height:50px;border-radius:12px;border:1px solid #2c343f;background:#212934;font-weight:600;order:{{ w.cancelOrder }}">Cancelar</span>
+                      <span style="flex:1.4;display:flex;align-items:center;justify-content:center;min-height:50px;padding:0 16px;border-radius:12px;background:{{ m.okBg }};color:{{ m.okC }};border:1px solid {{ m.okBd }};font-weight:600;opacity:{{ m.okOp }}">{{ m.ok }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div id="5b" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">5b</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Estados vazios</h2></div>
+    <div style="display:flex;gap:24px;align-items:flex-start">
+      <sc-for list="{{ vazios }}" as="v" hint-placeholder-count="4">
+        <div style="width:300px;padding:26px 22px;border-radius:22px;border:1px solid #2c343f;background:#12161c;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center">
+          <div style="height:96px;width:100%;display:grid;place-items:center">
+            <sc-if value="{{ v.a }}" hint-placeholder-val="{{ false }}"><div style="position:relative;width:220px;height:60px"><div style="position:absolute;left:0;right:34px;bottom:8px;height:14px;border-radius:999px;background:#0b0f14;box-shadow:inset 0 0 0 1px #2c343f;overflow:hidden"><div style="position:absolute;left:0;right:0;top:6px;height:2px;background:repeating-linear-gradient(90deg, rgba(243,233,210,.25) 0 12px, transparent 12px 24px)"></div></div><svg viewBox="0 0 64 44" style="position:absolute;left:0;bottom:12px;width:62px;height:42px;opacity:.9"><use href="#hE"></use></svg><div style="position:absolute;right:0;bottom:2px;width:30px;height:30px;border-radius:7px;background:conic-gradient(#f3e9d2 25%, #12161c 0 50%, #f3e9d2 0 75%, #12161c 0) 0 0 / 15px 15px;opacity:.5"></div></div></sc-if>
+            <sc-if value="{{ v.b }}" hint-placeholder-val="{{ false }}"><div style="position:relative;width:220px;height:70px"><div style="position:absolute;left:0;right:34px;bottom:8px;height:14px;border-radius:999px;background:linear-gradient(90deg, rgba(47,95,208,.2), #2f5fd0 55%, #38b787)"></div><svg viewBox="0 0 64 44" style="position:absolute;right:20px;bottom:12px;width:62px;height:42px"><use href="#hE"></use></svg><div style="position:absolute;right:0;bottom:2px;width:30px;height:30px;border-radius:7px;background:conic-gradient(#f3e9d2 25%, #12161c 0 50%, #f3e9d2 0 75%, #12161c 0) 0 0 / 15px 15px;box-shadow:0 0 0 2px #f3e9d2"></div><span style="position:absolute;left:30px;top:2px;width:9px;height:9px;background:#e8a53d;transform:rotate(20deg)"></span><span style="position:absolute;left:92px;top:-4px;width:8px;height:8px;background:#e5392e;transform:rotate(-15deg)"></span><span style="position:absolute;left:150px;top:6px;width:9px;height:9px;background:#f3e9d2;transform:rotate(35deg)"></span><span style="position:absolute;left:62px;top:16px;width:7px;height:7px;background:#2f5fd0;transform:rotate(10deg)"></span></div></sc-if>
+            <sc-if value="{{ v.c }}" hint-placeholder-val="{{ false }}"><span style="width:76px;height:76px;border-radius:50%;display:grid;place-items:center;border:2px dashed #3a4452;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5M9 9l4 4M13 9l-4 4"></path></svg></span></sc-if>
+            <sc-if value="{{ v.d }}" hint-placeholder-val="{{ false }}"><span style="width:76px;height:76px;border-radius:50%;display:grid;place-items:center;border:2px dashed #3a4452;color:#8d97a3"><svg viewBox="0 0 24 24" style="width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span></sc-if>
+          </div>
+          <h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;line-height:1.1">{{ v.t }}</h3>
+          <p style="margin:0;color:#b4bdc8;font-size:14px;line-height:1.5">{{ v.s }}</p>
+          <sc-if value="{{ v.cta }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border-radius:12px;background:{{ v.ctaBg }};color:{{ v.ctaC }};border:1px solid {{ v.ctaBd }};font-weight:600;font-size:14.5px">{{ v.cta }}</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div id="5c" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">5c</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Sem internet e erro</h2></div>
+    <div style="display:flex;gap:40px;align-items:flex-start">
+      <div style="width:375px;height:640px;position:relative;border-radius:28px;overflow:hidden;border:1px solid #2c343f;background:#12161c;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+        <div style="padding:12px 16px;display:flex;align-items:center;gap:10px;background:#3a2c10;border-bottom:1px solid rgba(232,165,61,.5)">
+          <svg viewBox="0 0 24 24" style="flex:none;width:20px;height:20px;fill:none;stroke:#e8a53d;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M2 8.8a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01M3 3l18 18"></path></svg>
+          <span style="flex:1;line-height:1.3"><strong style="color:#ffd58a;font-size:14px;display:block">Sem conexão</strong><span style="font-size:12.5px;color:#f1d9a8">3 marcações aguardando envio</span></span>
+        </div>
+        <div style="padding:16px;display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ sync }}" as="r" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;border:1px solid #2c343f;background:#1a2029">
+              <span style="flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;background:#212934;box-shadow:inset 0 0 0 1.5px {{ r.col }}">{{ r.i }}</span>
+              <span style="flex:1;min-width:0"><strong style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600">{{ r.n }}</strong><span style="display:block;font-size:12.5px;color:{{ r.sc }}">{{ r.sub }}</span></span>
+              <span style="flex:none;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ r.bg }};color:{{ r.col }}">{{ r.st }}</span>
+            </div>
+          </sc-for>
+          <div style="margin-top:8px;padding:12px 14px;border-radius:14px;border:1px dashed #3a4452;font-size:12.5px;color:#b4bdc8;line-height:1.5">Itens com nuvem ficam salvos neste aparelho e sobem sozinhos quando a conexão voltar. Pode continuar marcando.</div>
+        </div>
+        <div style="position:absolute;left:12px;right:12px;bottom:16px;display:flex;align-items:center;gap:12px;padding:12px 12px 14px;border-radius:16px;background:#212934;border:1px solid rgba(56,183,135,.45);box-shadow:0 12px 32px rgba(0,0,0,.5)"><span style="flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(56,183,135,.16);color:#38b787"><svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12.5 10 17.5 19 7"></path></svg></span><span style="flex:1"><strong style="font-size:14.5px;display:block">Conexão de volta</strong><span style="font-size:13px;color:#b4bdc8">3 marcações enviadas</span></span></div>
+        <div style="position:absolute;left:12px;right:12px;top:200px;font-size:11px;color:#8d97a3;text-align:right;font-weight:700;letter-spacing:1px;text-transform:uppercase">↓ ao reconectar</div>
+      </div>
+      <div style="width:375px;height:640px;position:relative;border-radius:28px;overflow:hidden;border:1px solid #2c343f;background:#12161c;box-shadow:0 30px 80px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:24px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center">
+          <span style="width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:rgba(229,57,46,.14);color:#e5392e"><svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg></span>
+          <h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:24px;font-weight:600">Não deu pra carregar a lista</h3>
+          <p style="margin:0;color:#b4bdc8;font-size:14.5px;line-height:1.5;max-width:30ch">Confira a conexão e tente de novo. Suas marcações já feitas não se perdem.</p>
+          <span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 24px;border-radius:12px;background:#d6342a;color:#fff;font-weight:600"><svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"></path></svg>Tentar de novo</span>
+          <span style="padding:10px;color:#e8a53d;font-weight:600;font-size:14px">Usar dados salvos · há 12 min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="5d" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">5d</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Gerenciar · Diretoria, Notificações, Backup</h2></div>
+    <div style="display:flex;gap:40px;align-items:flex-start">
+      <sc-for list="{{ ger }}" as="g" hint-placeholder-count="3">
+        <div style="width:375px;border-radius:28px;overflow:hidden;border:1px solid #2c343f;background:#12161c;padding:16px;display:flex;flex-direction:column;gap:16px;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+          <div style="position:relative;overflow:hidden;margin:0 -16px;padding:0 16px"><div style="display:flex;gap:6px;transform:translateX({{ g.shift }}px)"><sc-for list="{{ g.tabs }}" as="t" hint-placeholder-count="5"><span style="flex:none;padding:9px 14px;border-radius:12px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.c }};box-shadow:{{ t.sh }};font-size:14px;font-weight:600">{{ t.l }}</span></sc-for></div><div style="position:absolute;left:0;top:0;bottom:0;width:28px;background:linear-gradient(90deg,#12161c,rgba(18,22,28,0))"></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:26px;font-weight:600">{{ g.t }}</h3><sc-if value="{{ g.btn }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:12px;background:#d6342a;color:#fff;font-size:14px;font-weight:600">{{ g.btn }}</span></sc-if></div>
+
+          <sc-if value="{{ g.dir }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:14px;border-radius:18px;border:1px solid #2c343f;background:radial-gradient(80% 140% at 0% 0%, rgba(47,95,208,.2), transparent 60%), #1a2029;display:flex;flex-direction:column;gap:12px">
+              <span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#b4bdc8">Código de acesso</span>
+              <div style="display:flex;align-items:center;gap:8px"><strong style="flex:1;font-family:'Oswald',sans-serif;font-size:30px;letter-spacing:6px;font-weight:600">••••••</strong><span style="width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:#212934;color:#b4bdc8"><svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg></span><span style="width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:#212934;color:#b4bdc8"><svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15H4V4h11v1"></path></svg></span></div>
+              <span style="align-self:flex-start;color:#ff9a93;font-size:13.5px;font-weight:600">Gerar novo código · quem está logado precisa entrar de novo</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:12px;min-height:64px;padding:8px 14px;border-radius:16px;border:1px solid #2c343f;background:#1a2029"><span style="flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:17px;background:#212934;box-shadow:inset 0 0 0 1px #2c343f">{{ r.i }}</span><span style="flex:1;min-width:0"><strong style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600">{{ r.n }}</strong><span style="display:block;font-size:12.5px;color:#b4bdc8">{{ r.s }}</span></span><span style="flex:none;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ r.bg }};color:{{ r.c }}">{{ r.tag }}</span></div></sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ g.not }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;border-radius:16px;border:1px solid #2c343f;background:#1a2029;overflow:hidden">
+              <sc-for list="{{ g.rows }}" as="n" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:12px;padding:14px 16px;border-top:{{ n.bt }}"><div style="display:flex;align-items:center;justify-content:space-between;gap:14px"><span><strong style="font-size:14.5px;display:block">{{ n.t }}</strong><small style="font-size:12.5px;color:#b4bdc8">{{ n.s }}</small></span><span style="position:relative;flex:none;width:52px;height:30px;border-radius:999px;background:{{ n.bg }}"><span style="position:absolute;top:3px;left:{{ n.x }};width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4)"></span></span></div>
+                <sc-if value="{{ n.opts }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ n.opts }}" as="o" hint-placeholder-count="3"><span style="padding:8px 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.c }};font-size:13px;font-weight:600">{{ o.l }}</span></sc-for></div></sc-if></div></sc-for>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:16px;border:1px solid #2c343f;background:#1a2029"><span><strong style="font-size:14.5px;display:block">Horário do lembrete</strong><small style="font-size:12.5px;color:#b4bdc8">Enviado no dia escolhido</small></span><strong style="font-family:'Oswald',sans-serif;font-size:24px">18:00</strong></div>
+          </sc-if>
+
+          <sc-if value="{{ g.bk }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:16px;border-radius:18px;border:1px solid #2c343f;background:radial-gradient(80% 140% at 0% 0%, rgba(56,183,135,.16), transparent 60%), #1a2029;display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#b4bdc8">Último backup</span><strong style="font-family:'Oswald',sans-serif;font-size:38px;line-height:1.1;color:#38b787">há 2 dias</strong><span style="font-size:13.5px;color:#b4bdc8">34 jovens · 4 eventos · 212 marcações</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:12px;background:#d6342a;color:#fff;font-weight:600"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"></path></svg>Exportar</span><span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:12px;border:1px solid #2c343f;background:#212934;font-weight:600"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"></path></svg>Importar</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-radius:16px;border:1px solid #2c343f;background:#1a2029"><span><strong style="font-size:14.5px;display:block">Backup automático semanal</strong><small style="font-size:12.5px;color:#b4bdc8">Baixa um arquivo todo domingo</small></span><span style="position:relative;flex:none;width:52px;height:30px;border-radius:999px;background:#38b787"><span style="position:absolute;top:3px;left:25px;width:24px;height:24px;border-radius:50%;background:#fff"></span></span></div>
+            <div style="display:flex;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(232,165,61,.4);background:#2f2410"><svg viewBox="0 0 24 24" style="flex:none;width:20px;height:20px;margin-top:1px;fill:none;stroke:#e8a53d;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg><span style="font-size:13px;color:#f1d9a8;line-height:1.45">Importar substitui todos os dados deste aparelho. Exporte antes se não tiver certeza.</span></div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div id="5e" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">5e</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Interação na Presença</h2><span style="color:#8d97a3;font-size:14px">Três instantes do mesmo toque.</span></div>
+    <div style="display:flex;gap:28px;align-items:flex-start">
+      <sc-for list="{{ passos }}" as="p" hint-placeholder-count="3">
+        <div style="width:340px;display:flex;flex-direction:column;gap:12px">
+          <span style="display:flex;align-items:baseline;gap:8px"><b style="font-family:'Oswald',sans-serif;font-size:22px;color:#e5392e">{{ p.n }}</b><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#b4bdc8">{{ p.l }}</span></span>
+          <div style="padding:16px;border-radius:22px;border:1px solid #2c343f;background:#12161c;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:12px;min-height:68px;padding:10px 14px;border-radius:16px;border:1px solid {{ p.bd }};background:{{ p.bg }};transform:scale({{ p.sc }});box-shadow:{{ p.sh }}">
+              <span style="flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:16px;background:#212934;box-shadow:inset 0 0 0 {{ p.ring }}">A</span>
+              <span style="flex:1;min-width:0"><strong style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600">Arthur</strong><span style="display:block;font-size:12.5px;color:#b4bdc8">Confirmou · Rafa e Vini</span></span>
+              <span style="flex:none;width:{{ p.cs }}px;height:{{ p.cs }}px;border-radius:12px;display:grid;place-items:center;border:2px solid {{ p.cb }};background:{{ p.cbg }};color:#06241a"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:{{ p.ck }}"><path d="M5 12.5 10 17.5 19 7"></path></svg></span>
+            </div>
+            <span style="font-size:13px;color:#b4bdc8;line-height:1.5">{{ p.d }}</span>
+            <sc-if value="{{ p.toast }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:12px;padding:12px 12px 14px;border-radius:16px;background:#212934;border:1px solid rgba(56,183,135,.45)"><span style="flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(56,183,135,.16);color:#38b787"><svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12.5 10 17.5 19 7"></path></svg></span><span style="flex:1"><strong style="font-size:14.5px;display:block">Arthur presente</strong><span style="font-size:13px;color:#b4bdc8">Toque longo desmarca</span></span><span style="padding:8px 6px;font-weight:700;font-size:13.5px;color:#38b787">Desfazer</span></div></sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div id="5f" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#d6342a;color:#fff">5f</span><h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600;white-space:nowrap">Acessibilidade</h2></div>
+    <div style="display:flex;gap:32px;align-items:flex-start">
+      <div style="width:520px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#b4bdc8">Contraste · calculado, mínimo 4,5:1 (texto) e 3:1 (componentes)</span>
+        <div style="border-radius:16px;border:1px solid #2c343f;overflow:hidden">
+          <sc-for list="{{ contr }}" as="c" hint-placeholder-count="10">
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 14px;border-top:1px solid #2c343f;background:#12161c">
+              <span style="flex:none;width:96px;padding:6px 8px;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }};font-weight:600;font-size:13px;text-align:center">Texto</span>
+              <span style="flex:1;font-size:13px;color:#b4bdc8">{{ c.uso }}<span style="display:block;font-size:11.5px;color:#8d97a3;font-family:ui-monospace,monospace">{{ c.hex }}</span></span>
+              <strong style="flex:none;font-family:'Oswald',sans-serif;font-size:18px">{{ c.r }}</strong>
+              <span style="flex:none;width:54px;text-align:center;padding:3px 0;border-radius:999px;font-size:12px;font-weight:700;background:{{ c.pbg }};color:{{ c.pc }}">{{ c.ok }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="width:400px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#b4bdc8">Movimento reduzido · prefers-reduced-motion</span>
+        <div style="border-radius:16px;border:1px solid #2c343f;overflow:hidden">
+          <sc-for list="{{ reduz }}" as="m" hint-placeholder-count="5"><div style="padding:10px 14px;border-top:1px solid #2c343f;background:#12161c;font-size:13px;line-height:1.45"><b style="color:#eef1f4;font-weight:600">{{ m.a }}</b><span style="display:block;color:#b4bdc8">{{ m.b }}</span></div></sc-for>
+        </div>
+      </div>
+      <div style="width:400px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#b4bdc8">Texto ampliado · 130% do sistema</span>
+        <div style="padding:14px;border-radius:22px;border:1px solid #2c343f;background:#12161c">
+          <div style="position:relative;overflow:hidden;display:flex;flex-direction:column;gap:14px;padding:16px 16px 14px 20px;border-radius:18px;background:#1a2029;border:1px solid #2c343f"><div style="position:absolute;top:0;bottom:0;left:0;width:5px;background:#8d97a3"></div>
+            <div style="display:flex;align-items:center;gap:12px"><span style="flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:'Oswald',sans-serif;font-weight:600;font-size:21px;background:#212934">H</span><div style="flex:1;min-width:0"><h4 style="margin:0;font-family:'Oswald',sans-serif;font-size:27px;font-weight:600;line-height:1.1">Heitor</h4><div style="font-size:16px;color:#b4bdc8;margin-top:4px">com Téo</div></div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;border-radius:14px;background:#25d366;color:#06301a;font-size:17px;font-weight:600">WhatsApp</span><span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;border-radius:14px;background:#212934;border:1px solid #2c343f;font-size:17px;font-weight:600">Ligar</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#12161c;border:1px solid #2c343f;border-radius:13px;padding:4px"><span style="display:grid;place-items:center;min-height:52px;border-radius:10px;background:#212934;box-shadow:inset 0 0 0 1.5px #8d97a3;font-size:16.5px;font-weight:600">Pendente</span><span style="display:grid;place-items:center;min-height:52px;font-size:16.5px;font-weight:600;color:#b4bdc8">Chamei</span><span style="display:grid;place-items:center;min-height:52px;font-size:16.5px;font-weight:600;color:#b4bdc8">Confirmou</span><span style="display:grid;place-items:center;min-height:52px;font-size:16.5px;font-weight:600;color:#b4bdc8">Não vai</span></div>
+          </div>
+          <p style="margin:12px 2px 0;font-size:12.5px;color:#b4bdc8;line-height:1.5">Fontes em rem. Acima de 120%, o segmentado vira 2×2, os botões de contato voltam a ter rótulo e as linhas passam a quebrar em vez de cortar com reticências.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const lum = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }).reduce((a, v, i) => a + v * [.2126, .7152, .0722][i], 0); };
+    const cr = (f, b) => { const a = lum(f), c = lum(b); return (Math.max(a, c) + .05) / (Math.min(a, c) + .05); };
+    const pairs = [
+      ['Texto principal', '#eef1f4', '#12161c'], ['Texto secundário em card', '#b4bdc8', '#1a2029'], ['Cinza de apoio em card', '#8d97a3', '#1a2029'],
+      ['Cinza de apoio em #212934', '#8d97a3', '#212934'], ['Cinza em campo', '#8d97a3', '#12161c'], ['Dourado em card', '#e8a53d', '#1a2029'],
+      ['Vermelho de marca: só texto ≥ 24px e ícones', '#e5392e', '#1a2029'], ['Vermelho claro (erro, ações)', '#ff9a93', '#1a2029'], ['Azul como texto em card', '#5a86ee', '#1a2029'],
+      ['Verde em card', '#38b787', '#1a2029'], ['Branco no botão vermelho (#d6342a)', '#ffffff', '#d6342a'], ['Escuro sobre creme', '#12161c', '#f3e9d2'],
+      ['Chip Você', '#9db9ff', '#1d2b4f'], ['Chip Faltam', '#ff9a93', '#3b2022'], ['Aviso offline', '#f1d9a8', '#3a2c10'],
+    ];
+    const contr = pairs.map(([uso, fg, bg]) => { const r = cr(fg, bg); const ok = r >= 4.5, ok3 = r >= 3; return { uso, fg, bg, hex: fg + ' em ' + bg, r: r.toFixed(1) + ':1', ok: ok ? 'AA' : ok3 ? 'só 3:1' : 'falha', pbg: ok ? 'rgba(56,183,135,.16)' : ok3 ? 'rgba(232,165,61,.16)' : 'rgba(229,57,46,.16)', pc: ok ? '#38b787' : ok3 ? '#e8a53d' : '#ff9a93' }; });
+    const widths = [
+      { rot: 'Celular · gaveta', w: 375, fr: 28, al: 'flex-end', pad: '0', mx: '100%', rad: '24px 24px 0 0', sheet: true, btnDir: 'row', cancelOrder: 0 },
+      { rot: 'Desktop · diálogo', w: 760, fr: 12, al: 'center', pad: '24px', mx: '540px', rad: '22px', sheet: false, btnDir: 'row', cancelOrder: 0 },
+    ];
+    const modals = [
+      { nome: 'Visitante', form: true, h: 600, ok: 'Adicionar e marcar presente', okBg: '#d6342a', okC: '#fff', okBd: '#d6342a', okOp: 1 },
+      { nome: 'Zerar marcações', confirm: true, check: true, h: 560, t: 'Zerar marcações?', s: 'Todas as chamadas do Culto Box voltam para Pendente. Não dá pra desfazer.', chips: ['34 chamadas', '12 já marcadas'], ic: 'M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3', bg: 'rgba(229,57,46,.16)', col: '#e5392e', ok: 'Zerar tudo', okBg: 'rgba(229,57,46,.16)', okC: '#ff9a93', okBd: 'rgba(229,57,46,.6)', okOp: .45 },
+      { nome: 'Encerrar lista', confirm: true, check: false, h: 520, t: 'Encerrar a lista?', s: 'Trava as marcações e salva o resumo do culto. Dá pra reabrir depois.', chips: ['28 presentes', '3 visitantes', '4 sem confirmar'], ic: 'M5 12.5 10 17.5 19 7', bg: 'rgba(243,233,210,.14)', col: '#f3e9d2', ok: 'Encerrar lista', okBg: '#f3e9d2', okC: '#12161c', okBd: '#f3e9d2', okOp: 1 },
+    ];
+    const vazios = [
+      { a: true, t: 'Sem chamadas por enquanto', s: 'A distribuição ainda não foi feita para este evento. Assim que sair, sua lista aparece aqui.', cta: 'Distribuir quem falta', ctaBg: '#212934', ctaC: '#eef1f4', ctaBd: '#2c343f' },
+      { b: true, t: 'Tudo chamado!', s: 'Você fechou as 4 chamadas da sua lista. Bom trabalho, equipe na frente.', cta: 'Ver a equipe', ctaBg: 'transparent', ctaC: '#e8a53d', ctaBd: '#e8a53d' },
+      { c: true, t: 'Ninguém com “xyz”', s: 'Confira a grafia ou procure pelo telefone. Se for gente nova, dá pra cadastrar.', cta: 'Limpar busca', ctaBg: '#212934', ctaC: '#eef1f4', ctaBd: '#2c343f' },
+      { d: true, t: 'Nada no histórico ainda', s: 'As marcações e os cultos aparecem aqui assim que a equipe começar.', cta: '' },
+    ];
+    const sync = [
+      { i: 'A', n: 'Arthur', sub: 'Enviado', sc: '#38b787', st: 'Confirmou', col: '#38b787', bg: 'rgba(56,183,135,.18)' },
+      { i: 'D', n: 'Davi', sub: 'Aguardando envio', sc: '#e8a53d', st: 'Chamei', col: '#e8a53d', bg: 'rgba(232,165,61,.18)' },
+      { i: 'H', n: 'Heitor', sub: 'Aguardando envio', sc: '#e8a53d', st: 'Não vai', col: '#e5392e', bg: 'rgba(229,57,46,.18)' },
+    ];
+    const tab = (on) => ({ bd: on ? '#e5392e' : '#2c343f', bg: on ? '#212934' : 'transparent', c: on ? '#eef1f4' : '#b4bdc8', sh: on ? 'inset 0 0 0 1px #e5392e' : 'none' });
+    const T = (sel) => ['Eventos', 'Jovens', 'Diretoria', 'Notificações', 'Backup'].map(l => ({ l, ...tab(l === sel) }));
+    const opt = (l, on) => ({ l, bd: on ? '#e5392e' : '#2c343f', bg: on ? 'rgba(229,57,46,.14)' : '#12161c', c: on ? '#eef1f4' : '#b4bdc8' });
+    const sw = (on) => ({ bg: on ? '#38b787' : '#3a4452', x: on ? '25px' : '3px' });
+    const ger = [
+      { dir: true, shift: 0, t: 'Diretoria', btn: 'Convidar', tabs: T('Diretoria'), rows: [
+        { i: 'R', n: 'Rafa', s: 'Equipe masculina · você', tag: 'Líder', bg: 'rgba(232,165,61,.16)', c: '#e8a53d' }, { i: 'A', n: 'Ana', s: 'Equipe feminina', tag: 'Diretor', bg: '#212934', c: '#b4bdc8' },
+        { i: 'B', n: 'Bia', s: 'Equipe feminina', tag: 'Diretor', bg: '#212934', c: '#b4bdc8' }, { i: 'T', n: 'Téo', s: 'Equipe masculina', tag: 'Diretor', bg: '#212934', c: '#b4bdc8' } ] },
+      { not: true, shift: -44, t: 'Notificações', tabs: T('Notificações'), rows: [
+        { t: 'Lembrete antes do culto', s: 'Avisa quem tem chamadas pendentes', ...sw(true), bt: 'none', opts: [opt('1 dia antes', true), opt('2 horas antes', true), opt('No dia', false)] },
+        { t: 'Aniversários', s: 'No dia, para toda a diretoria', ...sw(true), bt: '1px solid #2c343f' },
+        { t: 'Quando alguém marcar', s: 'Receber a cada marcação da equipe', ...sw(false), bt: '1px solid #2c343f' },
+        { t: 'Resumo ao encerrar a lista', s: 'Presentes, visitantes e quem sumiu', ...sw(true), bt: '1px solid #2c343f' } ] },
+      { bk: true, shift: -128, t: 'Backup', tabs: T('Backup') },
+    ];
+    const passos = [
+      { n: '1', l: 'Repouso', d: 'Linha inteira é o alvo de toque. Caixa de 40 px só indica o estado.', bd: '#2c343f', bg: '#1a2029', sc: 1, sh: 'none', ring: '1px #2c343f', cs: 40, cb: '#3a4452', cbg: 'transparent', ck: 0 },
+      { n: '2', l: 'Pressionado · 80 ms', d: 'Escala 0,98, fundo verde 16%, caixa cresce para 44 px. Feedback imediato, antes de o dado ser salvo.', bd: 'rgba(56,183,135,.7)', bg: 'rgba(56,183,135,.16)', sc: .98, sh: '0 0 0 4px rgba(56,183,135,.12)', ring: '2px #38b787', cs: 44, cb: '#38b787', cbg: 'rgba(56,183,135,.35)', ck: 0 },
+      { n: '3', l: 'Marcado', d: 'Vibração curta de 30 ms, caixa preenchida com o check, toast com Desfazer por 5 s. Toque longo (500 ms) desmarca.', bd: 'rgba(56,183,135,.5)', bg: 'rgba(56,183,135,.10)', sc: 1, sh: 'none', ring: '2px #38b787', cs: 40, cb: '#38b787', cbg: '#38b787', ck: 1, toast: true },
+    ];
+    const reduz = [
+      { a: 'Capacete na pista', b: 'Capacete parado a 60% da pista, com o texto “Carregando…”.' },
+      { a: 'Roda girando', b: 'Anel estático com 3/4 do arco aceso; o rótulo no gerúndio continua.' },
+      { a: 'Esqueleto com brilho', b: 'Blocos lisos em #212934, sem varredura.' },
+      { a: 'Semáforo da Entrada', b: 'Luzes mudam de uma vez, sem sequência.' },
+      { a: 'Barra de tempo do toast', b: 'Barra fixa que some em fade; o toast sai pelo tempo normal.' },
+    ];
+    return { modals, widths, vazios, sync, ger, passos, contr, reduz };
+  }
+}
+</script>
+</body>
+</html>

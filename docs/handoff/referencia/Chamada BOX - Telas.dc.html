@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Oswald:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>* { box-sizing: border-box; } html, body { margin: 0; background: #0b0e12; } a { color: #e8a53d; } a:hover { color: #f3e9d2; }</style>
+</helmet>
+<section id="1" style="padding:64px;display:flex;flex-direction:column;gap:72px;font-family:'Inter',sans-serif;color:#eef1f4;background:#0b0e12;min-width:max-content">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e5392e">Turno 1 · Recriação do app atual</span>
+    <h1 style="margin:0;font-family:'Alfa Slab One',serif;font-weight:400;font-size:48px;letter-spacing:1px;color:#f3e9d2;text-transform:uppercase">Chamada BOX</h1>
+    <p style="margin:0;color:#8d97a3;font-size:15px;max-width:70ch">Cópia fiel do repositório gui-vncarvalho/box-chamada (modo demonstração), em celular, tablet e desktop. Cada tela rola dentro do quadro.</p>
+  </header>
+  <sc-for list="{{ telas }}" as="t" hint-placeholder-count="12">
+    <div id="{{ t.id }}" style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;align-items:baseline;gap:14px">
+        <span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:#e5392e;color:#fff">{{ t.id }}</span>
+        <h2 style="margin:0;font-family:'Oswald',sans-serif;font-size:30px;font-weight:600">{{ t.nome }}</h2>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:48px">
+        <sc-for list="{{ t.devs }}" as="d" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#8d97a3">{{ d.rot }}</span>
+            <div style="width:{{ d.w }}px;height:{{ d.h }}px;border-radius:{{ d.r }}px;overflow:hidden;border:1px solid #2c343f;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+              <dc-import name="Chamada App" tela="{{ t.tela }}" device="{{ d.dev }}" hint-size="100%,100%" style="width:100%;height:100%;display:block"></dc-import>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const devs = [
+      { dev: 'mobile', rot: 'Celular · 375', w: 375, h: 812, r: 28 },
+      { dev: 'tablet', rot: 'Tablet · 834', w: 834, h: 1194, r: 24 },
+      { dev: 'desktop', rot: 'Desktop · 1440', w: 1440, h: 1000, r: 12 },
+    ];
+    const lista = [
+      ['carregando', 'Carregamento'], ['gate', 'Entrada · código'], ['quem', 'Quem é você'],
+      ['minha', 'Minha lista'], ['presenca', 'Presença'], ['equipe', 'Equipe'], ['jovens', 'Jovens'],
+      ['historico', 'Histórico'], ['mg-eventos', 'Gerenciar · Eventos'], ['mg-jovens', 'Gerenciar · Jovens'],
+      ['novo-evento', 'Modal · Novo evento'], ['novo-jovem', 'Modal · Novo jovem'],
+    ];
+    return { telas: lista.map(([tela, nome], i) => ({ id: '1' + String.fromCharCode(97 + i), tela, nome, devs })) };
+  }
+}
+</script>
+</body>
+</html>
