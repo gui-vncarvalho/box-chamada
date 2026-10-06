@@ -20,6 +20,7 @@ import { pessoa } from './vinculos.js';
 export function render() {
   if (!S.codigo || !S.data) return renderGate();
   if (!S.me) return renderQuem();
+  $('#app').className = 'wrap';
 
   const ev = evento();
   const evs = eventosAtivos();

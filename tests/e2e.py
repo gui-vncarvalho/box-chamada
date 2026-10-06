@@ -68,8 +68,9 @@ class Sessao:
         pg = self.pg
         pg.goto(self.base + '/?demo')
         pg.fill('input[name=codigo]', 'x')
-        pg.click('text=Entrar')
-        pg.click(f'.pick-grid >> text={quem}')
+        pg.click('#form-login .btn-entrar')
+        pg.click(f'.quem-card:has-text("{quem}")')
+        pg.click('.quem-barra .btn-entrar')
         pg.wait_for_selector('.hero')
         return pg
 
@@ -267,6 +268,21 @@ def t_presenca_desfazer_e_offline(s):
     banco = s.js('JSON.parse(localStorage.getItem("box-demo-db-v6")).presencas.filter(p => p.evento_id === B.S.eventoId).length')
     checar(banco == 2, f'presenças no banco depois da fila: {banco}')
     s.erros = [e for e in s.erros if 'ERR_INTERNET_DISCONNECTED' not in e]
+
+
+def t_zerar_pede_confirmacao(s):
+    pg = s.entrar()
+    pg.locator('.pcard .seg button[data-status=chamado]').first.click()
+    pg.wait_for_timeout(150)
+    s.aba('gerenciar')
+    pg.click('[data-act=zerar]')
+    pg.wait_for_selector('#dlg2[open]')
+    checar(pg.locator('#dlg2 [data-r="1"]').is_disabled(), 'Zerar liberado sem marcar "Entendi"')
+    s.print('zerar', full=False)
+    pg.check('#dlg2 [data-entendi]')
+    pg.click('#dlg2 [data-r="1"]')
+    pg.wait_for_timeout(600)
+    checar(s.js("B.S.data.atribuicoes.filter(a => a.evento_id === B.S.eventoId && a.status !== 'pendente').length") == 0, 'não zerou')
 
 
 def t_presenca_no_dia(s):
@@ -657,7 +673,7 @@ def t_carregamento_leve(s):
     checar(pg.locator('#dlg .rp').count() > 0, 'resumo de culto antigo sem presenças')
 
 
-TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_desfazer_e_offline, t_presenca_no_dia,
+TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_desfazer_e_offline, t_zerar_pede_confirmacao, t_presenca_no_dia,
           t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro,
           t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido, t_backup, t_notificacoes, t_carregamento_leve]
 

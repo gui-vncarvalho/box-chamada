@@ -296,7 +296,7 @@ export async function encerrarPresenca() {
   const ev = evento();
   const r = calcularResumo(ev);
   const ok = await confirmar({
-    titulo: 'Encerrar a lista de presença?', ok: 'Encerrar',
+    titulo: 'Encerrar a lista de presença?', ok: 'Encerrar', creme: true,
     texto: `${plural(r.jovens, 'jovem', 'jovens')}${r.diretoria ? ` e ${r.diretoria} da diretoria` : ''} marcados.
       Depois de encerrar ninguém mais marca, mas dá pra reabrir pra corrigir.`,
   });
@@ -326,7 +326,7 @@ export async function encerrarEvento() {
   const ev = evento();
   const presencaAberta = !encerrada(ev);
   const ok = await confirmar({
-    titulo: `Encerrar “${esc(ev.nome)}”?`, ok: 'Encerrar evento',
+    titulo: `Encerrar “${esc(ev.nome)}”?`, ok: 'Encerrar evento', creme: true,
     texto: `${presencaAberta ? 'A lista de presença é encerrada com o resumo, a' : 'A'} chamada é finalizada (sai da Minha lista de todo mundo)
       e o evento vai pro histórico. O resumo fica em Histórico › Presenças. Dá pra reabrir em Gerenciar › Eventos.`,
   });

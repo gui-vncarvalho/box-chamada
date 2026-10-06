@@ -15,6 +15,7 @@ import { atualizarPresenca, formVisitante, htmlListaPresenca, presenca, togglePr
 import { $, esc, faixa, idade, nomeCurto, plural, quandoEvento, toast } from './util.js';
 import { atualizarTelaVinculos, dlgNovoVinculo, pessoa, removerVinculo } from './vinculos.js';
 import { compartilharResumo, dlgResumoCulto } from './frequencia.js';
+import { semaforoCodigo } from './telas/entrada.js';
 import { dlgJustificar } from './justificativas.js';
 import { exportarDados } from './exportar.js';
 import { alternarTipoPush, ativarPush, avisarDistribuicao, desativarPush, testarPush, trocouDePessoa } from './notificacoes.js';
@@ -137,14 +138,26 @@ export async function aoClicar(e) {
   const { act, id } = el.dataset;
 
   switch (act) {
+    case 'quem-sel': S.quemSel = id; render(); break;
+    case 'ver-codigo': {
+      const campo = $('#codigo');
+      const ver = campo.type === 'password';
+      campo.type = ver ? 'text' : 'password';
+      el.setAttribute('aria-pressed', ver);
+      el.setAttribute('aria-label', ver ? 'Esconder código' : 'Mostrar código');
+      el.innerHTML = ver ? ICON.olhoFechado : ICON.olho;
+      break;
+    }
     case 'sou':
       S.me = id;
+      S.quemSel = undefined;
       LS.set('me', id);
+      if (id !== 'visitante') LS.set('ultimo-me', id);
       S.tab = id === 'visitante' ? 'equipe' : 'minha';
       render();
       trocouDePessoa();
       break;
-    case 'trocar-eu': S.me = null; LS.set('me', null); render(); break;
+    case 'trocar-eu': S.me = null; S.quemSel = undefined; LS.set('me', null); render(); break;
     case 'trocar-evento': dlgEventos(); break;
     case 'escolher-evento':
       S.eventoId = id;
@@ -246,7 +259,7 @@ export async function aoClicar(e) {
     case 'distribuir': await acaoDistribuir(el.dataset.modo); break;
     case 'zerar':
       if (await confirmar({
-        titulo: 'Zerar as marcações?', perigo: true, ok: 'Zerar tudo',
+        titulo: 'Zerar as marcações?', perigo: true, ok: 'Zerar tudo', marcar: 'Entendi: isso não dá pra desfazer.',
         texto: `Todas as chamadas de “${esc(evento().nome)}” voltam pra pendente e o histórico é apagado. Quem chama quem continua igual.`,
       })) {
         try { await rpc('box_zerar', { p_evento: S.eventoId }); await recarregar(); toast('Marcações zeradas'); } catch (err) { falha(err); }
@@ -320,6 +333,7 @@ export function aoDigitar(e) {
     alternarTipoPush(e.target.dataset.pushTipo);
     return;
   }
+  if (e.target.id === 'codigo') { semaforoCodigo(e.target.value); return; }
   if (e.target.id === 'busca') {
     S.busca = e.target.value;
     S.limJ = PAG_JOVENS;

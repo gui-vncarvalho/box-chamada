@@ -21,14 +21,13 @@ export function abrirDlg(html, estado, d = dlg()) {
   if (d === dlg()) d.classList.toggle('dlg-largo', !!estado?.largo);
   const rolagem = !trocou && d.open ? d.scrollTop : 0;
   d.innerHTML = `<div class="dlg-body ${trocou ? 'troca' : ''}" tabindex="-1">${html}</div>`;
+  // Em tela de toque, focar um campo abre o teclado e esconde o modal: tira o autofocus
+  // antes de abrir (senão o navegador foca sozinho) e a pessoa toca no campo quando quiser.
+  if (telaDeToque()) d.querySelectorAll('input:not([type=radio]):not([type=checkbox])[autofocus], textarea[autofocus], select[autofocus]').forEach(c => c.removeAttribute('autofocus'));
   if (!d.open) d.showModal();
   d.scrollTop = rolagem;
-  // Foco no primeiro campo marcado (ou no corpo), nunca no botão de fechar.
-  // Em tela de toque, focar um campo abre o teclado e esconde o modal: lá o foco
-  // vai pro corpo e a pessoa toca no campo quando quiser.
-  let alvo = d.querySelector('[autofocus]');
-  if (alvo && telaDeToque() && alvo.matches('input:not([type=radio]):not([type=checkbox]), textarea, select')) alvo = null;
-  (alvo || d.querySelector('.dlg-body')).focus({ preventScroll: true });
+  // foco no primeiro campo marcado (ou no corpo), nunca no botão de fechar
+  (d.querySelector('[autofocus]') || d.querySelector('.dlg-body')).focus({ preventScroll: true });
 }
 
 export function fecharDlg(d = dlg()) {
@@ -51,7 +50,8 @@ export function fecharDlg(d = dlg()) {
 }
 
 /* Confirmação e texto no lugar do confirm()/prompt() do navegador */
-export function confirmar({ titulo, texto = '', ok = 'Confirmar', perigo = false }) {
+// marcar: caixa que precisa ser marcada antes de liberar o botão; creme: botão creme (ações de fechamento)
+export function confirmar({ titulo, texto = '', ok = 'Confirmar', perigo = false, marcar = '', creme = false }) {
   const d = $('#dlg2');
   return new Promise(res => {
     abrirDlg(`
@@ -59,12 +59,14 @@ export function confirmar({ titulo, texto = '', ok = 'Confirmar', perigo = false
         <span class="confirma-ic ${perigo ? 'perigo' : ''}">${perigo ? ICON.alerta : ICON.info}</span>
         <h2>${titulo}</h2>
         ${texto ? `<p>${texto}</p>` : ''}
+        ${marcar ? `<label class="confirma-marcar"><input type="checkbox" data-entendi>${marcar}</label>` : ''}
       </div>
       <div class="dlg-foot fim">
         <button class="btn ghost" data-r="0">Cancelar</button>
-        <button class="btn ${perigo ? 'danger-solid' : 'primary'}" data-r="1" autofocus>${ok}</button>
+        <button class="btn ${perigo ? 'danger-solid' : creme ? 'creme' : 'primary'}" data-r="1" ${marcar ? 'disabled' : 'autofocus'}>${ok}</button>
       </div>`, null, d);
-    const responder = v => { d.onclick = d.oncancel = null; fecharDlg(d).then(() => res(v)); };
+    d.onchange = e => { if (e.target.matches('[data-entendi]')) d.querySelector('[data-r="1"]').disabled = !e.target.checked; };
+    const responder = v => { d.onclick = d.oncancel = d.onchange = null; fecharDlg(d).then(() => res(v)); };
     d.onclick = e => {
       const b = e.target.closest('[data-r]');
       if (b) responder(b.dataset.r === '1');
