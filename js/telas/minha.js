@@ -7,7 +7,7 @@ import { cartaoInstalar } from '../pwa.js';
 import { encerrada } from '../frequencia.js';
 import { botaoJustificar, justificativa } from '../justificativas.js';
 import { presenca } from './presenca.js';
-import { $, byNome, celular, digitos, esc, faixa, faixaBadge, fmtTel, idade, iniciais, linkWhats, nomeCurto, subNome, telIntl } from '../util.js';
+import { $, byNome, celular, digitos, esc, faixaBadge, fmtTel, iniciais, linkWhats, nomeCurto, telIntl } from '../util.js';
 import { linhaVinculos } from '../vinculos.js';
 import { conviteNotificacoes } from '../notificacoes.js';
 import { estadoVazio } from '../vazio.js';
@@ -15,19 +15,6 @@ import { estadoVazio } from '../vazio.js';
 export function segStatus(a) {
   return `<div class="seg" role="group" aria-label="Status da chamada">
     ${STATUS.map(s => `<button class="st-${s.id}" data-act="status" data-id="${a.id}" data-status="${s.id}" aria-pressed="${a.status === s.id}">${s.label}</button>`).join('')}
-  </div>`;
-}
-
-export function botoesContato(j, a) {
-  const ev = evento();
-  const wa = linkWhats(ev, j);
-  const aid = a ? `data-id="${a.id}"` : '';
-  if (!digitos(j.telefone)) {
-    return `<div class="row-btns"><button class="btn small ghost" data-act="editar-jovem" data-id="${j.id}">+ Adicionar telefone</button></div>`;
-  }
-  return `<div class="row-btns">
-    <a class="btn wa" href="${esc(wa)}" target="_blank" rel="noopener" data-act="contato" ${aid}>${ICON.wa}WhatsApp</a>
-    <a class="btn" href="tel:+${telIntl(j.telefone)}" data-act="contato" ${aid}>${ICON.tel}Ligar</a>
   </div>`;
 }
 

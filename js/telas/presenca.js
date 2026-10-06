@@ -9,7 +9,7 @@ import { abrirForm, EQUIPES } from '../formulario.js';
 import { calcularResumo, cultosDoEvento, dlgResumoCulto, encerrada, pessoaDe, resumoDe } from '../frequencia.js';
 import { ICON } from '../icones.js';
 import { render } from '../render.js';
-import { $, byNome, contagem, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, nomeCurto, subNome, nomeMensagem, plural, primeiroNome, semAcento, toast, uid } from '../util.js';
+import { $, byNome, contagem, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, nomeCurto, subNome, nomeMensagem, plural, semAcento, toast, uid } from '../util.js';
 import { pessoa, textoVinculo, vinculosDe } from '../vinculos.js';
 import { buscaVazia } from '../vazio.js';
 import { enfileirar, enviados, erroDeRede, naFila, tirarDaFila } from '../fila.js';

@@ -5,7 +5,7 @@ import { abrirDlg } from './dialogos.js';
 import { S } from './estado.js';
 import { ICON } from './icones.js';
 import { botaoJustificar, justificativa, MOTIVOS } from './justificativas.js';
-import { byNome, celular, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, nomeCurto, nomeMensagem, plural, porFaixa, primeiroNome, toast } from './util.js';
+import { byNome, celular, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, nomeCurto, nomeMensagem, plural, porFaixa, toast } from './util.js';
 
 const CULTOS_SUMIU = 2; // faltou nos 2 últimos cultos encerrados…
 const JANELA_SUMIU = 6; // …e tinha vindo em algum dos 6 anteriores

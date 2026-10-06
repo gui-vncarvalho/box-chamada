@@ -3,7 +3,7 @@ import { diretor, jovem } from './dados.js';
 import { abrirDlg, dlg } from './dialogos.js';
 import { S } from './estado.js';
 import { ICON } from './icones.js';
-import { $, byNome, esc, faixa, faixaBadge, idade, nomeCurto, nomeMensagem, plural, primeiroNome, telIntl } from './util.js';
+import { $, byNome, esc, faixa, faixaBadge, idade, nomeCurto, nomeMensagem, plural, telIntl } from './util.js';
 
 export function proximoAniver(nasc, base = new Date()) {
   if (!nasc) return null;

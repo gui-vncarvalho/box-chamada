@@ -1,7 +1,7 @@
 // Esqueleto da tela: topo, card do evento e abas.
 import { renderAniver } from './aniversarios.js';
 import { cultosPassados, encerrada, resumoDe } from './frequencia.js';
-import { atribs, diretor, evento, eventosAtivos, jovem, porJovem, statusJovem } from './dados.js';
+import { atribs, diretor, evento, eventosAtivos, jovem } from './dados.js';
 import { demo } from './demo.js';
 import { abrirDlg, dlg } from './dialogos.js';
 import { distribuir } from './distribuir.js';
@@ -108,16 +108,6 @@ export function renderView() {
   if (S.tab === 'jovens') return viewJovens();
   if (S.tab === 'presenca') return viewPresenca();
   return '';
-}
-
-export function chipsEvento(ev) {
-  const data = dataEvento(ev);
-  return [
-    data && [ICON.cal, data.charAt(0).toUpperCase() + data.slice(1)],
-    horaGeral(ev) && [ICON.relogio, horaGeral(ev)],
-    [ICON.grupo, PUBLICO_LABEL[ev.publico]],
-    [ICON.tel, plural(ev.chamadas_por_jovem, 'chamada', 'chamadas') + ' por jovem'],
-  ].filter(Boolean).map(([ic, t]) => `<li>${ic}<span>${esc(t)}</span></li>`).join('');
 }
 
 // Sem evento aberto: convida pro próximo e mostra o último culto (ou como funciona).
