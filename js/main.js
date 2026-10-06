@@ -10,13 +10,15 @@ import { iniciarPWA } from './pwa.js';
 import { atualizarPush } from './notificacoes.js';
 import { dlgAniversarios } from './aniversarios.js';
 import { render } from './render.js';
-import { presenca } from './telas/presenca.js';
+import { atualizarPresenca, presenca } from './telas/presenca.js';
+import { atualizarFaixa, enviarFila, fila } from './fila.js';
 import { contagem, digitos, faixa, horaPara, idade, mensagem, semAcento } from './util.js';
 import { textoVinculo, vinculosDe } from './vinculos.js';
 
 /* Atualização automática: busca o que os outros marcaram. */
 export async function poll() {
   if (!S.codigo || !S.data || document.hidden || dlg().open) return;
+  if (fila().length) enviarFila(depoisDaFila);
   const ativo = document.activeElement;
   if (ativo && ['INPUT', 'TEXTAREA', 'SELECT'].includes(ativo.tagName)) return;
   try {
@@ -44,6 +46,11 @@ dlg().addEventListener('click', e => { if (e.target === dlg()) fecharDlg(); });
 dlg().addEventListener('cancel', e => { e.preventDefault(); fecharDlg(); });
 
 setInterval(poll, POLL_MS);
+
+// Sem internet: faixa no topo; quando volta, sobe a fila de presenças.
+const depoisDaFila = () => (S.tab === 'presenca' ? atualizarPresenca() : render());
+window.addEventListener('offline', atualizarFaixa);
+window.addEventListener('online', () => { atualizarFaixa(); enviarFila(depoisDaFila); });
 
 document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
 
@@ -81,6 +88,8 @@ atualizarPush().then(() => S.data && S.me && render()).catch(() => {});
     }
   }
   abrirAtalho(location.href);
+  atualizarFaixa();
+  enviarFila(depoisDaFila);
   // a tela de carregamento só existe na entrada: fica no mínimo LOADER_MIN_MS
   // (pra dar pra ver), depois some com um fade por cima da primeira tela já pronta
   const ld = document.getElementById('carregando');

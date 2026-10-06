@@ -131,3 +131,17 @@ ul.lista { list-style: none; margin: 0; padding: 0; display: flex; flex-directio
 .vazio-card .vz-acao { min-height: 46px; width: 100%; justify-content: center; margin-top: 4px; }
 .vazio-card .vz-acao + .vz-acao { margin-top: 0; }
 .vz-chegada { border-color: rgba(56, 183, 135, .35); }
+
+/* ---------- faixa de sem conexão ---------- */
+.faixa-offline {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 70;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
+  background: #3a2c10; border-bottom: 1px solid rgba(232, 165, 61, .5);
+  color: var(--cream); font-size: 13.5px; text-align: center;
+}
+.faixa-offline svg { flex: none; width: 18px; height: 18px; color: var(--gold); }
+.faixa-offline strong { color: var(--gold); }
+body.com-faixa { padding-top: calc(40px + env(safe-area-inset-top)); }
+body.com-faixa .pres-barra, body.com-faixa .lateral { top: calc(40px + env(safe-area-inset-top)); }
+@media (min-width: 1024px) { body.com-faixa .lateral { height: calc(100vh - 40px); } }

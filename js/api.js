@@ -2,12 +2,14 @@
 import { sair } from './acoes.js';
 import { diretor, evento, eventoPadrao, eventosAtivos } from './dados.js';
 import { demo } from './demo.js';
+import { aplicarFila } from './fila.js';
 import { CFG, DEMO, LS, S } from './estado.js';
 import { $, hojeISO, toast } from './util.js';
 
 export async function rpc(fn, args = {}) {
   const payload = { p_codigo: S.codigo, ...args };
   if (DEMO) {
+    if (!navigator.onLine) throw new TypeError('Failed to fetch');
     await new Promise(r => setTimeout(r, 120));
     return JSON.parse(JSON.stringify(demo[fn](payload) ?? null));
   }
@@ -56,6 +58,7 @@ export async function carregar() {
   S.data.vinculos ||= [];
   S.data.justificativas ||= [];
   mesclarExtras();
+  aplicarFila(S.data);
   const evs = eventosAtivos();
   const salvo = evs.find(e => e.id === S.eventoId);
   const hoje = hojeISO();

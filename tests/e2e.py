@@ -214,14 +214,59 @@ def t_presenca(s):
     pg.click('#plista >> text=como visitante')
     pg.wait_for_selector('#form-dlg')
     checar(pg.input_value('#form-dlg input[name=nome]') == 'Zezinho', 'nome do visitante não veio da busca')
+    # quem convidou: nome fora da lista não passa
+    pg.fill('#form-dlg input[name=convidou]', 'Fulano Inexistente')
+    pg.click('#form-dlg button[type=submit]')
+    pg.wait_for_timeout(300)
+    checar(pg.locator('#form-dlg').count() == 1, 'aceitou "quem convidou" fora da lista')
+    pg.fill('#form-dlg input[name=convidou]', 'Caio')
     pg.click('#form-dlg button[type=submit]')
     pg.wait_for_timeout(900)
     checar(s.js("!!B.presenca(B.S.data.jovens.find(j => j.nome === 'Zezinho')?.id)"), 'visitante não ficou presente')
-    checar(pg.inner_text('.pres-num strong') == '3', 'contador de presentes')
+    checar(s.js("""(() => { const z = B.S.data.jovens.find(j => j.nome === 'Zezinho'), c = B.S.data.jovens.find(j => j.nome === 'Caio');
+      return B.S.data.vinculos.some(v => v.tipo === 'convidou' && v.a_id === c.id && v.b_id === z.id); })()"""), 'vínculo "convidou" não salvou')
+    checar(pg.inner_text('.pres-n') == '3', 'contador de presentes')
     s.print('presenca')
     # no site real, antes do dia, a aba some
     s.js('(B.S.simularReal = true, B.render(), 0)')
     checar(pg.locator('.tab[data-id=presenca]').count() == 0, 'aba Presença visível antes do dia no modo real')
+
+
+def t_presenca_desfazer_e_offline(s):
+    pg = s.entrar()
+    s.aba('presenca')
+    pg.fill('#busca-p', 'Heitor')
+    pg.locator('.pcheck').first.click()
+    pg.wait_for_timeout(250)
+    checar(pg.locator('.pcheck.presente').count() == 1, 'toque não marcou')
+    pg.click('.toast .toast-acao:has-text("Desfazer")')
+    pg.wait_for_timeout(250)
+    checar(pg.locator('.pcheck.presente').count() == 0, 'Desfazer não desmarcou')
+    # um toque também desmarca
+    pg.locator('.pcheck').first.click()
+    pg.wait_for_timeout(250)
+    pg.locator('.pcheck').first.click()
+    pg.wait_for_timeout(250)
+    checar(pg.locator('.pcheck.presente').count() == 0, 'segundo toque não desmarcou')
+    # sem internet: marca na hora, guarda na fila e sobe quando volta
+    pg.fill('#busca-p', '')
+    s.ctx.set_offline(True)
+    pg.wait_for_timeout(150)
+    pg.locator('.pcheck:not(.presente)').nth(0).click()
+    pg.wait_for_timeout(150)
+    pg.locator('.pcheck:not(.presente)').nth(0).click()
+    pg.wait_for_timeout(250)
+    checar('2 marcações aguardando envio' in pg.inner_text('#offline'), 'faixa sem conexão')
+    checar(pg.locator('.pcheck .envio.fila').count() == 2, '"Aguardando envio" nos itens')
+    s.print('presenca-offline', full=False)
+    s.ctx.set_offline(False)
+    pg.wait_for_timeout(1200)
+    checar(pg.locator('#offline').count() == 0, 'faixa não sumiu ao reconectar')
+    checar(pg.locator('.toast:has-text("Conexão de volta")').count() == 1, 'aviso de conexão de volta')
+    checar(s.js('localStorage.getItem("box-demo:fila-presenca")') is None, 'fila não esvaziou')
+    banco = s.js('JSON.parse(localStorage.getItem("box-demo-db-v6")).presencas.filter(p => p.evento_id === B.S.eventoId).length')
+    checar(banco == 2, f'presenças no banco depois da fila: {banco}')
+    s.erros = [e for e in s.erros if 'ERR_INTERNET_DISCONNECTED' not in e]
 
 
 def t_presenca_no_dia(s):
@@ -391,7 +436,7 @@ def t_presenca_cultos_e_encerrar(s):
     pg.click('.chip[data-id=diretoria]')
     pg.locator('.pcheck.dir').first.click()
     pg.wait_for_timeout(200)
-    checar(pg.inner_text('.pres-tile.st-diretoria strong') == '1', 'contador da diretoria')
+    checar(pg.inner_text('.pres-metricas .st-diretoria b') == '1', 'contador da diretoria')
     s.print('presenca-cultos')
     # encerrar trava e mostra o resumo
     pg.click('[data-act=encerrar-presenca]')
@@ -611,7 +656,7 @@ def t_carregamento_leve(s):
     checar(pg.locator('#dlg .rp').count() > 0, 'resumo de culto antigo sem presenças')
 
 
-TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_no_dia,
+TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_presenca_desfazer_e_offline, t_presenca_no_dia,
           t_modais_e_cadastros, t_aniversarios, t_abas_e_pwa, t_campos_sem_zoom_e_sem_estouro,
           t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido, t_backup, t_notificacoes, t_carregamento_leve]
 

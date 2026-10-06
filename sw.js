@@ -50,6 +50,7 @@ const ARQUIVOS = [
   './js/util.js',
   './js/toast.js',
   './js/vazio.js',
+  './js/fila.js',
   './js/vinculos.js',
 ];
 

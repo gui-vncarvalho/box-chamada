@@ -51,6 +51,11 @@ export function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, on
             <label><input type="radio" name="${c.nome}" value="${ov}" ${String(v) === ov ? 'checked' : ''}>
               <span><strong>${ol}</strong>${od ? `<small>${od}</small>` : ''}</span></label>`).join('')}
           </div>${dica}</fieldset>`;
+      case 'pessoa':
+        // campo com sugestões (datalist); no envio vira o id da pessoa escolhida
+        return `<label class="${cls}"><span class="lbl">${c.label}</span>
+          <input name="${c.nome}" list="dl-${c.nome}" value="" placeholder="${esc(c.placeholder || '')}" autocomplete="off">
+          <datalist id="dl-${c.nome}">${c.opcoes.map(([, l]) => `<option value="${esc(l)}"></option>`).join('')}</datalist>${dica}</label>`;
       case 'stepper':
         return `<div class="${cls}"><span class="lbl">${c.label}</span>
           <div class="stepper">
@@ -150,6 +155,17 @@ export function abrirForm({ titulo, sub = '', campos, valores = {}, onSalvar, on
     for (const c of campos.filter(c => c.tipo !== 'nota')) {
       const el = form.elements[c.nome];
       dados[c.nome] = c.tipo === 'switch' ? el.checked : c.tipo === 'stepper' ? Number(el.value) : String(el.value).trim();
+      if (c.tipo === 'pessoa') {
+        const id = dados[c.nome] && c.opcoes.find(([, l]) => l.toLowerCase() === dados[c.nome].toLowerCase())?.[0];
+        if (dados[c.nome] && !id) {
+          el.closest('.field').classList.add('invalido');
+          el.setCustomValidity('Escolha um nome da lista');
+          el.reportValidity();
+          el.addEventListener('input', () => { el.setCustomValidity(''); el.closest('.field').classList.remove('invalido'); }, { once: true });
+          return;
+        }
+        dados[c.nome] = id || '';
+      }
     }
     const faltando = campos.filter(c => c.obrig && !dados[c.nome]);
     if (faltando.length) {

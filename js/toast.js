@@ -43,7 +43,7 @@ export function fecharToast(no) {
 
 // Remove um aviso persistente pelo id (ex.: o de "sem conexão" quando a internet volta).
 export function fecharToastId(id) {
-  fecharToast(pilha().querySelector(`[data-toast-id="${id}"]`));
+  pilha().querySelectorAll(`[data-toast-id="${id}"]:not(.saindo)`).forEach(fecharToast);
 }
 
 export function toast(titulo, opcoes = {}) {
@@ -51,7 +51,7 @@ export function toast(titulo, opcoes = {}) {
   const tipo = o.tipo || 'sucesso';
   pilha();
   hospedar();
-  if (o.id) fecharToast(caixa.querySelector(`[data-toast-id="${o.id}"]`));
+  if (o.id) fecharToastId(o.id);
   const no = document.createElement('div');
   no.className = `toast t-${tipo}`;
   no.setAttribute('role', tipo === 'erro' ? 'alert' : 'status');

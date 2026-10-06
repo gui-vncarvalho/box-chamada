@@ -12,6 +12,8 @@ import { render } from '../render.js';
 import { $, byNome, contagem, dataEvento, esc, faixa, faixaBadge, hojeISO, iniciais, nomeCurto, subNome, nomeMensagem, plural, primeiroNome, semAcento, toast, uid } from '../util.js';
 import { pessoa, textoVinculo, vinculosDe } from '../vinculos.js';
 import { buscaVazia } from '../vazio.js';
+import { enfileirar, enviados, erroDeRede, naFila, tirarDaFila } from '../fila.js';
+import { fecharToastId } from '../toast.js';
 
 export const presencasEv = () => (S.data?.presencas || []).filter(p => p.evento_id === S.eventoId);
 
@@ -85,17 +87,20 @@ export function htmlTopoPresenca() {
   const ev = evento();
   const d = dadosPresenca();
   const varios = cultosDoEvento(ev).length > 1;
+  const extra = [
+    ev.publico === 'todos' && d.total ? `${d.box} Box · ${d.sprint} Sprint` : '',
+    varios ? `${plural(d.noDia, 'jovem', 'jovens')} no dia` : '',
+  ].filter(Boolean).join(' · ');
   return `
-    <div class="pres-num">
-      <span class="eyebrow">Jovens presentes${varios ? ' neste culto' : ''}</span>
-      <strong>${d.total}</strong>
-      <small>${ev.publico === 'todos' && d.total ? `${d.box} Box · ${d.sprint} Sprint` : ''}${varios ? `${d.total ? ' · ' : ''}${plural(d.noDia, 'jovem', 'jovens')} no dia` : ''}</small>
-    </div>
-    <div class="pres-tiles">
-      <div class="pres-tile st-confirmado"><strong>${d.confVieram}<span>/${d.confTotal}</span></strong><small>confirmados vieram</small></div>
-      <div class="pres-tile st-chamado"><strong>${d.semConfirmar}</strong><small>vieram sem confirmar</small></div>
-      <div class="pres-tile st-presente"><strong>${d.novos}</strong><small>primeira vez</small></div>
-      <div class="pres-tile st-diretoria"><strong>${d.diretoria}</strong><small>da diretoria</small></div>
+    <strong class="pres-n">${d.total}</strong>
+    <div class="pres-info">
+      <span class="pres-rot">Presentes ${varios ? 'neste culto' : 'agora'}${extra ? ` <small>· ${extra}</small>` : ''}</span>
+      <div class="pres-metricas">
+        <span class="st-confirmado"><b>${d.confVieram}/${d.confTotal}</b> confirmados vieram</span>
+        <span class="st-chamado"><b>${d.semConfirmar}</b> sem confirmar</span>
+        <span class="st-presente"><b>${d.novos}</b> 1ª vez</span>
+        <span class="st-diretoria"><b>${d.diretoria}</b> da diretoria</span>
+      </div>
     </div>`;
 }
 
@@ -108,12 +113,16 @@ export function cardPresenca({ j, l, s, p, dir, outro }) {
     : dir ? `Diretoria · equipe ${j.equipe === 'F' ? 'feminina' : 'masculina'}`
     : s === 'pendente' ? (quem ? `Ninguém chamou ainda · ${quem}` : 'Não estava na lista de chamada')
     : `${STATUS_BY_ID[s].label}${quem ? ` · ${quem}` : ''}`;
+  const envio = naFila(j.id, cultoAtual()) ? '<b class="envio fila">Aguardando envio</b> · '
+    : enviados.has(j.id) ? '<b class="envio ok">Enviado</b> · ' : '';
+  // confirmou e ainda não chegou em nenhum culto do dia
+  const alerta = !p && !dir && s === 'confirmado' && !presenca(j.id) ? '<b class="nao-veio">Não veio ainda</b> · ' : '';
   return `
     <button class="pcheck ${p ? 'presente' : ''} st-${s} ${dir ? 'dir' : ''}" data-act="presenca" data-id="${j.id}" aria-pressed="${!!p}">
-      <span class="avatar" aria-hidden="true">${p ? ICON.check : esc(iniciais(j.nome))}</span>
+      <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
       <span class="jcard-txt">
-        <span class="jcard-nome"><strong>${esc(nomeCurto(j))}</strong>${dir ? '<span class="pill st-chamado">Diretoria</span>' : faixa(j) ? faixaBadge(j) : ''}${badgeAniver(j)}</span>${subNome(j)}
-        <span class="pcheck-sub">${!p && s === 'confirmado' ? '<span class="dot"></span>' : ''}${sub}${nomeOutro ? ` · <b class="no-outro">✓ também no ${esc(nomeOutro)}</b>` : ''}</span>
+        <span class="jcard-nome"><strong>${esc(nomeCurto(j))}</strong>${dir ? '<span class="faixa dir">Diretoria</span>' : faixa(j) ? faixaBadge(j) : ''}${badgeAniver(j)}</span>${subNome(j)}
+        <span class="pcheck-sub">${envio}${alerta}${sub}${nomeOutro ? ` · <b class="no-outro">✓ também no ${esc(nomeOutro)}</b>` : ''}</span>
       </span>
       <span class="pcheck-box" aria-hidden="true">${ICON.check}</span>
     </button>`;
@@ -191,7 +200,7 @@ export function viewPresenca() {
         <span class="c">${presencasEv().filter(p => culto(p) === id).length}</span></button>`).join('')}</div>` : ''}
     <div class="${fechada ? 'pres-fechada' : ''}">
       <section class="pres-topo" id="ptopo">${htmlTopoPresenca()}</section>
-      <div class="jtoolbar">
+      <div class="pres-barra"><div class="jtoolbar">
         <div class="pres-busca">
           <label class="busca">${ICON.lupa}
             <input type="search" id="busca-p" placeholder="${fechada ? 'Buscar na lista' : 'Quem chegou?'}" value="${esc(S.buscaP)}" aria-label="Buscar pessoa" autocomplete="off">
@@ -199,7 +208,7 @@ export function viewPresenca() {
           ${fechada ? '' : `<button class="btn primary" data-act="visitante">${ICON.addPessoa}<span>Visitante</span></button>`}
         </div>
         <div class="jfiltros"><div class="chips" id="pchips" role="group" aria-label="Filtrar">${htmlChipsPresenca()}</div></div>
-      </div>
+      </div></div>
       <div id="plista">${htmlListaPresenca()}</div>
     </div>
     ${fechada ? '' : `
@@ -220,7 +229,7 @@ export function atualizarPresenca() {
   });
 }
 
-export async function togglePresenca(id, junto = false) {
+export async function togglePresenca(id, junto = false, { desfazer = false } = {}) {
   const ev = evento();
   if (!presencaLiberada(ev) || encerrada(ev)) return;
   const quem = pessoa(id);
@@ -235,7 +244,9 @@ export async function togglePresenca(id, junto = false) {
       jovem_id: quem.tipo === 'jovem' ? id : null, diretor_id: quem.tipo === 'diretor' ? id : null,
     }];
   }
-  if (!junto) {
+  if (desfazer) {
+    if (S.sugJunto?.jid === id) S.sugJunto = null;
+  } else if (!junto) {
     // ao marcar alguém, sugere quem tem vínculo e ainda não chegou neste culto
     const ligados = atual ? [] : vinculosDe(id).map(v => (v.a_id === id ? v.b_id : v.a_id))
       .filter(x => pessoa(x)?.p.ativo && !presencaNoCulto(x, c));
@@ -244,13 +255,31 @@ export async function togglePresenca(id, junto = false) {
     S.sugJunto.ids = S.sugJunto.ids.filter(x => x !== id);
     if (!S.sugJunto.ids.length) S.sugJunto = null;
   }
-  navigator.vibrate?.(12);
+  navigator.vibrate?.(atual ? 12 : 30);
   S.data.historico.unshift({ evento_id: ev.id, quem: nomeQuem(), jovem: quem.p.nome, status: atual ? 'ausente' : 'presente', em: new Date().toISOString() });
   atualizarPresenca();
-  if (!junto && S.sugJunto) $('.pres-junto')?.scrollIntoView({ block: 'nearest', behavior: semAnimacao() ? 'auto' : 'smooth' });
+  if (!junto && !desfazer && S.sugJunto) $('.pres-junto')?.scrollIntoView({ block: 'nearest', behavior: semAnimacao() ? 'auto' : 'smooth' });
+  const item = { evento: ev.id, pessoa: id, tipo: quem.tipo, presente: !atual, quem: nomeQuem(), culto: c, em: new Date().toISOString() };
+  const avisar = offline => {
+    if (desfazer) return;
+    toast(`${nomeCurto(quem.p)} ${atual ? 'desmarcado(a)' : 'presente'}`, {
+      tipo: atual ? 'info' : 'sucesso', id: 'presenca',
+      texto: offline ? 'Sem conexão: fica guardado e sobe sozinho' : '',
+      acao: { rotulo: 'Desfazer', fn: () => togglePresenca(id, false, { desfazer: true }) },
+    });
+  };
+  if (!navigator.onLine) {
+    enfileirar(item);
+    atualizarPresenca();
+    return avisar(true);
+  }
+  avisar(false);
   try {
     await rpc('box_presenca', { p_evento: ev.id, p_jovem: id, p_presente: !atual, p_quem: nomeQuem(), p_culto: c });
+    tirarDaFila(item);
   } catch (e) {
+    if (erroDeRede(e)) { enfileirar(item); atualizarPresenca(); return; }
+    fecharToastId('presenca');
     S.data.presencas = lista;
     S.data.historico.shift();
     if (String(e.message).includes('lista_encerrada')) {
@@ -311,6 +340,16 @@ export async function encerrarEvento() {
   } catch (e) { falha(e); }
 }
 
+// Quem pode ter convidado: jovens e diretoria ativos. Nomes repetidos ganham o nome completo.
+function opcoesConvite() {
+  const gente = [...S.data.jovens, ...S.data.diretores].filter(p => p.ativo);
+  const conta = {};
+  gente.forEach(p => { const n = nomeCurto(p).toLowerCase(); conta[n] = (conta[n] || 0) + 1; });
+  return gente
+    .map(p => [p.id, conta[nomeCurto(p).toLowerCase()] > 1 && nomeCurto(p) !== p.nome ? `${nomeCurto(p)} (${p.nome})` : nomeCurto(p)])
+    .sort((a, b) => a[1].localeCompare(b[1], 'pt-BR'));
+}
+
 export function formVisitante() {
   const ev = evento();
   if (!presencaLiberada(ev) || encerrada(ev)) return;
@@ -326,13 +365,17 @@ export function formVisitante() {
       { nome: 'genero', label: 'Equipe', tipo: 'segmentado', padrao: 'F', opcoes: EQUIPES, full: true },
       { nome: 'telefone', label: 'WhatsApp', tipo: 'tel', placeholder: '(11) 91234-5678' },
       { nome: 'nascimento', label: 'Data de nascimento', tipo: 'date', dica: 'Opcional' },
+      { nome: 'convidou', label: 'Quem convidou', tipo: 'pessoa', full: true, opcoes: opcoesConvite(), placeholder: 'Opcional · digite pra buscar', dica: 'Fica salvo como vínculo “Convidou”.' },
     ],
     valores: { nome: nomeBusca },
     onSalvar: async dados => {
+      const convidou = dados.convidou;
+      delete dados.convidou;
       dados.id = uid();
       dados.obs = `Primeira vez: ${ev.nome}${ev.data ? ` (${dataEvento(ev, { day: '2-digit', month: '2-digit', year: 'numeric' })})` : ''}`;
       await rpc('box_salvar', { p_tabela: 'jovens', p_dados: dados });
       await rpc('box_presenca', { p_evento: ev.id, p_jovem: dados.id, p_presente: true, p_quem: nomeQuem(), p_culto: c });
+      if (convidou) await rpc('box_vinculo', { p_a: convidou, p_b: dados.id, p_tipo: 'convidou', p_remover: false });
       S.buscaP = '';
       toast(`${nomeMensagem(dados)} cadastrado(a) e presente 🎉`);
     },
