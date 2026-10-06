@@ -37,6 +37,10 @@ export async function poll() {
 document.addEventListener('click', aoClicar);
 document.addEventListener('input', aoDigitar);
 document.addEventListener('submit', aoEnviar);
+// linha de seções do Gerenciar: degradê na borda esquerda quando rolada (dica de que tem mais)
+document.addEventListener('scroll', e => {
+  if (e.target.classList?.contains('mg-abas')) e.target.classList.toggle('rolada', e.target.scrollLeft > 4);
+}, true);
 iniciarPWA();
 
 dlg().addEventListener('close', () => { S.dlg = null; });

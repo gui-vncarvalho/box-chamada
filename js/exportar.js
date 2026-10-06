@@ -1,6 +1,6 @@
 // Backup dos dados: planilha (.xlsx) pra ler e JSON completo pra restaurar.
 import { falha, rpc } from './api.js';
-import { LS } from './estado.js';
+import { LS, S } from './estado.js';
 import { ICON } from './icones.js';
 import { MOTIVOS } from './justificativas.js';
 import { dataEvento, esc, toast } from './util.js';
@@ -103,20 +103,27 @@ export function cartaoBackup() {
   const ultimo = LS.get('ultimo-backup');
   const dias = ultimo ? Math.floor((Date.now() - new Date(ultimo)) / 86400000) : null;
   const atrasado = dias == null || dias >= LEMBRAR_DIAS;
+  const grande = dias == null ? 'Nunca' : dias === 0 ? 'Hoje' : dias === 1 ? 'Ontem' : `Há ${dias} dias`;
   const quando = ultimo
-    ? `Último backup neste aparelho: ${dataEvento({ data: ultimo.slice(0, 10) }, { day: '2-digit', month: '2-digit', year: 'numeric' })}${dias ? ` (há ${dias} dias)` : ' (hoje)'}.`
+    ? `Último backup neste aparelho: ${dataEvento({ data: ultimo.slice(0, 10) }, { day: '2-digit', month: '2-digit', year: 'numeric' })}.`
     : 'Nenhum backup feito neste aparelho ainda.';
+  const d = S.data;
   return `
     <section class="backup ${atrasado ? 'atrasado' : ''}">
-      <div class="backup-txt">
-        <strong>Backup dos dados</strong>
-        <small>Baixe uma cópia de tudo: jovens, diretoria, eventos, chamadas, presenças e justificativas.
-          Vale fazer uma vez por mês e guardar no Drive.</small>
-        <small class="backup-quando">${esc(quando)}</small>
+      <div class="backup-topo">
+        <span class="eyebrow">Último backup</span>
+        <strong class="backup-quando-n">${grande}</strong>
+        <small class="backup-quando">${esc(quando)}${atrasado ? ' Vale fazer uma vez por mês.' : ''}</small>
+        <div class="backup-conta">
+          <span><b>${d.jovens.length}</b> jovens</span>
+          <span><b>${d.eventos.length}</b> eventos</span>
+          <span><b>${d.atribuicoes.length + d.presencas.length}</b> marcações</span>
+        </div>
       </div>
-      <div class="row-btns">
-        <button class="btn" data-act="exportar" data-id="json" title="Cópia exata do banco, pra restaurar se precisar">Backup completo (.json)</button>
+      <p class="backup-txt">Baixa uma cópia de tudo: jovens, diretoria, eventos, chamadas, presenças e justificativas. Guarde no Drive.</p>
+      <div class="backup-btns">
         <button class="btn primary" data-act="exportar" data-id="xlsx">${ICON.baixar}Planilha (.xlsx)</button>
+        <button class="btn" data-act="exportar" data-id="json" title="Cópia exata do banco, pra restaurar se precisar">Backup completo (.json)</button>
       </div>
     </section>`;
 }

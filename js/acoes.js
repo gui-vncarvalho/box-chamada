@@ -198,7 +198,7 @@ export async function aoClicar(e) {
     case 'instalar-dispensar':
       LS.set('pwa-dispensado', '1');
       render();
-      toast('Dá pra instalar depois em Gerenciar › Diretoria.');
+      toast('Dá pra instalar depois em Gerenciar › Notificações.');
       break;
     case 'vinc-novo': dlgNovoVinculo(id, () => atualizarTelaVinculos(id)); break;
     case 'vinc-remover': await removerVinculo(id, el.dataset.pessoa, () => atualizarTelaVinculos(el.dataset.pessoa)); break;
@@ -268,6 +268,8 @@ export async function aoClicar(e) {
       S.mgTab = id;
       LS.set('mgTab', id);
       render();
+      // a linha de seções rola na horizontal: deixa a aba escolhida à vista
+      $('.mg-abas [aria-selected="true"]')?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
       break;
     case 'apelido-usar': {
       const x = sugestoesApelido().find(y => y.p.id === id);
@@ -283,7 +285,7 @@ export async function aoClicar(e) {
     case 'push-ativar': await ativarPush(); render(); break;
     case 'push-desativar': await desativarPush(); render(); break;
     case 'push-testar': await testarPush(); break;
-    case 'push-dispensar': LS.set('push-dispensado', '1'); render(); toast('Dá pra ativar depois em Gerenciar › Diretoria.'); break;
+    case 'push-dispensar': LS.set('push-dispensado', '1'); render(); toast('Dá pra ativar depois em Gerenciar › Notificações.'); break;
     case 'exportar': await exportarDados(id, el); render(); break;
     case 'apelido-ignorar': ignorarApelido(id); render(); break;
     case 'mgf-painel': S.mgPainel = !S.mgPainel; render(); break;

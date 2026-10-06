@@ -283,9 +283,6 @@ export function mgDiretoria() {
       <button class="btn primary" data-act="novo-diretor">${ICON.mais1}Pessoa</button>
     </div>
     ${eu?.equipe === 'M' ? m + f : f + m}
-    ${cartaoInstalar()}
-    ${cartaoNotificacoes()}
-    ${cartaoBackup()}
     <div class="aparelho">
       <div><strong>Este aparelho</strong><small>Você está como <b>${esc(eu ? eu.nome : 'Visitante')}</b>.</small></div>
       <div class="row-btns">
@@ -295,12 +292,33 @@ export function mgDiretoria() {
     </div>`;
 }
 
-export function viewGerenciar() {
-  const abas = [['eventos', 'Eventos', ICON.cal], ['jovens', 'Jovens', ICON.grupo], ['diretoria', 'Diretoria', ICON.user]];
-  const corpo = { eventos: mgEventos, jovens: mgJovens, diretoria: mgDiretoria }[S.mgTab]();
+function mgNotificacoes() {
   return `
-    <div class="mg-abas" role="tablist">${abas.map(([id, l, ic]) => `
-      <button role="tab" data-act="mg-tab" data-id="${id}" aria-selected="${S.mgTab === id}">${ic}<span>${l}</span></button>`).join('')}
+    <div class="mg-head"><div><h2>Notificações</h2><p>Lembretes das chamadas e aniversários, escolhidos em cada aparelho.</p></div></div>
+    ${cartaoInstalar()}
+    ${cartaoNotificacoes()}`;
+}
+
+function mgBackup() {
+  return `
+    <div class="mg-head"><div><h2>Backup</h2><p>Uma cópia de tudo, pra guardar no Drive.</p></div></div>
+    ${cartaoBackup()}`;
+}
+
+const SECOES = {
+  eventos: ['Eventos', 'cal', mgEventos],
+  jovens: ['Jovens', 'grupo', mgJovens],
+  diretoria: ['Diretoria', 'user', mgDiretoria],
+  notificacoes: ['Notificações', 'sino', mgNotificacoes],
+  backup: ['Backup', 'baixar', mgBackup],
+};
+
+export function viewGerenciar() {
+  const atual = SECOES[S.mgTab] ? S.mgTab : 'eventos';
+  const corpo = SECOES[atual][2]();
+  return `
+    <div class="mg-abas" role="tablist" aria-label="Seções">${Object.entries(SECOES).map(([id, [l, ic]]) => `
+      <button role="tab" data-act="mg-tab" data-id="${id}" aria-selected="${atual === id}">${ICON[ic]}<span>${l}</span></button>`).join('')}
     </div>
     <div class="mg-corpo">${corpo}</div>`;
 }

@@ -1,12 +1,11 @@
 // Aba Histórico.
 import { diretor, evento, jovem } from '../dados.js';
 import { S } from '../estado.js';
-import { ICON } from '../icones.js';
-import { $, esc, plural, tempoAtras } from '../util.js';
+import { $, esc, iniciais, plural, tempoAtras } from '../util.js';
 import { viewPresencasHist } from '../frequencia.js';
 import { estadoVazio } from '../vazio.js';
 
-export const HIST_ICON = { chamado: 'tel', confirmado: 'check', nao_vai: 'xis', pendente: 'desfazer', presente: 'entrada', ausente: 'desfazer' };
+const PILL_HIST = { chamado: 'Chamei', confirmado: 'Confirmou', nao_vai: 'Não vai', pendente: 'Desfeito', presente: 'Presente', ausente: 'Desmarcado' };
 
 export function fraseHist(x) {
   const quem = `<strong>${esc(x.quem)}</strong>`;
@@ -91,10 +90,11 @@ function viewMarcacoes() {
         const hora = new Date(x.em).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         const recente = Date.now() - new Date(x.em) < 3600000;
         return `<li class="tl st-${x.status}">
-          <span class="tl-ic" aria-hidden="true">${ICON[HIST_ICON[x.status]] || ''}</span>
+          <span class="tl-ic" aria-hidden="true" title="${esc(x.quem || '')}">${esc(iniciais(x.quem || '?'))}</span>
           <${j ? `button data-act="jovem" data-id="${j.id}"` : 'div'} class="tl-corpo">
             <span class="tl-txt"><span>${frase}</span>${sub ? `<small>${sub}</small>` : ''}</span>
-            <time datetime="${esc(x.em)}" title="${esc(new Date(x.em).toLocaleString('pt-BR'))}">${recente ? tempoAtras(x.em) : hora}</time>
+            <span class="tl-lado"><span class="pill">${PILL_HIST[x.status] || ''}</span>
+              <time datetime="${esc(x.em)}" title="${esc(new Date(x.em).toLocaleString('pt-BR'))}">${recente ? tempoAtras(x.em) : hora}</time></span>
           </${j ? 'button' : 'div'}>
         </li>`;
       }).join('')}</ol>

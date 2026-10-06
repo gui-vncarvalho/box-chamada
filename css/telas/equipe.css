@@ -1,4 +1,28 @@
 /* Aba Equipe. */
 
+.egrupo { margin-bottom: 24px; }
+.egrupo .grupo-titulo { color: var(--text); }
+.egrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 12px; align-items: start; }
+.egrid > * { min-width: 0; }
+.ecard { display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); }
+.ecard-head { display: flex; align-items: center; gap: 12px; }
+.ecard-head .avatar { width: 42px; height: 42px; font-size: 16px; }
+.ecard-head h3 { flex: 1; min-width: 0; font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 600; line-height: 1.1; overflow-wrap: anywhere; }
+.ecard-n { flex: none; font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; }
+.ecard-n span { color: var(--text-2); font-size: 15px; }
+.ecard-n.completo { color: var(--success); }
+.ecard-barra { display: flex; gap: 3px; height: 8px; }
+.ecard-barra span { border-radius: 999px; background: var(--st); }
+.ecard-jovens { display: flex; flex-wrap: wrap; gap: 6px; }
+.echip {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 5px 11px; border-radius: 999px;
+  border: 1px solid transparent; background: var(--surface-2); color: var(--text); font-size: 13px; font-weight: 500;
+}
+.echip { position: relative; }
+.echip::after { content: ""; position: absolute; inset: -6px 0; } /* alvo de toque de 44px sem aumentar o chip */
+.echip:hover { border-color: var(--text-dim); }
+.echip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--st); }
 .card-eu { border-color: rgba(229, 57, 46, .45); box-shadow: 0 0 0 1px rgba(229, 57, 46, .15); }
-.voce { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 999px; vertical-align: middle; margin-left: 4px; }
+.card-eu .ecard-head .avatar { box-shadow: inset 0 0 0 2px var(--accent); }
+.voce { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--accent-txt); background: var(--accent-soft); padding: 2px 7px; border-radius: 999px; vertical-align: middle; margin-left: 4px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

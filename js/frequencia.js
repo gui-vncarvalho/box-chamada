@@ -112,29 +112,46 @@ export function viewPresencasHist() {
     const [y, m, d] = ev.data.split('-').map(Number);
     return `<span class="cal-tile"><small>${new Date(y, m - 1, d).toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '')}</small><strong>${d}</strong></span>`;
   };
+  const ultimo = cultos[0];
+  const ru = ultimo && resumoDe(ultimo);
+  const maior = Math.max(1, ...cultos.map(ev => resumoDe(ev).jovens || 0));
   return `
+    ${ultimo ? `
+    <button class="hist-ultimo" data-act="resumo-culto" data-id="${ultimo.id}">
+      <strong class="pres-n">${ru.jovens}</strong>
+      <span class="pres-info">
+        <span class="pres-rot">Último culto · ${esc(ultimo.nome)} <small>· ${esc(dataEvento(ultimo, { day: '2-digit', month: '2-digit' }))}</small></span>
+        <span class="pres-metricas">
+          ${ru.confirmados ? `<span class="st-confirmado"><b>${ru.confirmados_vieram}/${ru.confirmados}</b> confirmados vieram</span>` : ''}
+          <span class="st-presente"><b>${ru.visitantes || 0}</b> ${ru.visitantes === 1 ? 'visitante' : 'visitantes'}</span>
+          <span class="st-diretoria"><b>${ru.diretoria || 0}</b> da diretoria</span>
+        </span>
+      </span>
+      <span class="chevron">${ICON.chevron}</span>
+    </button>` : ''}
     <section class="grupo">
       <h4 class="grupo-titulo">Quem sumiu ${sumiu?.length ? `<span>${sumiu.length}</span>` : ''}</h4>
       ${sumiu === null
         ? `<p class="dim small sumiu-vazio">Aparece aqui quem estava vindo e faltou nos ${CULTOS_SUMIU} últimos cultos. Precisa de pelo menos ${CULTOS_SUMIU + 1} cultos com a lista encerrada.</p>`
-        : sumiu.length ? `<div class="jgrid">${sumiu.map(({ j, ultima }) => `
-          <button class="jcard sumiu" data-act="jovem" data-id="${j.id}">
-            <span class="avatar" aria-hidden="true">${esc(j.nome.slice(0, 1).toUpperCase())}</span>
-            <span class="jcard-txt"><span class="jcard-nome"><strong>${esc(nomeCurto(j))}</strong></span>
-              <span class="jcard-resp"><span>Faltou nos ${CULTOS_SUMIU} últimos · veio por último em ${esc(ultima.nome)} (${esc(dataEvento(ultima, { day: '2-digit', month: '2-digit' }))})</span></span></span>
-            <span class="chevron">${ICON.chevron}</span>
+        : sumiu.length ? `
+          <p class="dim small sumiu-dica">Faltaram nos ${CULTOS_SUMIU} últimos cultos. Toque pra ver quando vieram por último.</p>
+          <div class="sumiu-chips">${sumiu.map(({ j, ultima }) => `
+          <button class="sumiu-chip" data-act="jovem" data-id="${j.id}"
+            title="Veio por último em ${esc(ultima.nome)} (${esc(dataEvento(ultima, { day: '2-digit', month: '2-digit' }))})">
+            <span class="sumiu-nome">${esc(nomeCurto(j))}</span><b aria-label="faltou em ${CULTOS_SUMIU} cultos">${CULTOS_SUMIU}</b>
           </button>`).join('')}</div>`
         : '<p class="dim small sumiu-vazio">Ninguém sumiu. 🙌</p>'}
     </section>
     <section class="grupo">
-      <h4 class="grupo-titulo">Cultos <span>${cultos.length}</span></h4>
+      <h4 class="grupo-titulo">Cultos passados <span>${cultos.length}</span></h4>
       ${cultos.length ? `<div class="mg-lista">${cultos.map(ev => {
         const r = resumoDe(ev);
         return `
-        <button class="ev-item" data-act="resumo-culto" data-id="${ev.id}">
+        <button class="ev-item ev-culto" data-act="resumo-culto" data-id="${ev.id}">
           ${mes(ev)}
           <span class="ev-item-txt"><strong>${esc(ev.nome)}</strong>
-            <small>${numeros(r)}${r.confirmados ? ` · ${r.confirmados_vieram}/${r.confirmados} confirmados vieram` : ''}</small></span>
+            <small>${numeros(r)}${r.confirmados ? ` · ${r.confirmados_vieram}/${r.confirmados} confirmados vieram` : ''}</small>
+            <span class="ev-barra" aria-hidden="true"><span style="width:${Math.round(((r.jovens || 0) / maior) * 100)}%"></span></span></span>
           <span class="pill ${encerrada(ev) ? '' : 'st-chamado'}">${encerrada(ev) ? 'Encerrada' : 'Aberta'}</span>
           <span class="chevron">${ICON.chevron}</span>
         </button>`;

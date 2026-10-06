@@ -5,7 +5,7 @@ import { diretor, evento, jovem, porJovem, statusJovem } from '../dados.js';
 import { S, STATUS_BY_ID } from '../estado.js';
 import { ICON } from '../icones.js';
 import { presenca } from './presenca.js';
-import { $, byNome, elegivel, esc, faixa, faixaBadge, iniciais, nomeCurto, subNome, semAcento } from '../util.js';
+import { $, byNome, elegivel, esc, faixa, faixaBadge, iniciais, nomeCurto, semAcento } from '../util.js';
 import { buscaVazia } from '../vazio.js';
 
 export const PAG_JOVENS = 20;
@@ -22,12 +22,15 @@ export function linhasJovens() {
 export const passaFiltro = (r, f) => f === 'todos' || r.s === f || (f === 'aberto' && (r.s === 'pendente' || r.s === 'chamado'));
 
 export function cardJovem({ j, l, s }) {
+  // sub numa linha só: nome completo (se tem apelido) · quem chama, com o status de cada um
+  const quem = l.map(a => `<span class="st-${a.status}"><span class="dot" aria-hidden="true"></span>${esc(nomeCurto(diretor(a.diretor_id)))}${a.status === 'pendente' ? '' : ' · ' + STATUS_BY_ID[a.status].label}</span>`).join('');
+  const completo = (j.apelido || '').trim() ? `<span class="jcard-completo">${esc(j.nome)}</span>` : '';
   return `
     <button class="jcard st-${s}" data-act="jovem" data-id="${j.id}">
       <span class="avatar" aria-hidden="true">${esc(iniciais(j.nome))}</span>
       <span class="jcard-txt">
-        <span class="jcard-nome"><strong>${esc(nomeCurto(j))}</strong>${faixa(j) ? faixaBadge(j) : ''}${presenca(j.id) ? '<span class="veio">Veio</span>' : ''}${badgeAniver(j)}</span>${subNome(j)}
-        <span class="jcard-resp">${l.length ? l.map(a => `<span class="st-${a.status}"><span class="dot"></span>${esc(nomeCurto(diretor(a.diretor_id)))}${a.status === 'pendente' ? '' : ' · ' + STATUS_BY_ID[a.status].label}</span>`).join('') : '<span class="dim">Sem responsável</span>'}</span>
+        <span class="jcard-nome"><strong>${esc(nomeCurto(j))}</strong>${faixa(j) ? faixaBadge(j) : ''}${presenca(j.id) ? '<span class="veio">Veio</span>' : ''}${badgeAniver(j)}</span>
+        <span class="jcard-resp">${completo}${quem || '<span class="dim">Sem responsável</span>'}</span>
       </span>
       <span class="pill st-${s}">${s === 'pendente' ? 'Ninguém chamou' : STATUS_BY_ID[s].label}</span>
     </button>`;
