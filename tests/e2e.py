@@ -76,6 +76,14 @@ class Sessao:
     def js(self, expr):
         return self.pg.evaluate(f'(() => {{ const B = window.__box; return {expr}; }})()')
 
+    def fechar_avisos(self):
+        for _ in range(5):
+            t = self.pg.locator('.toast:not(.saindo) .toast-txt')
+            if not t.count():
+                break
+            t.first.click()
+        self.pg.wait_for_timeout(260)
+
     def aba(self, id):
         self.pg.click(f':is(.tab, .lat-item)[data-id={id}]:visible')
         self.pg.wait_for_timeout(120)
@@ -98,18 +106,41 @@ def t_minha_lista(s):
     checar(n > 0, 'Minha lista vazia')
     pg.locator('.pcard').first.locator('button:has-text("Confirmou")').click()
     pg.wait_for_timeout(150)
-    checar(pg.locator('.grupo-titulo:has-text("Resolvidos")').count() == 1, 'card não foi pra "Resolvidos"')
-    # nota com modal próprio
-    pg.locator('.pcard .link-btn').first.click()
+    checar(pg.locator('.grupo-titulo:has-text("Já respondeu")').count() == 1 and pg.locator('.mrow.st-confirmado').count() == 1,
+           'card não foi pra "Já respondeu"')
+    # o aviso tem "Desfazer", que volta pro status anterior
+    pg.locator('.toast .toast-acao:has-text("Desfazer")').first.click()
+    pg.wait_for_timeout(300)
+    checar(pg.locator('.mrow').count() == 0 and pg.locator('.pcard').count() == n, 'Desfazer não voltou o status')
+    # a linha de "Já respondeu" abre o card completo
+    pg.locator('.pcard').first.locator('button:has-text("Confirmou")').click()
+    pg.wait_for_timeout(150)
+    s.fechar_avisos()
+    pg.locator('.mrow').first.click()
+    pg.wait_for_timeout(150)
+    checar(pg.locator('.pcard-recolher').count() == 1, 'linha não expandiu')
+    pg.locator('.pcard-recolher').click()
+    # filtro por status
+    pg.click('.mchip[data-id=confirmado]')
+    pg.wait_for_timeout(150)
+    checar(pg.locator('.pcard').count() == 0 and pg.locator('.mrow').count() == 1, 'filtro de status')
+    pg.click('.mchip[data-id=confirmado]')
+    pg.wait_for_timeout(150)
+    # nota pelo detalhe do jovem (toque no nome)
+    pg.locator('.pcard .pcard-quem').first.click()
+    pg.wait_for_selector('#dlg[open]')
+    pg.locator('#dlg .resp:has(.voce) .link-btn:has-text("+ Nota")').click()
     pg.wait_for_selector('#dlg2[open]')
     pg.click('#dlg2 textarea')
     pg.keyboard.type('Vai levar a irmã')
     pg.keyboard.press('Enter')
     pg.wait_for_timeout(400)
+    pg.keyboard.press('Escape')
+    pg.wait_for_timeout(450)
     checar(pg.locator('.pcard .nota:has-text("Vai levar a irmã")').count() == 1, 'nota não salvou')
     # WhatsApp marca "Chamei" e a mensagem tem emoji inteiro
     with s.ctx.expect_page() as pop:
-        pg.locator('.pcard.st-pendente .btn.wa').first.click()
+        pg.locator('.pcard.st-pendente .circ.wa').first.click()
     url = pop.value.url
     pop.value.close()
     checar('api.whatsapp.com/send' in url and '%F0%9F%98%8A' in url, f'link do WhatsApp errado: {url[:80]}')
@@ -436,11 +467,15 @@ def t_historico_presencas_e_justificativas(s):
     s.aba('minha')
     pg.locator('.pcard').first.locator('button:has-text("Não vai")').click()
     pg.wait_for_timeout(200)
+    s.fechar_avisos()
     pg.locator('.pcard-just .link-btn').first.click()
     pg.wait_for_selector('#dlg2[open]')
     pg.click('#dlg2 [data-motivo=trabalho]')
     pg.click('#dlg2 [data-salvar]')
     pg.wait_for_timeout(700)
+    s.fechar_avisos()
+    pg.locator('.mrow.st-nao_vai').first.click()  # com o motivo salvo, vira linha; abre de novo
+    pg.wait_for_timeout(150)
     checar('Trabalho' in pg.inner_text('.pcard-just'), 'motivo na Minha lista')
 
 

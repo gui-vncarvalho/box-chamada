@@ -56,6 +56,7 @@ export const S = {
   histModo: 'marcacoes',
   pFiltro: 'todos',
   mFiltro: '',
+  mAbertos: new Set(),
   limJ: 20,
   buscaMg: '',
   data: null,

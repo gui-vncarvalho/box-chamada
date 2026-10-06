@@ -25,13 +25,13 @@
 .st-ausente { --st: var(--text-dim); --st-soft: var(--surface-2); }
 .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; background: var(--st-soft, var(--surface-2)); color: var(--st, var(--text-dim)); }
 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--st); flex: none; }
-.seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
+.seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 13px; padding: 4px; }
 .seg button {
-  border: none; background: transparent; border-radius: 7px; padding: 8px 2px; min-height: 40px;
+  border: none; background: transparent; border-radius: 10px; padding: 8px 2px; min-height: 44px;
   font-size: 13px; font-weight: 600; color: var(--text-dim); white-space: nowrap;
 }
 .seg button:hover { color: var(--text); }
-.seg button[aria-pressed="true"] { background: var(--st-soft); color: var(--st); box-shadow: inset 0 0 0 1px var(--st); }
+.seg button[aria-pressed="true"] { background: var(--st-soft); color: var(--st); box-shadow: inset 0 0 0 1.5px var(--st); }
 .faixa { font-size: 11.5px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; padding: 2px 7px; border-radius: 6px; white-space: nowrap; }
 .faixa.box { background: var(--accent-soft); color: var(--accent); }
 .faixa.sprint { background: var(--blue-soft); color: var(--blue); }
@@ -80,6 +80,8 @@ ul.lista { list-style: none; margin: 0; padding: 0; display: flex; flex-directio
   display: flex; flex-direction: column; gap: 8px; pointer-events: none;
 }
 @media (min-width: 1024px) { #toasts { left: auto; right: 20px; bottom: 20px; width: 380px; } }
+/* dentro de um modal (gaveta no celular): vai pro topo pra não cobrir os botões */
+@media (max-width: 1023px) { #toasts.em-dlg { bottom: auto; top: calc(12px + env(safe-area-inset-top)); flex-direction: column-reverse; } }
 .toast {
   --tc: var(--success); position: relative; overflow: hidden; pointer-events: auto;
   display: flex; align-items: center; gap: 12px; padding: 12px 12px 14px;
@@ -89,6 +91,7 @@ ul.lista { list-style: none; margin: 0; padding: 0; display: flex; flex-directio
 .toast.t-info { --tc: var(--blue); border-color: var(--border); }
 .toast.t-aviso { --tc: var(--gold); border-color: rgba(232, 165, 61, .4); }
 .toast.t-erro { --tc: var(--accent); border-color: rgba(229, 57, 46, .45); }
+.toast { cursor: pointer; }
 .toast.saindo { animation: toast-sai .2s ease-in forwards; }
 .toast-ic {
   flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;

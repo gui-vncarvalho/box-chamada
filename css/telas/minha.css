@@ -1,35 +1,96 @@
 /* Aba Minha lista. */
 
-.minha-head { display: flex; align-items: baseline; gap: 10px; margin: 4px 0 6px; }
-.minha-head .tag { font-size: 13px; color: var(--text-dim); }
+.minha-head { display: flex; align-items: baseline; gap: 10px; margin: 4px 0 12px; }
+.minha-head .tag { font-size: 13px; color: var(--text-2); }
+
+/* filtro por status */
+.mfiltros { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px 4px; padding: 0 16px 2px; }
+.mfiltros::-webkit-scrollbar { display: none; }
+.mchip {
+  flex: none; display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 13px;
+  border-radius: 999px; border: 1px solid var(--border); background: transparent;
+  color: var(--text-2); font-size: 13.5px; font-weight: 600; white-space: nowrap;
+}
+.mchip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--st); }
+.mchip .n { font-family: 'Oswald', sans-serif; font-size: 13px; opacity: .85; }
+.mchip:hover:not(:disabled) { border-color: var(--text-dim); color: var(--text); }
+.mchip[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+.mchip:disabled { opacity: .45; }
+
 .grupo { margin-top: 18px; }
 .grupo-titulo {
   display: flex; align-items: center; gap: 8px; margin: 0 0 10px;
-  font-size: 12px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--text-dim);
+  font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(--text-2);
 }
-.grupo-titulo span { background: var(--surface-2); border-radius: 999px; padding: 1px 8px; font-size: 11.5px; letter-spacing: 0; }
-.pgrid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
-@media (min-width: 700px) { .pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.grupo-titulo span {
+  background: var(--surface-2); color: var(--text); border-radius: 999px; padding: 0 8px;
+  font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 20px; letter-spacing: 0;
+}
+.grupo-titulo.pra { color: var(--text); }
+.grupo-titulo.pra span { background: var(--btn-red); color: #fff; }
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 12px; align-items: start; }
+.pgrid > * { min-width: 0; }
+.pgrid.respondeu { gap: 8px; }
+
+/* card "Pra chamar" */
 .pcard {
   position: relative; overflow: hidden;
-  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-  padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 14px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+  padding: 14px 14px 12px 18px; display: flex; flex-direction: column; gap: 12px;
 }
-.pcard::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--st); }
-.pcard.st-pendente::before { background: var(--border); }
-.pcard-top { display: flex; align-items: center; gap: 12px; }
+.pcard::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--st); }
+.pcard-top { display: flex; align-items: center; gap: 8px; }
+.pcard-quem {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 0; margin-right: 4px;
+  background: none; border: none; color: inherit; text-align: left; border-radius: 12px;
+}
 .avatar {
-  flex: none; width: 44px; height: 44px; border-radius: 50%;
+  flex: none; width: 46px; height: 46px; border-radius: 50%;
   display: grid; place-items: center;
   font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: .5px;
-  background: var(--surface-2); color: var(--text); box-shadow: inset 0 0 0 2px var(--st);
+  background: var(--surface-2); color: var(--text); box-shadow: inset 0 0 0 1px var(--border);
 }
-.st-pendente > .avatar { box-shadow: inset 0 0 0 1px var(--border); }
 .pcard-id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.pcard-id h3 { font-size: 19px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pcard-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font-size: 13.5px; color: var(--text-dim); }
+.pcard-nome { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.pcard-nome h3 { font-family: 'Oswald', sans-serif; font-size: 21px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pcard-nome svg { flex: none; width: 15px; height: 15px; color: var(--text-dim); }
+.pcard-quem:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
+.pcard-sub { display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 13px; color: var(--text-2); }
+.pcard-sub > :not(.pcard-sub-txt) { flex: none; }
+.pcard-sub-txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pcard-obs { margin: -4px 0 0; font-size: 13.5px; color: var(--text-2); }
+
+/* botões redondos de contato */
+.circ {
+  flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+}
+.circ svg { width: 20px; height: 20px; }
+.circ.wa { background: var(--wa); border-color: var(--wa); color: #06301a; }
+.circ.wa svg { width: 24px; height: 24px; }
+.circ.tracejado { background: transparent; border-style: dashed; color: var(--text-2); }
+.circ:hover { filter: brightness(1.08); }
+
+.pcard .nota { text-align: left; border: none; width: 100%; color: var(--text); }
+.pcard-recolher { align-self: center; min-height: 44px; color: var(--text-2); }
+.link-btn { background: none; border: none; padding: 4px 2px; color: var(--gold); font-weight: 600; font-size: 13px; white-space: nowrap; }
+.link-btn:hover { text-decoration: underline; }
+
+/* linha "Já respondeu" */
+.mrow {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 10px 14px;
+  border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: inherit; text-align: left;
+}
+.mrow:hover { border-color: var(--text-dim); }
+.mrow .avatar { width: 38px; height: 38px; font-size: 14px; box-shadow: inset 0 0 0 1.5px var(--st); }
+.mrow-id { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.mrow-id strong { font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mrow-id small { font-size: 12.5px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mrow .pill { flex: none; }
+
+/* peças usadas também no detalhe do jovem */
+.pcard-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font-size: 13.5px; color: var(--text-2); }
 .pcard-meta .sep { opacity: .5; }
-.pcard-obs { margin: -4px 0 0; font-size: 13.5px; color: var(--text-dim); }
 .icon-btn {
   flex: none; width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
   background: transparent; border: 1px solid transparent; color: var(--text-dim);
@@ -40,16 +101,11 @@
 .acoes .btn { min-height: 44px; font-size: 15px; }
 .btn.tracejado { min-height: 44px; background: transparent; border-style: dashed; color: var(--text-dim); width: 100%; }
 .btn.tracejado:hover { color: var(--text); }
-.pcard .nota { text-align: left; border: none; width: 100%; color: var(--text); }
-.pcard-foot {
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding-top: 12px; border-top: 1px solid var(--border); font-size: 13px;
-}
-.pcard-foot .outros { gap: 4px 12px; }
-.pcard-foot .outros > span { display: inline-flex; align-items: center; gap: 6px; }
-.link-btn { background: none; border: none; padding: 4px 2px; color: var(--gold); font-weight: 600; font-size: 13px; white-space: nowrap; }
-.link-btn:hover { text-decoration: underline; }
-@media (max-width: 520px) {
-  .pcard { padding: 16px 14px 12px; gap: 12px; }
+
+@media (max-width: 360px) {
+  .pcard { padding-left: 16px; padding-right: 12px; }
+  .pcard-quem { gap: 10px; }
   .avatar { width: 40px; height: 40px; font-size: 15px; }
+  .circ { width: 44px; height: 44px; }
+  .pcard .seg button { font-size: 12px; letter-spacing: -.1px; }
 }

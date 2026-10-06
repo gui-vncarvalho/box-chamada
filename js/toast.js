@@ -12,15 +12,27 @@ const MAX = 3;
 const DURACAO = 5000;
 const ICONES = { sucesso: 'check', info: 'info', aviso: 'alerta', erro: 'xis' };
 
+// referência fixa: se o modal que hospeda os avisos for redesenhado, a pilha volta pro lugar
+let caixa = null;
 function pilha() {
-  let el = document.getElementById('toasts');
-  if (!el) {
-    el = Object.assign(document.createElement('div'), { id: 'toasts' });
-    el.setAttribute('aria-live', 'polite');
-    document.body.append(el);
+  if (!caixa) {
+    caixa = document.getElementById('toasts') || Object.assign(document.createElement('div'), { id: 'toasts' });
+    caixa.setAttribute('aria-live', 'polite');
   }
-  return el;
+  if (!caixa.isConnected) document.body.append(caixa);
+  return caixa;
 }
+
+// Com um modal aberto o resto da página fica inerte (e atrás do fundo escuro):
+// os avisos passam a morar dentro do modal do topo e voltam pro body quando ele fecha.
+function hospedar() {
+  if (!caixa) return;
+  const topo = [...document.querySelectorAll('dialog[open]:not(.fechando)')].pop();
+  const casa = topo || document.body;
+  if (caixa.parentElement !== casa) casa.append(caixa);
+  caixa.classList.toggle('em-dlg', !!topo);
+}
+new MutationObserver(hospedar).observe(document.documentElement, { subtree: true, childList: true, attributes: true, attributeFilter: ['open', 'class'] });
 
 export function fecharToast(no) {
   if (!no || no.classList.contains('saindo')) return;
@@ -37,7 +49,8 @@ export function fecharToastId(id) {
 export function toast(titulo, opcoes = {}) {
   const o = opcoes === true ? { tipo: 'erro' } : opcoes || {};
   const tipo = o.tipo || 'sucesso';
-  const caixa = pilha();
+  pilha();
+  hospedar();
   if (o.id) fecharToast(caixa.querySelector(`[data-toast-id="${o.id}"]`));
   const no = document.createElement('div');
   no.className = `toast t-${tipo}`;
@@ -50,8 +63,9 @@ export function toast(titulo, opcoes = {}) {
     ${o.acao ? `<button class="toast-acao">${esc(o.acao.rotulo)}</button>` : ''}
     ${duracao ? `<span class="toast-tempo" style="animation-duration:${duracao}ms"></span>` : ''}`;
   if (o.acao) {
-    no.querySelector('.toast-acao').onclick = () => { fecharToast(no); o.acao.fn(); };
+    no.querySelector('.toast-acao').onclick = e => { e.stopPropagation(); fecharToast(no); o.acao.fn(); };
   }
+  no.onclick = () => fecharToast(no); // tocar no aviso fecha
   caixa.append(no);
   // máximo de 3 na tela: sai o mais antigo
   const todos = [...caixa.querySelectorAll('.toast:not(.saindo)')];

@@ -85,6 +85,21 @@ export async function toggleResp(jid, did) {
   } catch (e) { falha(e); }
 }
 
+// Marca o status e mostra o aviso com "Desfazer" (volta pro status anterior).
+async function marcarComDesfazer(aid, status) {
+  const a = S.data.atribuicoes.find(x => x.id === aid);
+  if (!a || a.status === status) return;
+  const antes = a.status;
+  await setStatus(aid, status);
+  if (a.status !== status) return; // não salvou (o erro já foi avisado)
+  toast(`${nomeCurto(jovem(a.jovem_id))}: ${STATUS_BY_ID[status].label}`, {
+    tipo: status === 'nao_vai' ? 'aviso' : status === 'pendente' ? 'info' : 'sucesso',
+    texto: a.diretor_id === S.me ? 'Marcado na sua lista' : `Lista de ${nomeCurto(diretor(a.diretor_id))}`,
+    acao: { rotulo: 'Desfazer', fn: () => setStatus(aid, antes) },
+    id: 'status-' + aid,
+  });
+}
+
 export async function acaoDistribuir(modo) {
   const ev = evento();
   const lista = atribs();
@@ -196,13 +211,19 @@ export async function aoClicar(e) {
       rolarParaConteudo({ sempre: true });
       break;
     case 'faixa-j': S.faixaJ = id; S.limJ = PAG_JOVENS; render(); break;
-    case 'status': await setStatus(id, el.dataset.status); break;
+    case 'status': await marcarComDesfazer(id, el.dataset.status); break;
     case 'contato': {
       const a = id && S.data.atribuicoes.find(x => x.id === id);
       // espera o link abrir antes de redesenhar a tela
-      if (a && a.status === 'pendente') setTimeout(() => { setStatus(id, 'chamado'); toast('Marcado como "Chamei"'); }, 400);
+      if (a && a.status === 'pendente') setTimeout(() => marcarComDesfazer(id, 'chamado'), 400);
       break;
     }
+    case 'm-filtro': S.mFiltro = S.mFiltro === id ? '' : id; render(); break;
+    case 'm-expandir':
+      if (S.mAbertos.has(id)) S.mAbertos.delete(id); else S.mAbertos.add(id);
+      render();
+      document.querySelector(`[data-aid="${id}"], .mrow[data-id="${id}"]`)?.scrollIntoView({ block: 'nearest' });
+      break;
     case 'nota': {
       const a = S.data.atribuicoes.find(x => x.id === id);
       const t = await pedirTexto({
