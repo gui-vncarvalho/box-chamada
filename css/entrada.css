@@ -120,7 +120,7 @@ fieldset.field legend { padding: 0; margin-bottom: 6px; }
 .field .lbl { display: block; }
 .field input:focus, .field textarea:focus, .form-texto textarea:focus, #form-imp textarea:focus { outline: none; border-color: var(--text-dim); box-shadow: 0 0 0 4px rgba(255, 255, 255, .06); }
 .field.invalido input { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-.field.invalido .lbl::after { content: " · obrigatório"; color: var(--accent); }
+.field.invalido .lbl::after { content: " · obrigatório"; color: var(--accent-txt); }
 input[type="date"] { color-scheme: dark; }
 /* campo dentro de rótulo herdava 13px e o cinza do rótulo */
 .field input, .field textarea, .field select { font-size: 15px; color: var(--text); }

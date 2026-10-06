@@ -34,6 +34,9 @@ export async function poll() {
   }
 }
 
+// fonte padrão do aparelho/navegador aumentada: o CSS folga o layout (.texto-grande)
+document.documentElement.classList.toggle('texto-grande', parseFloat(getComputedStyle(document.documentElement).fontSize) >= 19.2);
+
 document.addEventListener('click', aoClicar);
 document.addEventListener('input', aoDigitar);
 document.addEventListener('submit', aoEnviar);

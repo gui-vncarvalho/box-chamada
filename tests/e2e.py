@@ -304,11 +304,12 @@ def t_presenca_no_dia(s):
 def t_modais_e_cadastros(s):
     pg = s.entrar()
     s.aba('gerenciar')
-    s.print('gerenciar-eventos')
+    s.print('gerenciar-eventos', full=False)  # o print de página inteira desliga a emulação de toque
     pg.click('.mg-head .btn.primary')
     pg.wait_for_selector('#form-dlg')
     if s.nome == 'celular':  # no toque, não abre o teclado sozinho
-        checar(s.js('document.activeElement.matches("input, textarea")') is False, 'abriu o teclado sozinho no celular')
+        foco = s.js('document.activeElement.matches("input, textarea") ? document.activeElement.outerHTML.slice(0, 90) : ""')
+        checar(not foco, f'abriu o teclado sozinho no celular: {foco}')
         checar(s.js("document.querySelector('#dlg').scrollTop") == 0, 'modal não abriu no topo')
     else:
         checar(s.js('document.activeElement.name') == 'nome', 'foco não foi pro nome')

@@ -43,7 +43,7 @@
 .motivos { gap: 6px; }
 .motivos .chip { padding: 7px 12px; font-size: 13.5px; }
 .pcard-just { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; margin-top: -4px; border-radius: 10px; background: var(--surface-2); font-size: 13px; color: var(--text-dim); }
-.pcard-just b { color: var(--accent); }
+.pcard-just b { color: var(--accent-txt); }
 
 /* frequência de uma pessoa */
 .freq-resumo { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; }
@@ -84,7 +84,7 @@
 .just-lista .jf-nome { flex: 1; min-width: 120px; }
 
 /* resumo › chamadas: quem chamou quem */
-.just-pill.alerta { background: var(--accent-soft); color: var(--accent); }
+.just-pill.alerta { background: var(--accent-soft); color: var(--accent-txt); }
 .nomes.alerta span { background: var(--accent-soft); color: var(--text); }
 .ch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 8px; }
 .ch-card { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0, 0, 0, .14); }

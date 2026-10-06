@@ -2,8 +2,8 @@
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  min-height: 38px; padding: 7px 14px;
-  border-radius: 9px; border: 1px solid var(--border);
+  min-height: 44px; padding: 7px 14px;
+  border-radius: 10px; border: 1px solid var(--border);
   background: var(--surface-2); color: var(--text);
   text-decoration: none; font-size: 14px; font-weight: 600; white-space: nowrap;
 }
@@ -12,18 +12,21 @@
 .btn.wa { background: var(--wa); border-color: var(--wa); color: #06301a; }
 .btn.wa-suave svg { color: var(--wa); }
 .btn.ghost { background: transparent; }
-.btn.danger { background: transparent; color: var(--accent); border-color: var(--accent-soft); }
-.btn.small { min-height: 30px; padding: 4px 10px; font-size: 13px; }
+.btn.danger { background: transparent; color: var(--accent-txt); border-color: var(--accent-soft); }
+.btn.small { min-height: 36px; padding: 4px 12px; font-size: 13px; position: relative; }
+/* alvo de toque de 44px sem aumentar o visual de chips e botões compactos */
+:is(.btn.small, .me-chip, .hchip, .chip, .seg-mini button, .link-btn) { position: relative; }
+:is(.btn.small:not(.carregando), .me-chip, .hchip, .chip, .seg-mini button, .link-btn)::after { content: ""; position: absolute; inset: -5px -2px; }
 .btn[aria-disabled="true"] { opacity: .45; pointer-events: none; }
 .btn svg { width: 16px; height: 16px; flex: none; }
 .row-btns { display: flex; flex-wrap: wrap; gap: 8px; }
-.st-pendente { --st: var(--text-dim); --st-soft: var(--surface-2); }
+.st-pendente { --st: var(--text-dim); --st-soft: var(--surface-2); --st-txt: var(--text-2); }
 .st-chamado { --st: var(--gold); --st-soft: var(--gold-soft); }
 .st-confirmado { --st: var(--success); --st-soft: var(--success-soft); }
-.st-nao_vai { --st: var(--accent); --st-soft: var(--accent-soft); }
-.st-presente { --st: var(--blue); --st-soft: var(--blue-soft); }
+.st-nao_vai { --st: var(--accent); --st-soft: var(--accent-soft); --st-txt: var(--accent-txt); }
+.st-presente { --st: var(--blue); --st-soft: var(--blue-soft); --st-txt: var(--blue-txt); }
 .st-ausente { --st: var(--text-dim); --st-soft: var(--surface-2); }
-.pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; background: var(--st-soft, var(--surface-2)); color: var(--st, var(--text-dim)); }
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; background: var(--st-soft, var(--surface-2)); color: var(--st-txt, var(--st, var(--text-2))); }
 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--st); flex: none; }
 .seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 13px; padding: 4px; }
 .seg button {
@@ -31,10 +34,10 @@
   font-size: 13px; font-weight: 600; color: var(--text-dim); white-space: nowrap;
 }
 .seg button:hover { color: var(--text); }
-.seg button[aria-pressed="true"] { background: var(--st-soft); color: var(--st); box-shadow: inset 0 0 0 1.5px var(--st); }
+.seg button[aria-pressed="true"] { background: var(--st-soft); color: var(--st-txt, var(--st)); box-shadow: inset 0 0 0 1.5px var(--st); }
 .faixa { font-size: 11.5px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; padding: 2px 7px; border-radius: 6px; white-space: nowrap; }
-.faixa.box { background: var(--accent-soft); color: var(--accent); }
-.faixa.sprint { background: var(--blue-soft); color: var(--blue); }
+.faixa.box { background: var(--accent-soft); color: var(--accent-txt); }
+.faixa.sprint { background: var(--blue-soft); color: var(--blue-txt); }
 .faixa.nd { background: var(--surface-2); color: var(--text-dim); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }

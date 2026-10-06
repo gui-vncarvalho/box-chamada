@@ -51,8 +51,16 @@ button, .btn, input, select, textarea {
 button { cursor: pointer; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
+  *, *::before, *::after { transition: none !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
 }
+
+/* texto ampliado no aparelho (fonte padrão ≥ 120%): segmentado 2×2 e linhas que quebram em vez de cortar */
+.texto-grande .seg { grid-template-columns: repeat(2, 1fr); }
+.texto-grande .seg button { min-height: 52px; }
+.texto-grande :is(.pcard-sub-txt, .jcard-resp, .pcheck-sub, .mrow-id strong, .mrow-id small, .quem-txt strong) { white-space: normal; overflow: visible; }
+.texto-grande .jcard-nome { max-height: none; flex-wrap: wrap; }
+.texto-grande .pcard-top { flex-wrap: wrap; }
+.texto-grande .pcard-quem { flex-basis: 100%; }
 
 /* barras de rolagem finas e escuras, no tema do site */
 * { scrollbar-width: thin; scrollbar-color: #3a4350 transparent; }
