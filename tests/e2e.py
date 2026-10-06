@@ -662,28 +662,42 @@ TESTES = [t_minha_lista, t_equipe_historico, t_jovens_e_busca, t_presenca, t_pre
           t_presenca_cultos_e_encerrar, t_historico_presencas_e_justificativas, t_encerrar_evento, t_apelido, t_backup, t_notificacoes, t_carregamento_leve]
 
 
-def rodar(prints=None):
+def _rodar_lote(lote, prints):
+    """Roda uma parte dos testes num processo próprio (navegador e servidor próprios)."""
     from playwright.sync_api import sync_playwright
     base = servidor()
-    if prints:
-        os.makedirs(prints, exist_ok=True)
-    falhas = 0
+    saida = []
     with sync_playwright() as p:
         b = p.chromium.launch()
-        for tela in ['desktop', 'celular']:
-            for t in TESTES:
-                quando = NO_DIA if t is t_presenca_no_dia else ANTES
-                s = Sessao(b, base, tela, quando, prints)
-                try:
-                    t(s)
-                    s.fechar()
-                    print(f'  ok    {tela:8} {t.__name__[2:]}')
-                except Exception as e:  # noqa: BLE001
-                    falhas += 1
-                    print(f'  FALHA {tela:8} {t.__name__[2:]}: {e}')
-                    s.ctx.close()
+        for i, tela, ti in lote:
+            t = TESTES[ti]
+            quando = NO_DIA if t is t_presenca_no_dia else ANTES
+            s = Sessao(b, base, tela, quando, prints)
+            try:
+                t(s)
+                s.fechar()
+                saida.append((i, True, f'  ok    {tela:8} {t.__name__[2:]}'))
+            except Exception as e:  # noqa: BLE001
+                saida.append((i, False, f'  FALHA {tela:8} {t.__name__[2:]}: {e}'))
+                s.ctx.close()
         b.close()
-    print(f'\n{len(TESTES) * 2 - falhas} ok, {falhas} falha(s)')
+    return saida
+
+
+def rodar(prints=None, jobs=None):
+    from concurrent.futures import ProcessPoolExecutor
+    if prints:
+        os.makedirs(prints, exist_ok=True)
+    tarefas = [(i, tela, ti) for i, (tela, ti) in
+               enumerate((tela, ti) for tela in ['desktop', 'celular'] for ti in range(len(TESTES)))]
+    jobs = max(1, min(jobs or os.cpu_count() // 2 or 1, len(tarefas)))
+    lotes = [tarefas[k::jobs] for k in range(jobs)]  # testes distribuídos entre os processos
+    with ProcessPoolExecutor(jobs) as ex:
+        resultados = sorted(r for lote in ex.map(_rodar_lote, lotes, [prints] * jobs) for r in lote)
+    for _, _, linha in resultados:
+        print(linha)
+    falhas = sum(not ok for _, ok, _ in resultados)
+    print(f'\n{len(resultados) - falhas} ok, {falhas} falha(s)')
     return falhas
 
 
@@ -713,4 +727,5 @@ if __name__ == '__main__':
         i = sys.argv.index('--comparar')
         sys.exit(1 if comparar(sys.argv[i + 1], sys.argv[i + 2]) else 0)
     pasta = sys.argv[sys.argv.index('--prints') + 1] if '--prints' in sys.argv else None
-    sys.exit(1 if rodar(pasta) else 0)
+    jobs = int(sys.argv[sys.argv.index('-j') + 1]) if '-j' in sys.argv else None
+    sys.exit(1 if rodar(pasta, jobs) else 0)

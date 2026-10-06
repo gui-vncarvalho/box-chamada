@@ -41,7 +41,8 @@ Serve sem cache e recarrega a página sozinho quando um `.html`, `.css` ou `.js`
 
 ```sh
 python -m venv .venv && .venv/bin/pip install playwright pillow && .venv/bin/playwright install chromium
-.venv/bin/python tests/e2e.py                    # roda tudo, no desktop e no celular
+.venv/bin/python tests/e2e.py                    # roda tudo, no desktop e no celular, em paralelo
+.venv/bin/python tests/e2e.py -j 2               # limita o número de processos (padrão: metade dos núcleos)
 .venv/bin/python tests/e2e.py --prints antes     # salva prints de todas as telas
 .venv/bin/python tests/e2e.py --comparar antes depois   # compara duas pastas de prints
 ```
