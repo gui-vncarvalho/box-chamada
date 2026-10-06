@@ -16,9 +16,12 @@ Site estático, sem build: módulos ES nativos do navegador, publicado direto no
 | `js/render.js` | Esqueleto: topo, card do evento e abas |
 | `js/telas/*.js` | Uma tela por arquivo: entrada, minha, equipe, jovens, presença, histórico, gerenciar |
 | `js/dialogos.js`, `js/formulario.js`, `js/cadastros.js` | Modais, formulário genérico, cadastros e importação |
+| `js/toast.js`, `js/vazio.js` | Avisos (com Desfazer) e estados vazios ilustrados |
+| `js/fila.js` | Fila das presenças marcadas sem internet e a faixa "Sem conexão" |
 | `js/aniversarios.js`, `js/vinculos.js`, `js/busca.js`, `js/distribuir.js`, `js/pwa.js` | Funcionalidades transversais |
 | `js/acoes.js` | O que cada botão e campo faz |
 | `css/*.css`, `css/telas/*.css` | Estilos por componente e por tela (a ordem dos `<link>` importa) |
+| `docs/handoff/` | Referência do redesign (Claude Design): especificação e telas |
 | `manifest.webmanifest`, `sw.js`, `icons/` | App instalável (PWA) e recebimento das notificações |
 | `supabase/functions/notificar/` | Edge Function que envia as notificações (Web Push) |
 | `tests/e2e.py` | Testes de ponta a ponta (modo demonstração) |

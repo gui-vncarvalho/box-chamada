@@ -14,12 +14,14 @@ O Chamada BOX organiza isso: divide os jovens entre a diretoria, mostra a cada u
 - Pode ser **instalado como app** na tela inicial (Android e iPhone).
 - Cada pessoa da diretoria escolhe quem é e passa a ver a própria lista.
 - O que um marca, os outros veem em poucos segundos.
+- No celular, as abas ficam numa barra embaixo; no computador, numa barra lateral.
+- **Desfazer:** toda marcação mostra um aviso com "Desfazer", pra corrigir um toque errado na hora.
 
 ## Funcionalidades
 
 ### Chamadas
 - **Distribuição automática:** ao criar um evento, os jovens são divididos entre a diretoria por equipe (feminina e masculina), equilibrando a quantidade de cada um. Dá pra ajustar à mão.
-- **Minha lista:** cada um vê quem precisa chamar, com botões de **WhatsApp** (mensagem pronta, com o apelido e o horário certo) e **Ligar**.
+- **Minha lista:** cada um vê quem precisa chamar, com botões de **WhatsApp** (mensagem pronta, com o apelido e o horário certo) e **Ligar**. Fica dividida em "Pra chamar" e "Já respondeu", com filtro por status.
 - **Status de cada chamada:** Pendente, Chamei, Confirmou ou Não vai, com espaço pra nota.
 - **Equipe e Jovens:** o andamento de toda a diretoria e de cada jovem, com busca por nome, apelido, idade, faixa, aniversário ou relacionamento.
 - **Copiar lista pro grupo:** o texto de quem chama quem, pronto pra colar no WhatsApp.
@@ -30,9 +32,10 @@ O Chamada BOX organiza isso: divide os jovens entre a diretoria, mostra a cada u
 - Em dias como o Box Day, cada faixa recebe na mensagem o horário do seu culto.
 
 ### Presença
-- **No dia do evento,** marca-se quem chegou com um toque, inclusive a diretoria.
+- **No dia do evento,** marca-se quem chegou com um toque (outro toque desmarca), inclusive a diretoria.
+- **Sem internet,** as marcações continuam valendo na tela, ficam esperando e sobem sozinhas quando a conexão volta.
 - **Dois cultos no mesmo dia** (Sprint e Box) têm listas separadas, e a mesma pessoa pode estar nas duas.
-- **Visitantes** são cadastrados na hora e já entram como presentes.
+- **Visitantes** são cadastrados na hora, já entram como presentes e podem ter **quem convidou** registrado.
 - **"Veio junto?"** sugere marcar a família e os amigos de quem acabou de chegar.
 - **Encerrar a lista** guarda o resumo do culto e trava as marcações (dá pra reabrir).
 
@@ -40,7 +43,7 @@ O Chamada BOX organiza isso: divide os jovens entre a diretoria, mostra a cada u
 - **Resumo de cada culto:** quantos vieram, quantos confirmados vieram, visitantes, faltas e **quem da diretoria fez ou não fez as suas chamadas**.
 - **Enviar pro grupo:** um resumo curto do culto pra compartilhar no WhatsApp.
 - **Frequência de cada jovem** nos últimos cultos.
-- **Quem sumiu:** quem vinha e faltou nos últimos cultos, pra diretoria procurar.
+- **Último culto, cultos passados e Quem sumiu:** quem vinha e faltou nos últimos cultos, pra diretoria procurar.
 - **Motivo da ausência:** trabalho, estudo, viagem, saúde, família ou outro, com detalhe.
 
 ### Pessoas
@@ -54,12 +57,17 @@ O Chamada BOX organiza isso: divide os jovens entre a diretoria, mostra a cada u
 - **Aniversários do dia,** às 9h.
 - **Cada pessoa escolhe** se quer receber e o quê, e pode desativar quando quiser.
 
+### Acessibilidade
+- Cores com contraste pra leitura fácil, botões grandes pro toque, respeito à opção de reduzir animações e layout que se ajusta à fonte ampliada do aparelho.
+
 ### Backup
 - Uma cópia de todos os dados, em **planilha** (pra consultar) e em **arquivo completo** (pra restaurar). O app lembra quando já faz mais de um mês do último backup.
 
 ## Privacidade
 
 Os dados dos jovens (nomes, telefones, datas de nascimento) **não ficam neste repositório**. Eles ficam num banco de dados protegido e só podem ser acessados com o código da diretoria. Quando alguém sair da diretoria, o código deve ser trocado.
+
+Por segurança, **os dados dos jovens também não ficam gravados nos aparelhos** da diretoria: o app só os mostra enquanto está aberto. Sem internet ele não abre; se a conexão cair com o app aberto, só as marcações de presença ainda não enviadas ficam guardadas (sem nomes nem telefones), até subirem.
 
 ---
 
